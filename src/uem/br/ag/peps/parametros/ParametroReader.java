@@ -11,16 +11,32 @@ import java.util.stream.Stream;
 public class ParametroReader {
 	
 	private List<ParametroLinha> parametros = new ArrayList<ParametroLinha>();
+	
+	private String filePath;
+	
+	public static ParametroReader instance;
+	
+	private synchronized static void newInstance() {
+		instance = new ParametroReader();
+	}
 
-	public ParametroReader(String path) throws IOException {
-	    final Stream<String> lines = Files.lines(Paths.get(path));
+	public static ParametroReader getInstance() {
+		if (instance == null) {
+			newInstance();
+		}
+		
+		return instance;
+	}
+	
+	public void readParametrosFile() throws IOException {
+	    final Stream<String> lines = Files.lines(Paths.get(getFilePath()));
 	    lines.forEach(readParametro());
 	    lines.close();
 	}
-
+	
 	private Consumer<String> readParametro() {
 		return new Consumer<String>() {
-
+			
 			@Override
 			public void accept(String t) {
 				ParametroLinha parametroLinha = null;
@@ -52,8 +68,17 @@ public class ParametroReader {
 			}
 		};
 	}
-
-	public static void main(String[] args) throws IOException {
-		new ParametroReader("/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst10-5-10-5.conf");
+	
+	public List<ParametroLinha> getParametros() {
+		return parametros;
 	}
+	
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
 }
