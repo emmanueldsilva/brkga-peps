@@ -1,30 +1,35 @@
 package uem.br.ag.peps.problema;
 
-import static java.util.Arrays.asList;
+import static java.lang.Integer.compare;
 import static java.util.Collections.emptyList;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import uem.br.ag.peps.entidade.Employee;
 import uem.br.ag.peps.entidade.Skill;
+import uem.br.ag.peps.entidade.Task;
 import uem.br.ag.peps.parametros.ParametroEmployeeNumber;
 import uem.br.ag.peps.parametros.ParametroEmployeeSalary;
 import uem.br.ag.peps.parametros.ParametroEmployeeSkill;
-import uem.br.ag.peps.parametros.ParametroEmployeeSkillNumber;
+import uem.br.ag.peps.parametros.ParametroGraphArc;
 import uem.br.ag.peps.parametros.ParametroLinha;
 import uem.br.ag.peps.parametros.ParametroReader;
 import uem.br.ag.peps.parametros.ParametroSkillNumber;
+import uem.br.ag.peps.parametros.ParametroTaskCost;
+import uem.br.ag.peps.parametros.ParametroTaskNumber;
+import uem.br.ag.peps.parametros.ParametroTaskSkill;
 
 public class ProblemaBuilder {
 	
 	private List<ParametroLinha> parametros = emptyList();
 	
-	private List<Skill> skills = new ArrayList<Skill>();;
+	private List<Skill> skills = new ArrayList<Skill>();
+	
+	private List<Employee> employees = new ArrayList<Employee>();
+	
+	private List<Task> tasks = new ArrayList<Task>();
 
 	public ProblemaBuilder() {
 		readParametrosArquivo();
@@ -39,6 +44,7 @@ public class ProblemaBuilder {
 			
 			readSkills();
 			readEmployees();
+			readTasks();
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Erro ao ler o arquivo de parâmetros");
@@ -66,40 +72,71 @@ public class ProblemaBuilder {
 			employee.setCodigo(i);
 			employee.setSalario(readSalario(i));
 			employee.setSkills(readEmployeeSkills(i));
+			employees.add(employee);
 		}
+	}
+	
+	private void readTasks() {
+		final ParametroTaskNumber parametroTaskNumber = (ParametroTaskNumber) parametros.stream()
+																						.filter(p -> p instanceof ParametroTaskNumber)
+																						.findFirst().get();
+		
+		int quantidadeTasks = parametroTaskNumber.getValue();
+		for (int i = 0; i < quantidadeTasks; i++) {
+			final Task task = new Task();
+			task.setNumero(i);
+			task.setCusto(readCustoTask(i));
+			task.setSkills(readTaskSkills(i));
+			tasks.add(task);
+		}
+		
+		buildHierarquiaEntreTasks();
+	}
+
+	private void buildHierarquiaEntreTasks() {
+		parametros.stream()
+				  .filter(p -> (p instanceof ParametroGraphArc))
+				  .sorted((p1, p2)-> compare(((ParametroGraphArc) p1).getNumeroArco(), ((ParametroGraphArc) p2).getNumeroArco()))
+				  .forEach(p -> buildRelacionamentoEntreTasks((ParametroGraphArc) p));
+	}
+
+	private void buildRelacionamentoEntreTasks(ParametroGraphArc p) {
+		final Task taskInicial = tasks.get(p.getNo1());
+		final Task taskFinal = tasks.get(p.getNo2());
+		taskInicial.addNextTask(taskFinal);
+		taskFinal.addPreviousTask(taskInicial);
+	}
+
+	private List<Skill> readTaskSkills(int numero) {
+		final List<Skill> skills = new ArrayList<Skill>();
+		parametros.stream()
+				  .filter(p -> (p instanceof ParametroTaskSkill) && ((ParametroTaskSkill) p).getTask() == numero)
+				  .sorted((p1, p2)-> compare(((ParametroTaskSkill) p1).getSkill(), ((ParametroTaskSkill) p2).getSkill()))
+				  .forEach(p -> skills.add(this.skills.get(((ParametroTaskSkill) p).getValue())));
+		
+		return skills;
 	}
 
 	private List<Skill> readEmployeeSkills(int codigo) {
-		final Skill[] employeeSkills = new Skill[readNumberOfSkills(codigo)];
+		final List<Skill> skills = new ArrayList<Skill>();
 		parametros.stream()
 				  .filter(p -> (p instanceof ParametroEmployeeSkill) && ((ParametroEmployeeSkill) p).getEmployee() == codigo)
-				  .collect(Collectors.toList())
-				  .forEach(addSkillToEmployeeSkills(codigo, employeeSkills));
+				  .sorted((p1, p2) -> compare(((ParametroEmployeeSkill) p1).getSkill(), ((ParametroEmployeeSkill) p2).getSkill()))
+				  .forEach(p -> skills.add(this.skills.get(((ParametroEmployeeSkill) p).getValue())));
 		
-		return asList(employeeSkills);
-	}
-
-	private int readNumberOfSkills(int codigo) {
-		return ((ParametroEmployeeSkillNumber) parametros.stream()
-														 .filter(p -> p instanceof ParametroEmployeeSkillNumber && ((ParametroEmployeeSkillNumber) p).getEmployee() == codigo)
-														 .findFirst().get()).getValue();
-	}
-
-	private Consumer<ParametroLinha> addSkillToEmployeeSkills(int codigo, Skill[] employeeSkills) {
-		return new Consumer<ParametroLinha>() {
-
-			@Override
-			public void accept(ParametroLinha parametroLinha) {
-				ParametroEmployeeSkill parametroEmployeeSkill = (ParametroEmployeeSkill) parametroLinha;
-				employeeSkills[parametroEmployeeSkill.getSkill()] = skills.get(parametroEmployeeSkill.getValue());
-			}
-		};
+		return skills;
 	}
 
 	private Double readSalario(int codigo) {
 		return ((ParametroEmployeeSalary) parametros.stream()
 													.filter(p -> p instanceof ParametroEmployeeSalary && ((ParametroEmployeeSalary) p).getEmployee() == codigo)
 													.findFirst().get()).getValue();
+	}
+	
+	private Double readCustoTask(int numero) {
+		return ((ParametroTaskCost) parametros.stream()
+											  .filter(p -> p instanceof ParametroTaskCost && ((ParametroTaskCost) p).getTask() == numero)
+											  .findFirst().get()).getValue();
 	}
 	
 	public static void main(String[] args) throws IOException {

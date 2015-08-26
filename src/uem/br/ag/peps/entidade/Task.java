@@ -2,6 +2,7 @@ package uem.br.ag.peps.entidade;
 
 import static java.util.Collections.emptyList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Task {
@@ -12,9 +13,9 @@ public class Task {
 	
 	private List<Skill> skills = emptyList();
 	
-	private List<Task> nextTasks = emptyList();
+	private List<Task> nextTasks = new ArrayList<Task>();
 	
-	private Task previousTask;
+	private List<Task> previousTasks = new ArrayList<Task>();
 
 	public int getNumero() {
 		return numero;
@@ -47,13 +48,25 @@ public class Task {
 	public void setNextTasks(List<Task> nextTasks) {
 		this.nextTasks = nextTasks;
 	}
-
-	public Task getPreviousTask() {
-		return previousTask;
+	
+	public void addNextTask(Task task) {
+		if (!nextTasks.contains(task)) {
+			nextTasks.add(task);
+		}
 	}
 
-	public void setPreviousTask(Task previousTask) {
-		this.previousTask = previousTask;
+	public List<Task> getPreviousTasks() {
+		return previousTasks;
+	}
+
+	public void setPreviousTasks(List<Task> previousTasks) {
+		this.previousTasks = previousTasks;
+	}
+	
+	public void addPreviousTask(Task task) {
+		if (!previousTasks.contains(task)) {
+			previousTasks.add(task);
+		}
 	}
 	
 }

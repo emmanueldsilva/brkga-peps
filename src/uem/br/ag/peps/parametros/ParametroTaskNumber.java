@@ -5,7 +5,7 @@ import static org.apache.commons.lang3.StringUtils.substringAfter;
 
 public class ParametroTaskNumber extends ParametroLinha {
 
-	private static final String GRAPH_ARC_NUMBER = "graph.arc.number";
+	private static final String TASK_NUMBER = "task.number";
 	private static final String EQUALS = "=";
 
 	private int value;
@@ -15,7 +15,7 @@ public class ParametroTaskNumber extends ParametroLinha {
 	}
 
 	public static String pattern() {
-		return GRAPH_ARC_NUMBER + EQUALS + "\\d+";
+		return TASK_NUMBER + EQUALS + "\\d+";
 	}
 	
 	public int getValue() {
