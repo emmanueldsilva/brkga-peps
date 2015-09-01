@@ -30,8 +30,22 @@ public class ProblemaBuilder {
 	private List<Employee> employees = new ArrayList<Employee>();
 	
 	private List<Task> tasks = new ArrayList<Task>();
+	
+	public static ProblemaBuilder instance;
+	
+	private synchronized static void newInstance() {
+		instance = new ProblemaBuilder();
+	}
 
-	public ProblemaBuilder() {
+	public static ProblemaBuilder getInstance() {
+		if (instance == null) {
+			newInstance();
+		}
+		
+		return instance;
+	}
+
+	private ProblemaBuilder() {
 		readParametrosArquivo();
 	}
 
@@ -138,8 +152,27 @@ public class ProblemaBuilder {
 											  .filter(p -> p instanceof ParametroTaskCost && ((ParametroTaskCost) p).getTask() == numero)
 											  .findFirst().get()).getValue();
 	}
-	
-	public static void main(String[] args) throws IOException {
-		new ProblemaBuilder();
+
+	public List<ParametroLinha> getParametros() {
+		return parametros;
 	}
+
+	public List<Skill> getSkills() {
+		return skills;
+	}
+
+	public List<Employee> getEmployees() {
+		return employees;
+	}
+
+	public List<Task> getTasks() {
+		return tasks;
+	}
+	
+	public Task getTask(int numero) {
+		return tasks.stream()
+					.filter(t -> t.getNumero() == numero)
+					.findFirst().get();
+	}
+
 }
