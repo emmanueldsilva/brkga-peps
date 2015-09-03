@@ -152,6 +152,18 @@ public class ProblemaBuilder {
 											  .filter(p -> p instanceof ParametroTaskCost && ((ParametroTaskCost) p).getTask() == numero)
 											  .findFirst().get()).getValue();
 	}
+	
+	public Task getTask(int numero) {
+		return tasks.stream()
+					.filter(t -> t.getNumero() == numero)
+					.findFirst().get();
+	}
+	
+	public Employee getEmployee(int codigo) {
+		return employees.stream()
+				.filter(e -> e.getCodigo() == codigo)
+				.findFirst().get();
+	}
 
 	public List<ParametroLinha> getParametros() {
 		return parametros;
@@ -167,12 +179,6 @@ public class ProblemaBuilder {
 
 	public List<Task> getTasks() {
 		return tasks;
-	}
-	
-	public Task getTask(int numero) {
-		return tasks.stream()
-					.filter(t -> t.getNumero() == numero)
-					.findFirst().get();
 	}
 
 }
