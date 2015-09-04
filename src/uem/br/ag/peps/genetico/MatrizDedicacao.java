@@ -6,10 +6,16 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import uem.br.ag.peps.entidade.Employee;
+import uem.br.ag.peps.entidade.Skill;
 import uem.br.ag.peps.entidade.Task;
 import uem.br.ag.peps.problema.ProblemaBuilder;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 public class MatrizDedicacao {
 	
@@ -87,5 +93,36 @@ public class MatrizDedicacao {
 		return true;
 	}
 	
+	public boolean isSolucaoValidaPeranteRestricao2() {
+		for (int task = 0; task < matrizDedicacao.length; task++) {
+			
+			
+		}
+		
+		return false;
+	}
 	
+	private List<GrauDedicacao> getGrausDedicacao(int task) {
+		final List<GrauDedicacao> grausDedicacao = Lists.newArrayList();
+		for (int employee = 0; employee < matrizDedicacao[task].length; employee++) {
+			grausDedicacao.add(employee, matrizDedicacao[employee][task]);
+		}
+		
+		return grausDedicacao;
+	}
+	
+	private List<GrauDedicacao> getGrausDedicaoEfetivos(int task) {
+		final List<GrauDedicacao> grausDedicacao = getGrausDedicacao(task);
+
+		List<Skill> list = Lists.newArrayList();
+		Set<Skill> set = Sets.newHashSet();
+		grausDedicacao.stream()
+					 .filter(g -> g.getValor() > 0.0)
+					 .map(g -> g.getEmployee())
+					 .map(e -> e.getSkills())
+					 .forEach(s -> set.addAll(s));
+		list.addAll(set);
+		
+		return null;
+	}
 }
