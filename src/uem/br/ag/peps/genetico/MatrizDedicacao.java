@@ -1,12 +1,12 @@
 package uem.br.ag.peps.genetico;
 
 import static java.math.BigDecimal.ZERO;
+import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ZERO;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import uem.br.ag.peps.entidade.Employee;
@@ -15,7 +15,6 @@ import uem.br.ag.peps.entidade.Task;
 import uem.br.ag.peps.problema.ProblemaBuilder;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 public class MatrizDedicacao {
 	
@@ -93,13 +92,26 @@ public class MatrizDedicacao {
 		return true;
 	}
 	
+	/**
+	 * Restrição 2: Toda tarefa deve ter funcionários aptos a realizá-la. Ou seja, deve haver pelo menos um funcionário atuando sobre essa tarefa que 
+	 * possua as habilidades necessárias para realizá-la.
+	 * @return
+	 */
 	public boolean isSolucaoValidaPeranteRestricao2() {
 		for (int task = 0; task < matrizDedicacao.length; task++) {
+			final List<Skill> employeesSkills = getSkillsDosEmployeesQueAtuamNaTask(task);
+			final List<Skill> taskSkills = ProblemaBuilder.getInstance().getTask(task).getSkills();
+			employeesSkills.retainAll(taskSkills);
 			
 			
+			if (!employeesSkills.equals(taskSkills)) return false;
 		}
 		
-		return false;
+		return true;
+	}
+	
+	public boolean isSolucaoValidaPeranteRestricao3() {
+		
 	}
 	
 	private List<GrauDedicacao> getGrausDedicacao(int task) {
@@ -111,18 +123,13 @@ public class MatrizDedicacao {
 		return grausDedicacao;
 	}
 	
-	private List<GrauDedicacao> getGrausDedicaoEfetivos(int task) {
-		final List<GrauDedicacao> grausDedicacao = getGrausDedicacao(task);
-
-		List<Skill> list = Lists.newArrayList();
-		Set<Skill> set = Sets.newHashSet();
-		grausDedicacao.stream()
-					 .filter(g -> g.getValor() > 0.0)
-					 .map(g -> g.getEmployee())
-					 .map(e -> e.getSkills())
-					 .forEach(s -> set.addAll(s));
-		list.addAll(set);
-		
-		return null;
+	private List<Skill> getSkillsDosEmployeesQueAtuamNaTask(int task) {
+		return getGrausDedicacao(task).stream()
+									  .filter(g -> g.getValor() > DOUBLE_ZERO)
+									  .map(g -> g.getEmployee())
+									  .flatMap(e -> e.getSkills().stream())
+									  .distinct()
+									  .collect(Collectors.toList());
 	}
+	
 }
