@@ -111,7 +111,7 @@ public class MatrizDedicacao {
 	}
 	
 	public boolean isSolucaoValidaPeranteRestricao3() {
-		
+		return true;
 	}
 	
 	private List<GrauDedicacao> getGrausDedicacao(int task) {

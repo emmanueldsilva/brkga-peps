@@ -22,6 +22,8 @@ import uem.br.ag.peps.parametros.ParametroTaskNumber;
 import uem.br.ag.peps.parametros.ParametroTaskSkill;
 
 public class ProblemaBuilder {
+
+	private String parametrosPath;
 	
 	private List<ParametroLinha> parametros = emptyList();
 	
@@ -45,14 +47,12 @@ public class ProblemaBuilder {
 		return instance;
 	}
 
-	private ProblemaBuilder() {
-		readParametrosArquivo();
-	}
+	private ProblemaBuilder() {	}
 
-	private void readParametrosArquivo() {
+	public void readParametrosArquivo() {
 		try {
 			ParametroReader parametroReader = ParametroReader.getInstance();
-			parametroReader.setFilePath("/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst10-5-10-5.conf");
+			parametroReader.setFilePath(parametrosPath);
 			parametroReader.readParametrosFile();
 			parametros = parametroReader.getParametros();
 			
@@ -163,6 +163,16 @@ public class ProblemaBuilder {
 		return employees.stream()
 				.filter(e -> e.getCodigo() == codigo)
 				.findFirst().get();
+	}
+	
+	public Skill getSkill(int codigo) {
+		return skills.stream()
+				.filter(s -> s.getCodigo() == codigo)
+				.findFirst().get();
+	}
+	
+	public void setParametrosPath(String parametrosPath) {
+		this.parametrosPath = parametrosPath;
 	}
 
 	public List<ParametroLinha> getParametros() {

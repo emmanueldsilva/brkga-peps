@@ -20,7 +20,7 @@ import uem.br.ag.peps.parametros.ParametroTaskSkillNumber;
 public class LeituraParametrosTest {
 
 	@Test
-	public void deveEfetuarLeituraParametroTaskSkill(){
+	public void deveEfetuarLeituraParametroTaskSkill() {
 		final String linha = "task.3.skill.4=700";
 		Assert.assertTrue(linha.matches(ParametroTaskSkill.pattern()));
 		
@@ -31,7 +31,7 @@ public class LeituraParametrosTest {
 	}
 	
 	@Test
-	public void deveEfetuarLeituraParametroEmployeeSkill(){
+	public void deveEfetuarLeituraParametroEmployeeSkill() {
 		final String linha = "employee.3.skill.4=5";
 		Assert.assertTrue(linha.matches(ParametroEmployeeSkill.pattern()));
 		
@@ -42,7 +42,7 @@ public class LeituraParametrosTest {
 	}
 	
 	@Test
-	public void deveEfetuarLeituraParametroEmployeeSalary(){
+	public void deveEfetuarLeituraParametroEmployeeSalary() {
 		final String linha = "employee.4.salary=10448.133483293168";
 		Assert.assertTrue(linha.matches(ParametroEmployeeSalary.pattern()));
 		
@@ -52,7 +52,7 @@ public class LeituraParametrosTest {
 	}
 	
 	@Test
-	public void deveEfetuarLeituraParametroTaskSkillNumber(){
+	public void deveEfetuarLeituraParametroTaskSkillNumber() {
 		final String linha = "task.6.skill.number=3";
 		Assert.assertTrue(linha.matches(ParametroTaskSkillNumber.pattern()));
 		
@@ -62,7 +62,7 @@ public class LeituraParametrosTest {
 	}
 	
 	@Test
-	public void deveEfetuarLeituraParametroEmployeeSkillNumber(){
+	public void deveEfetuarLeituraParametroEmployeeSkillNumber() {
 		final String linha = "employee.4.skill.number=4";
 		Assert.assertTrue(linha.matches(ParametroEmployeeSkillNumber.pattern()));
 		
@@ -72,7 +72,7 @@ public class LeituraParametrosTest {
 	}
 	
 	@Test
-	public void deveEfetuarLeituraParametroTaskCost(){
+	public void deveEfetuarLeituraParametroTaskCost() {
 		final String linha = "task.4.cost=7.0";
 		Assert.assertTrue(linha.matches(ParametroTaskCost.pattern()));
 		
@@ -82,7 +82,7 @@ public class LeituraParametrosTest {
 	}
 	
 	@Test
-	public void deveEfetuarLeituraParametroGraphArc(){
+	public void deveEfetuarLeituraParametroGraphArc() {
 		final String linha = "graph.arc.19=6 9";
 		Assert.assertTrue(linha.matches(ParametroGraphArc.pattern()));
 		
@@ -93,7 +93,7 @@ public class LeituraParametrosTest {
 	}
 	
 	@Test
-	public void deveEfetuarLeituraParametroSkillNumber(){
+	public void deveEfetuarLeituraParametroSkillNumber() {
 		final String linha = "skill.number=10";
 		Assert.assertTrue(linha.matches(ParametroSkillNumber.pattern()));
 		
@@ -102,7 +102,7 @@ public class LeituraParametrosTest {
 	}
 	
 	@Test
-	public void deveEfetuarLeituraParametroTaskNumber(){
+	public void deveEfetuarLeituraParametroTaskNumber() {
 		final String linha = "task.number=10";
 		Assert.assertTrue(linha.matches(ParametroTaskNumber.pattern()));
 		
@@ -111,7 +111,7 @@ public class LeituraParametrosTest {
 	}
 	
 	@Test
-	public void deveEfetuarLeituraParametroGraphArcNumber(){
+	public void deveEfetuarLeituraParametroGraphArcNumber() {
 		final String linha = "graph.arc.number=21";
 		Assert.assertTrue(linha.matches(ParametroGraphArcNumber.pattern()));
 		
@@ -120,7 +120,7 @@ public class LeituraParametrosTest {
 	}
 	
 	@Test
-	public void deveEfetuarLeituraParametroEmployeeNumber(){
+	public void deveEfetuarLeituraParametroEmployeeNumber() {
 		final String linha = "employee.number=5";
 		Assert.assertTrue(linha.matches(ParametroEmployeeNumber.pattern()));
 		
