@@ -18,7 +18,7 @@ import com.google.common.collect.Lists;
 
 public class MatrizDedicacao {
 	
-	private GrauDedicacao[][] matrizDedicacao;
+	private GrauDedicacao[][] matrizDedicacao = null;
 	
 	private List<Double> duracoesTask = new ArrayList<Double>();
 
@@ -49,10 +49,14 @@ public class MatrizDedicacao {
 		}
 	}
 
+	public BigDecimal calculaSomatorioDedicacaoTask(Task task) {
+		return calculaSomatorioDedicacaoTask(task.getNumero());
+	}
+	
 	private BigDecimal calculaSomatorioDedicacaoTask(int task) {
 		BigDecimal somatorioDedicacaoTask = BigDecimal.ZERO;
 		
-		for (int employee = 0; employee < matrizDedicacao[task].length; employee++) {
+		for (int employee = 0; employee < matrizDedicacao.length; employee++) {
 			final GrauDedicacao grauDedicacao = matrizDedicacao[employee][task];
 			somatorioDedicacaoTask = somatorioDedicacaoTask.add(BigDecimal.valueOf(grauDedicacao.getValor()));
 		}
@@ -130,6 +134,18 @@ public class MatrizDedicacao {
 									  .flatMap(e -> e.getSkills().stream())
 									  .distinct()
 									  .collect(Collectors.toList());
+	}
+	
+	public GrauDedicacao getGrauDedicacao(Employee employee, Task task) {
+		return matrizDedicacao[employee.getCodigo()][task.getNumero()];
+	}
+
+	public GrauDedicacao[][] getMatrizDedicacao() {
+		return matrizDedicacao;
+	}
+
+	public List<Double> getDuracoesTask() {
+		return duracoesTask;
 	}
 	
 }

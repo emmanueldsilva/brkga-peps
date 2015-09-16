@@ -1,5 +1,6 @@
 package uem.br.ag.peps.problema;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Integer.compare;
 import static java.util.Collections.emptyList;
 
@@ -27,11 +28,11 @@ public class ProblemaBuilder {
 	
 	private List<ParametroLinha> parametros = emptyList();
 	
-	private List<Skill> skills = new ArrayList<Skill>();
+	private List<Skill> skills = newArrayList();
 	
-	private List<Employee> employees = new ArrayList<Employee>();
+	private List<Employee> employees = newArrayList();
 	
-	private List<Task> tasks = new ArrayList<Task>();
+	private List<Task> tasks = newArrayList();
 	
 	public static ProblemaBuilder instance;
 	
@@ -169,6 +170,13 @@ public class ProblemaBuilder {
 		return skills.stream()
 				.filter(s -> s.getCodigo() == codigo)
 				.findFirst().get();
+	}
+	
+	public void clear() {
+		this.parametrosPath = null;
+		this.employees = newArrayList();
+		this.tasks = newArrayList();
+		this.skills = newArrayList();
 	}
 	
 	public void setParametrosPath(String parametrosPath) {
