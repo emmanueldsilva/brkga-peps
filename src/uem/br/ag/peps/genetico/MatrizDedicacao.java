@@ -1,10 +1,10 @@
 package uem.br.ag.peps.genetico;
 
 import static java.math.BigDecimal.ZERO;
+import static java.math.MathContext.DECIMAL32;
 import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ZERO;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,9 +42,9 @@ public class MatrizDedicacao {
 	 * tjduracao
 	 */
 	public void calculaDuracoesTasks() {
-		for (int task = 0; task < matrizDedicacao.length; task++) {
+		for (int task = 0; task < matrizDedicacao[0].length; task++) {
 			final BigDecimal esforcoTask = BigDecimal.valueOf(ProblemaBuilder.getInstance().getTask(task).getCusto());
-			final BigDecimal duracaoTask = esforcoTask.divide(calculaSomatorioDedicacaoTask(task), RoundingMode.HALF_EVEN);
+			final BigDecimal duracaoTask = esforcoTask.divide(calculaSomatorioDedicacaoTask(task), DECIMAL32);
 			duracoesTask.add(task, duracaoTask.doubleValue());
 		}
 	}
@@ -67,15 +67,15 @@ public class MatrizDedicacao {
 	public Double calculaCustoProjeto() {
 		BigDecimal custoProjeto = BigDecimal.ZERO;
 		
-		for (int task = 0; task < matrizDedicacao.length; task++) {
-			final BigDecimal duracaoTask = BigDecimal.valueOf(duracoesTask.get(0));
+		for (int employee = 0; employee < matrizDedicacao.length; employee++) {
+			final BigDecimal salario = BigDecimal.valueOf(ProblemaBuilder.getInstance().getEmployee(employee).getSalario());
 			
-			for (int employee = 0; employee < matrizDedicacao[task].length; employee++) {
-				final BigDecimal salario = BigDecimal.valueOf(ProblemaBuilder.getInstance().getEmployee(employee).getSalario());
+			for (int task = 0; task < matrizDedicacao[employee].length; task++) {
+				final BigDecimal duracaoTask = BigDecimal.valueOf(duracoesTask.get(task));
 				final GrauDedicacao grauDedicacao = matrizDedicacao[employee][task];
 
 				final BigDecimal dedicacao = BigDecimal.valueOf(grauDedicacao.getValor());
-				custoProjeto.add(salario.multiply(dedicacao).multiply(duracaoTask));
+				custoProjeto = custoProjeto.add(salario.multiply(dedicacao).multiply(duracaoTask));
 			}
 		}
 		
@@ -87,7 +87,7 @@ public class MatrizDedicacao {
 	 * @return
 	 */
 	public boolean isSolucaoValidaPeranteRestricao1() {
-		for (int task = 0; task < matrizDedicacao.length; task++) {
+		for (int task = 0; task < matrizDedicacao[0].length; task++) {
 			if (calculaSomatorioDedicacaoTask(task).compareTo(ZERO) <= 0) {
 				return false;
 			}
