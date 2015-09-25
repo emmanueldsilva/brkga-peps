@@ -13,21 +13,7 @@ public class ParametroReader {
 	private List<ParametroLinha> parametros = new ArrayList<ParametroLinha>();
 	
 	private String filePath;
-	
-	public static ParametroReader instance;
-	
-	private synchronized static void newInstance() {
-		instance = new ParametroReader();
-	}
 
-	public static ParametroReader getInstance() {
-		if (instance == null) {
-			newInstance();
-		}
-		
-		return instance;
-	}
-	
 	public void readParametrosFile() throws IOException {
 	    final Stream<String> lines = Files.lines(Paths.get(getFilePath()));
 	    lines.forEach(readParametro());

@@ -52,7 +52,7 @@ public class ProblemaBuilder {
 
 	public void readParametrosArquivo() {
 		try {
-			ParametroReader parametroReader = ParametroReader.getInstance();
+			ParametroReader parametroReader = new ParametroReader();
 			parametroReader.setFilePath(parametrosPath);
 			parametroReader.readParametrosFile();
 			parametros = parametroReader.getParametros();

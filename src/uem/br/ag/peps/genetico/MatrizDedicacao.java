@@ -102,7 +102,7 @@ public class MatrizDedicacao {
 	 * @return
 	 */
 	public boolean isSolucaoValidaPeranteRestricao2() {
-		for (int task = 0; task < matrizDedicacao.length; task++) {
+		for (int task = 0; task < matrizDedicacao[0].length; task++) {
 			final List<Skill> employeesSkills = getSkillsDosEmployeesQueAtuamNaTask(task);
 			final List<Skill> taskSkills = ProblemaBuilder.getInstance().getTask(task).getSkills();
 			employeesSkills.retainAll(taskSkills);
@@ -120,7 +120,7 @@ public class MatrizDedicacao {
 	
 	private List<GrauDedicacao> getGrausDedicacao(int task) {
 		final List<GrauDedicacao> grausDedicacao = Lists.newArrayList();
-		for (int employee = 0; employee < matrizDedicacao[task].length; employee++) {
+		for (int employee = 0; employee < matrizDedicacao.length; employee++) {
 			grausDedicacao.add(employee, matrizDedicacao[employee][task]);
 		}
 		

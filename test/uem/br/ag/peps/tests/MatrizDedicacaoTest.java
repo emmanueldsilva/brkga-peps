@@ -147,7 +147,7 @@ public class MatrizDedicacaoTest {
 	}
 	
 	@Test
-	public void testSolucaoFactivelParaRestricao1() {
+	public void testSolucaoFactivelParaRestricao1e2() {
 		final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
 		
 		final Task task0 = problemaBuilder.getTask(0);
@@ -169,6 +169,9 @@ public class MatrizDedicacaoTest {
 		
 		Assert.assertTrue("Deve ser uma solução factível, pois todas as tarefas possuem certa dedicação", 
 				matrizDedicacao.isSolucaoValidaPeranteRestricao1());
+		
+		Assert.assertTrue("Deve ser uma solução factível, pois todas as tarefas possuem empregados qualificados para realizá-las", 
+				matrizDedicacao.isSolucaoValidaPeranteRestricao2());
 	}
 	
 	@Test
@@ -194,6 +197,31 @@ public class MatrizDedicacaoTest {
 		
 		Assert.assertFalse("Não deve ser uma solução factível, pois a tarefa 2 está sem dedicação de nenhum empregado.", 
 				matrizDedicacao.isSolucaoValidaPeranteRestricao1());
+	}
+	
+	@Test
+	public void testSolucaoNaoFactivelParaRestricao2() {
+		final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
+		
+		final Task task0 = problemaBuilder.getTask(0);
+		final Task task1 = problemaBuilder.getTask(1);
+		final Task task2 = problemaBuilder.getTask(2);
+		final Task task3 = problemaBuilder.getTask(3);
+		
+		final Employee employee0 = problemaBuilder.getEmployee(0);
+		matrizDedicacao.addGrauDedicacao(employee0, task0, 0.4);
+		matrizDedicacao.addGrauDedicacao(employee0, task1, 0.0);
+		matrizDedicacao.addGrauDedicacao(employee0, task2, 0.3);
+		matrizDedicacao.addGrauDedicacao(employee0, task3, 0.8);
+		
+		final Employee employee1 = problemaBuilder.getEmployee(1);
+		matrizDedicacao.addGrauDedicacao(employee1, task0, 0.2);
+		matrizDedicacao.addGrauDedicacao(employee1, task1, 1.0);
+		matrizDedicacao.addGrauDedicacao(employee1, task2, 0.7);
+		matrizDedicacao.addGrauDedicacao(employee1, task3, 0.6);
+		
+		Assert.assertFalse("Não deve ser uma solução factível, pois tarefa 1 não possui empregados qualificados para realizá-las", 
+				matrizDedicacao.isSolucaoValidaPeranteRestricao2());
 	}
 	
 	
