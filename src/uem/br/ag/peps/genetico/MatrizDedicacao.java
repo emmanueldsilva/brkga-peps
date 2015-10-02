@@ -2,11 +2,14 @@ package uem.br.ag.peps.genetico;
 
 import static java.math.BigDecimal.ZERO;
 import static java.math.MathContext.DECIMAL32;
+import static java.util.Comparator.comparingDouble;
 import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ZERO;
+import static uem.br.ag.peps.genetico.RealizacaoTarefa.calculaTempoFim;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import uem.br.ag.peps.entidade.Employee;
@@ -21,6 +24,8 @@ public class MatrizDedicacao {
 	private GrauDedicacao[][] matrizDedicacao = null;
 	
 	private List<Double> duracoesTask = new ArrayList<Double>();
+	
+	private List<RealizacaoTarefa> realizacoesTarefas = new ArrayList<RealizacaoTarefa>();
 
 	public MatrizDedicacao() {
 		int numeroEmpregados = ProblemaBuilder.getInstance().getEmployees().size();
@@ -115,9 +120,59 @@ public class MatrizDedicacao {
 	}
 	
 	public boolean isSolucaoValidaPeranteRestricao3() {
+		for (Task task : ProblemaBuilder.getInstance().getTasks()) {
+			calcularPeriodoRealizacaoTarefa(task);
+		}
+		
+		// Calcular os períodos de cada tarefa individual 
+		
 		return true;
 	}
 	
+	private RealizacaoTarefa calcularPeriodoRealizacaoTarefa(Task task) {
+		final Optional<RealizacaoTarefa> realizacaoTarefaOptional = getRealizacaoTarefa(task);
+		if (realizacaoTarefaOptional.isPresent()) 
+			return realizacaoTarefaOptional.get();
+		
+		final RealizacaoTarefa realizacaoTarefa = buildRealizacaoTarefa(task);
+		this.realizacoesTarefas.add(realizacaoTarefa);
+		
+		return realizacaoTarefa;
+	}
+
+	private RealizacaoTarefa buildRealizacaoTarefa(Task task) {
+		if (!task.hasPreviousTasks()) {
+			return buildRealizacaoTarefaInicial(task);
+		} 
+
+		return buildRealizacaoTarefaDependente(task);
+	}
+
+	private RealizacaoTarefa buildRealizacaoTarefaInicial(Task task) {
+		return new RealizacaoTarefa(task, DOUBLE_ZERO, duracoesTask.get(task.getNumero()));
+	}
+	
+	private RealizacaoTarefa buildRealizacaoTarefaDependente(Task task) {
+		final List<RealizacaoTarefa> realizacoesPrecedentes = new ArrayList<RealizacaoTarefa>();
+		for (Task previousTask : task.getPreviousTasks()) {
+			realizacoesPrecedentes.add(calcularPeriodoRealizacaoTarefa(previousTask));
+		}
+		
+		final RealizacaoTarefa realizacaoPrecedenteMaisTardia = realizacoesPrecedentes.stream()
+				.max(comparingDouble(RealizacaoTarefa::getTempoFim))
+				.get();
+		
+		final Double tempoInicio = realizacaoPrecedenteMaisTardia.getTempoFim();
+		final Double tempoFim = calculaTempoFim(tempoInicio, duracoesTask.get(task.getNumero()));
+		return new RealizacaoTarefa(task, tempoInicio, tempoFim);
+	}
+	
+	private Optional<RealizacaoTarefa> getRealizacaoTarefa(Task task) {
+		return realizacoesTarefas.stream()
+								 .filter(r -> r.getTask().equals(task))
+								 .findFirst();
+	}
+
 	private List<GrauDedicacao> getGrausDedicacao(int task) {
 		final List<GrauDedicacao> grausDedicacao = Lists.newArrayList();
 		for (int employee = 0; employee < matrizDedicacao.length; employee++) {

@@ -68,5 +68,9 @@ public class Task {
 			previousTasks.add(task);
 		}
 	}
+
+	public boolean hasPreviousTasks() {
+		return this.previousTasks.isEmpty();
+	}
 	
 }
