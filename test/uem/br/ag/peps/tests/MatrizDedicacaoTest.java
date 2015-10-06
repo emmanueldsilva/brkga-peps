@@ -3,8 +3,6 @@ package uem.br.ag.peps.tests;
 import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ZERO;
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -108,12 +106,11 @@ public class MatrizDedicacaoTest {
 		matrizDedicacao.addGrauDedicacao(employee1, task3, 0.6);
 		
 		matrizDedicacao.calculaDuracoesTasks();
-		final List<Double> duracoesTask = matrizDedicacao.getDuracoesTask();
-		
-		assertEquals(Double.valueOf(6.666667), duracoesTask.get(task0.getNumero()));
-		assertEquals(Double.valueOf(3.0), duracoesTask.get(task1.getNumero()));
-		assertEquals(Double.valueOf(5.0), duracoesTask.get(task2.getNumero()));
-		assertEquals(Double.valueOf(0.7142857), duracoesTask.get(task3.getNumero()));
+
+		assertEquals(Double.valueOf(6.666667), matrizDedicacao.getRealizacaoTarefa(task0).getDuracao());
+		assertEquals(Double.valueOf(3.0), matrizDedicacao.getRealizacaoTarefa(task1).getDuracao());
+		assertEquals(Double.valueOf(5.0), matrizDedicacao.getRealizacaoTarefa(task2).getDuracao());
+		assertEquals(Double.valueOf(0.7142857), matrizDedicacao.getRealizacaoTarefa(task3).getDuracao());
 	}
 	
 	@Test

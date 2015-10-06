@@ -1,5 +1,7 @@
 package uem.br.ag.peps.genetico;
 
+import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ZERO;
+
 import java.math.BigDecimal;
 
 import uem.br.ag.peps.entidade.Task;
@@ -10,9 +12,14 @@ public class RealizacaoTarefa {
 	
 	private Double tempoFim;
 	
+	private Double duracao;
+	
 	private Task task;
 	
-	//TODO Colocar a duração da tarefa aqui.
+	public RealizacaoTarefa(Task task, Double duracao) {
+		this.task = task;
+		this.duracao = duracao;
+	}
 	
 	public RealizacaoTarefa(Task task, Double tempoInicio, Double tempoFim) {
 		this.tempoInicio = tempoInicio;
@@ -36,6 +43,14 @@ public class RealizacaoTarefa {
 		this.tempoFim = tempoFim;
 	}
 
+	public Double getDuracao() {
+		return duracao;
+	}
+
+	public void setDuracao(Double duracao) {
+		this.duracao = duracao;
+	}
+
 	public Task getTask() {
 		return task;
 	}
@@ -44,8 +59,18 @@ public class RealizacaoTarefa {
 		this.task = task;
 	}
 	
-	public static Double calculaTempoFim(Double tempoInicio, Double duracao) {
-		return BigDecimal.valueOf(tempoInicio).add(BigDecimal.valueOf(duracao)).doubleValue();
+	public RealizacaoTarefa buildRealizacaoTarefaInicial() {
+		this.tempoInicio = DOUBLE_ZERO;
+		this.tempoFim = duracao;
+		
+		return this;
+	}
+	
+	public RealizacaoTarefa buildRealizacaoTarefa(Double tempoInicio) {
+		this.tempoInicio = tempoInicio;
+		this.tempoFim = BigDecimal.valueOf(tempoInicio).add(BigDecimal.valueOf(duracao)).doubleValue();
+		
+		return this;
 	}
 	
 }
