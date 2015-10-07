@@ -3,6 +3,7 @@ package uem.br.ag.peps.genetico;
 import static java.math.BigDecimal.ZERO;
 import static java.math.MathContext.DECIMAL32;
 import static java.util.Comparator.comparingDouble;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ZERO;
 
 import java.math.BigDecimal;
@@ -132,17 +133,38 @@ public class MatrizDedicacao {
 	}
 	
 	private void calculaFasesRealizacaoProjeto() {
-		Double inicioFase = 0.0;
-		Double fimFase = calculaTempoTotalProjeto();
-		
-		for (RealizacaoTarefa realizacaoTarefa : realizacoesTarefas) {
-			Double tempoInicioRealizacao = realizacaoTarefa.getTempoInicio();
+		final Double tempoTotalProjeto = calculaTempoTotalProjeto();
+
+		Double inicioFase = DOUBLE_ZERO;
+		while (inicioFase < tempoTotalProjeto) {
+			final RealizacaoTarefa taskMaisCedoASerConcluida = getPrimeiraRealizacaoTarefaASerConcluida(inicioFase);
+			final List<RealizacaoTarefa> realizacoesConcomitantes = getRealizacoesTarefasConcomitantes(taskMaisCedoASerConcluida);
 			
-			if (tempoInicioRealizacao == inicioFase) {
-				
-			}
+			fasesProjeto.add(new FaseProjeto(inicioFase, taskMaisCedoASerConcluida.getTempoFim(), realizacoesConcomitantes));
+
+			inicioFase = taskMaisCedoASerConcluida.getTempoFim();
+		}
+	}
+
+	private RealizacaoTarefa getPrimeiraRealizacaoTarefaASerConcluida(Double tempoInicioFase) {
+		if (DOUBLE_ZERO.equals(tempoInicioFase)) {
+			return realizacoesTarefas.stream()
+									 .filter(rt -> DOUBLE_ZERO.equals(rt.getTempoInicio()))
+									 .findFirst()
+									 .get();
 		}
 		
+		return realizacoesTarefas.stream()
+								 .filter(rt -> rt.getTempoFim() > tempoInicioFase)
+								 .min(comparingDouble(RealizacaoTarefa::getTempoFim))
+								 .get();
+	}
+
+	private List<RealizacaoTarefa> getRealizacoesTarefasConcomitantes(RealizacaoTarefa taskMaisCedoASerConcluida) {
+		Double tempoFim = taskMaisCedoASerConcluida.getTempoFim();
+		return realizacoesTarefas.stream()
+								 .filter(rt -> rt.getTempoInicio() <= tempoFim && tempoFim <= rt.getTempoFim())
+								 .collect(toList());
 	}
 
 	private Double calculaTempoTotalProjeto() {
