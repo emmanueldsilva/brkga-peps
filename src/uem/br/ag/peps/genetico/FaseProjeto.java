@@ -6,20 +6,20 @@ import com.google.common.collect.Lists;
 
 public class FaseProjeto {
 
-	private List<RealizacaoTarefa> realizacoesConcomitantes;
+	private List<TaskScheduling> escalasConcomitantes;
 	
 	private Double inicioFase;
 	
 	private Double fimFase;
 	
-	public FaseProjeto(Double inicioFase, Double fimFase, List<RealizacaoTarefa> realizacoesConcomitantes) {
+	public FaseProjeto(Double inicioFase, Double fimFase, List<TaskScheduling> escalasConcomitantes) {
 		this.inicioFase = inicioFase;
 		this.fimFase = fimFase;
-		this.realizacoesConcomitantes = Lists.newArrayList(realizacoesConcomitantes);
+		this.escalasConcomitantes = Lists.newArrayList(escalasConcomitantes);
 	}
 
-	public List<RealizacaoTarefa> getRealizacoesConcomitantes() {
-		return realizacoesConcomitantes;
+	public List<TaskScheduling> getEscalasConcomitantes() {
+		return escalasConcomitantes;
 	}
 
 	public Double getInicioFase() {
@@ -30,4 +30,7 @@ public class FaseProjeto {
 		return fimFase;
 	}
 
+	public Double getDuracaoFase() {
+		return fimFase - inicioFase;
+	}
 }

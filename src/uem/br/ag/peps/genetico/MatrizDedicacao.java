@@ -24,7 +24,7 @@ public class MatrizDedicacao {
 	
 	private List<FaseProjeto> fasesProjeto = new ArrayList<FaseProjeto>();
 	
-	private List<RealizacaoTarefa> realizacoesTarefas = new ArrayList<RealizacaoTarefa>();
+	private List<TaskScheduling> escalaTarefas = new ArrayList<TaskScheduling>();
 
 	public MatrizDedicacao() {
 		int numeroEmpregados = ProblemaBuilder.getInstance().getEmployees().size();
@@ -51,7 +51,7 @@ public class MatrizDedicacao {
 			final BigDecimal esforcoTask = BigDecimal.valueOf(task.getCusto());
 			final BigDecimal duracaoTask = esforcoTask.divide(calculaSomatorioDedicacaoTask(taskNumero), DECIMAL32);
 			
-			realizacoesTarefas.add(taskNumero, new RealizacaoTarefa(task, duracaoTask.doubleValue()));
+			escalaTarefas.add(taskNumero, new TaskScheduling(task, duracaoTask.doubleValue()));
 		}
 	}
 
@@ -77,9 +77,8 @@ public class MatrizDedicacao {
 			final BigDecimal salario = BigDecimal.valueOf(ProblemaBuilder.getInstance().getEmployee(employee).getSalario());
 			
 			for (int task = 0; task < matrizDedicacao[employee].length; task++) {
-				RealizacaoTarefa realizacaoTarefa = getRealizacaoTarefa(ProblemaBuilder.getInstance().getTask(task));
-				
-				final BigDecimal duracaoTask = BigDecimal.valueOf(realizacaoTarefa.getDuracao());
+				final TaskScheduling taskScheduling = getTaskScheduling(ProblemaBuilder.getInstance().getTask(task));
+				final BigDecimal duracaoTask = BigDecimal.valueOf(taskScheduling.getDuracao());
 				final GrauDedicacao grauDedicacao = matrizDedicacao[employee][task];
 
 				final BigDecimal dedicacao = BigDecimal.valueOf(grauDedicacao.getValor());
@@ -122,14 +121,62 @@ public class MatrizDedicacao {
 		return true;
 	}
 	
+	/**
+	 * Restrição 3: não pode haver trabalho extra no projeto. Trabalho extra ocorre quando um ou mais empregados tem um nível de dedicação
+	 * maior que seu nível de dedicação máximo.
+	 * @return
+	 */
 	public boolean isSolucaoValidaPeranteRestricao3() {
 		for (Task task : ProblemaBuilder.getInstance().getTasks()) {
-			calculaPeriodoRealizacaoTarefa(task);
+			calculaTaskScheduling(task);
 		}
 		
 		calculaFasesRealizacaoProjeto();
 		
-		return true;
+		final Double esforcoExtraTotalProjeto = calculaEsforcoExtraTotalProjeto();
+		
+		return esforcoExtraTotalProjeto == DOUBLE_ZERO;
+	}
+
+	private Double calculaEsforcoExtraTotalProjeto() {
+		Double esforcoExtraTotalProjeto = 0.0;
+		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
+			esforcoExtraTotalProjeto += calculaEsforcoExtraFuncionario(employee);
+		}
+		
+		return esforcoExtraTotalProjeto;
+	}
+
+	private Double calculaEsforcoExtraFuncionario(Employee employee) {
+		Double esforcoExtraFuncionario = 0.0;
+		for (FaseProjeto faseProjeto : fasesProjeto) {
+			esforcoExtraFuncionario += calculaEsforcoExtraFuncionarioFase(employee, faseProjeto);
+		}
+		
+		return esforcoExtraFuncionario;
+	}
+
+	private Double calculaEsforcoExtraFuncionarioFase(Employee employee, FaseProjeto faseProjeto) {
+		final Double esforcoFase = calculaEsforcoFuncionarioFase(employee, faseProjeto);
+		if (esforcoFase > 1.0) {
+			return calculaEsforcoExtraFuncionarioProjeto(faseProjeto, esforcoFase);
+		}
+		
+		return DOUBLE_ZERO;
+	}
+
+	private Double calculaEsforcoExtraFuncionarioProjeto(FaseProjeto faseProjeto, Double esforcoFase) {
+		//(esforcoFase - 1.0) pois o valor limite do esforço é 1.0, acima disso é esforço extra
+		return (esforcoFase - 1.0) * faseProjeto.getDuracaoFase();  
+	}
+
+	private Double calculaEsforcoFuncionarioFase(Employee employee, FaseProjeto faseProjeto) {
+		Double esforcoFase = 0.0;
+		for (TaskScheduling taskScheduling : faseProjeto.getEscalasConcomitantes()) {
+			esforcoFase += getGrauDedicacao(employee, taskScheduling.getTask()).getValor();
+		}
+		
+		return esforcoFase;
 	}
 	
 	private void calculaFasesRealizacaoProjeto() {
@@ -137,72 +184,72 @@ public class MatrizDedicacao {
 
 		Double inicioFase = DOUBLE_ZERO;
 		while (inicioFase < tempoTotalProjeto) {
-			final RealizacaoTarefa taskMaisCedoASerConcluida = getPrimeiraRealizacaoTarefaASerConcluida(inicioFase);
-			final List<RealizacaoTarefa> realizacoesConcomitantes = getRealizacoesTarefasConcomitantes(taskMaisCedoASerConcluida);
+			final TaskScheduling taskMaisCedoASerConcluida = getPrimeiraEscalaTarefaASerConcluida(inicioFase);
+			final List<TaskScheduling> taskSchedulingConcomitantes = getTaskSchedulingConcomitantes(taskMaisCedoASerConcluida);
 			
-			fasesProjeto.add(new FaseProjeto(inicioFase, taskMaisCedoASerConcluida.getTempoFim(), realizacoesConcomitantes));
+			fasesProjeto.add(new FaseProjeto(inicioFase, taskMaisCedoASerConcluida.getTempoFim(), taskSchedulingConcomitantes));
 
 			inicioFase = taskMaisCedoASerConcluida.getTempoFim();
 		}
 	}
 
-	private RealizacaoTarefa getPrimeiraRealizacaoTarefaASerConcluida(Double tempoInicioFase) {
+	private TaskScheduling getPrimeiraEscalaTarefaASerConcluida(Double tempoInicioFase) {
 		if (DOUBLE_ZERO.equals(tempoInicioFase)) {
-			return realizacoesTarefas.stream()
+			return escalaTarefas.stream()
 									 .filter(rt -> DOUBLE_ZERO.equals(rt.getTempoInicio()))
 									 .findFirst()
 									 .get();
 		}
 		
-		return realizacoesTarefas.stream()
+		return escalaTarefas.stream()
 								 .filter(rt -> rt.getTempoFim() > tempoInicioFase)
-								 .min(comparingDouble(RealizacaoTarefa::getTempoFim))
+								 .min(comparingDouble(TaskScheduling::getTempoFim))
 								 .get();
 	}
 
-	private List<RealizacaoTarefa> getRealizacoesTarefasConcomitantes(RealizacaoTarefa taskMaisCedoASerConcluida) {
+	private List<TaskScheduling> getTaskSchedulingConcomitantes(TaskScheduling taskMaisCedoASerConcluida) {
 		Double tempoFim = taskMaisCedoASerConcluida.getTempoFim();
-		return realizacoesTarefas.stream()
+		return escalaTarefas.stream()
 								 .filter(rt -> rt.getTempoInicio() <= tempoFim && tempoFim <= rt.getTempoFim())
 								 .collect(toList());
 	}
 
 	private Double calculaTempoTotalProjeto() {
-		return realizacoesTarefas.stream()
+		return escalaTarefas.stream()
 								 .max((rt1, rt2) -> rt1.getTempoFim().compareTo(rt2.getTempoFim()))
 								 .get()
 								 .getTempoFim();
 	}
 
-	private RealizacaoTarefa calculaPeriodoRealizacaoTarefa(Task task) {
+	private TaskScheduling calculaTaskScheduling(Task task) {
 		if (!task.hasPreviousTasks()) {
-			return buildRealizacaoTarefaInicial(task);
+			return buildSchedulingTaskInicial(task);
 		} 
 
-		return buildRealizacaoTarefaDependente(task);
+		return buildSchedulingTaskDependente(task);
 	}
 
-	private RealizacaoTarefa buildRealizacaoTarefaInicial(Task task) {
-		return getRealizacaoTarefa(task).buildRealizacaoTarefaInicial();
+	private TaskScheduling buildSchedulingTaskInicial(Task task) {
+		return getTaskScheduling(task).buildSchedulingTaskInicial();
 	}
 	
-	private RealizacaoTarefa buildRealizacaoTarefaDependente(Task task) {
-		final List<RealizacaoTarefa> realizacoesPrecedentes = new ArrayList<RealizacaoTarefa>();
+	private TaskScheduling buildSchedulingTaskDependente(Task task) {
+		final List<TaskScheduling> schedulingPrecedentes = new ArrayList<TaskScheduling>();
 		for (Task previousTask : task.getPreviousTasks()) {
-			realizacoesPrecedentes.add(calculaPeriodoRealizacaoTarefa(previousTask));
+			schedulingPrecedentes.add(calculaTaskScheduling(previousTask));
 		}
 		
-		final RealizacaoTarefa realizacaoPrecedenteMaisTardia = realizacoesPrecedentes.stream()
-				.max(comparingDouble(RealizacaoTarefa::getTempoFim))
+		final TaskScheduling schedulingPrecedenteMaisTardio = schedulingPrecedentes.stream()
+				.max(comparingDouble(TaskScheduling::getTempoFim))
 				.get();
 		
-		final Double tempoInicio = realizacaoPrecedenteMaisTardia.getTempoFim();
-		final RealizacaoTarefa realizacaoTarefa = getRealizacaoTarefa(task);
-		return realizacaoTarefa.buildRealizacaoTarefa(tempoInicio);
+		final Double tempoInicio = schedulingPrecedenteMaisTardio.getTempoFim();
+		final TaskScheduling taskScheduling = getTaskScheduling(task);
+		return taskScheduling.buildTaskScheduling(tempoInicio);
 	}
 	
-	public RealizacaoTarefa getRealizacaoTarefa(Task task) {
-		return realizacoesTarefas.stream()
+	public TaskScheduling getTaskScheduling(Task task) {
+		return escalaTarefas.stream()
 								 .filter(r -> r.getTask().equals(task))
 								 .findFirst().get();
 	}
@@ -233,8 +280,8 @@ public class MatrizDedicacao {
 		return matrizDedicacao;
 	}
 
-	public List<RealizacaoTarefa> getRealizacoesTarefas() {
-		return realizacoesTarefas;
+	public List<TaskScheduling> getEscalaTarefas() {
+		return escalaTarefas;
 	}
 
 }

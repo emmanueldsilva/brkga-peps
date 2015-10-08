@@ -107,10 +107,10 @@ public class MatrizDedicacaoTest {
 		
 		matrizDedicacao.calculaDuracoesTasks();
 
-		assertEquals(Double.valueOf(6.666667), matrizDedicacao.getRealizacaoTarefa(task0).getDuracao());
-		assertEquals(Double.valueOf(3.0), matrizDedicacao.getRealizacaoTarefa(task1).getDuracao());
-		assertEquals(Double.valueOf(5.0), matrizDedicacao.getRealizacaoTarefa(task2).getDuracao());
-		assertEquals(Double.valueOf(0.7142857), matrizDedicacao.getRealizacaoTarefa(task3).getDuracao());
+		assertEquals(Double.valueOf(6.666667), matrizDedicacao.getTaskScheduling(task0).getDuracao());
+		assertEquals(Double.valueOf(3.0), matrizDedicacao.getTaskScheduling(task1).getDuracao());
+		assertEquals(Double.valueOf(5.0), matrizDedicacao.getTaskScheduling(task2).getDuracao());
+		assertEquals(Double.valueOf(0.7142857), matrizDedicacao.getTaskScheduling(task3).getDuracao());
 	}
 	
 	@Test
