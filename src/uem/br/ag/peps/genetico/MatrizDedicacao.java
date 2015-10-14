@@ -1,6 +1,8 @@
 package uem.br.ag.peps.genetico;
 
+import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
+import static java.math.BigDecimal.valueOf;
 import static java.math.MathContext.DECIMAL32;
 import static java.util.Comparator.comparingDouble;
 import static java.util.stream.Collectors.toList;
@@ -133,47 +135,51 @@ public class MatrizDedicacao {
 		
 		calculaFasesRealizacaoProjeto();
 		
-		final Double esforcoExtraTotalProjeto = calculaEsforcoExtraTotalProjeto();
+		final BigDecimal esforcoExtraTotalProjeto = calculaEsforcoExtraTotalProjeto();
 		
-		return esforcoExtraTotalProjeto == DOUBLE_ZERO;
+		return esforcoExtraTotalProjeto.compareTo(ZERO) == 0;
 	}
 
-	private Double calculaEsforcoExtraTotalProjeto() {
-		Double esforcoExtraTotalProjeto = 0.0;
+	private BigDecimal calculaEsforcoExtraTotalProjeto() {
+		BigDecimal esforcoExtraTotalProjeto = ZERO;
 		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
-			esforcoExtraTotalProjeto += calculaEsforcoExtraFuncionario(employee);
+			esforcoExtraTotalProjeto = esforcoExtraTotalProjeto.add(calculaEsforcoExtraFuncionario(employee));
 		}
 		
 		return esforcoExtraTotalProjeto;
 	}
 
-	private Double calculaEsforcoExtraFuncionario(Employee employee) {
-		Double esforcoExtraFuncionario = 0.0;
+	private BigDecimal calculaEsforcoExtraFuncionario(Employee employee) {
+		BigDecimal esforcoExtraFuncionario = ZERO;
 		for (FaseProjeto faseProjeto : fasesProjeto) {
-			esforcoExtraFuncionario += calculaEsforcoExtraFuncionarioFase(employee, faseProjeto);
+			esforcoExtraFuncionario = esforcoExtraFuncionario.add(calculaEsforcoExtraFuncionarioFase(employee, faseProjeto));
 		}
 		
 		return esforcoExtraFuncionario;
 	}
 
-	private Double calculaEsforcoExtraFuncionarioFase(Employee employee, FaseProjeto faseProjeto) {
-		final Double esforcoFase = calculaEsforcoFuncionarioFase(employee, faseProjeto);
-		if (esforcoFase > 1.0) {
+	private BigDecimal calculaEsforcoExtraFuncionarioFase(Employee employee, FaseProjeto faseProjeto) {
+		final BigDecimal esforcoFase = calculaEsforcoFuncionarioFase(employee, faseProjeto);
+		if (esforcoFase.compareTo(ONE) > 0) {
 			return calculaEsforcoExtraFuncionarioProjeto(faseProjeto, esforcoFase);
 		}
 		
-		return DOUBLE_ZERO;
+		return ZERO;
 	}
 
-	private Double calculaEsforcoExtraFuncionarioProjeto(FaseProjeto faseProjeto, Double esforcoFase) {
+	private BigDecimal calculaEsforcoExtraFuncionarioProjeto(FaseProjeto faseProjeto, BigDecimal esforcoFase) {
+		//(esforcoFase - 1.0) * faseProjeto.getDuracaoFase() 
 		//(esforcoFase - 1.0) pois o valor limite do esforço é 1.0, acima disso é esforço extra
-		return (esforcoFase - 1.0) * faseProjeto.getDuracaoFase();  
+		BigDecimal duracaoFase = BigDecimal.valueOf(faseProjeto.getDuracaoFase());
+ 		
+		return (esforcoFase.subtract(ONE)).multiply(duracaoFase);
 	}
 
-	private Double calculaEsforcoFuncionarioFase(Employee employee, FaseProjeto faseProjeto) {
-		Double esforcoFase = 0.0;
+	private BigDecimal calculaEsforcoFuncionarioFase(Employee employee, FaseProjeto faseProjeto) {
+		BigDecimal esforcoFase = BigDecimal.ZERO;
 		for (TaskScheduling taskScheduling : faseProjeto.getEscalasConcomitantes()) {
-			esforcoFase += getGrauDedicacao(employee, taskScheduling.getTask()).getValor();
+			final Double valorGrauDedicacao = getGrauDedicacao(employee, taskScheduling.getTask()).getValor();
+			esforcoFase = esforcoFase.add(valueOf(valorGrauDedicacao));
 		}
 		
 		return esforcoFase;
@@ -186,6 +192,7 @@ public class MatrizDedicacao {
 		while (inicioFase < tempoTotalProjeto) {
 			final TaskScheduling taskMaisCedoASerConcluida = getPrimeiraEscalaTarefaASerConcluida(inicioFase);
 			final List<TaskScheduling> taskSchedulingConcomitantes = getTaskSchedulingConcomitantes(taskMaisCedoASerConcluida);
+			taskSchedulingConcomitantes.add(taskMaisCedoASerConcluida);
 			
 			fasesProjeto.add(new FaseProjeto(inicioFase, taskMaisCedoASerConcluida.getTempoFim(), taskSchedulingConcomitantes));
 
@@ -196,29 +203,29 @@ public class MatrizDedicacao {
 	private TaskScheduling getPrimeiraEscalaTarefaASerConcluida(Double tempoInicioFase) {
 		if (DOUBLE_ZERO.equals(tempoInicioFase)) {
 			return escalaTarefas.stream()
-									 .filter(rt -> DOUBLE_ZERO.equals(rt.getTempoInicio()))
-									 .findFirst()
-									 .get();
+                                .filter(rt -> DOUBLE_ZERO.equals(rt.getTempoInicio()))
+                                .findFirst()
+                                .get();
 		}
 		
 		return escalaTarefas.stream()
-								 .filter(rt -> rt.getTempoFim() > tempoInicioFase)
-								 .min(comparingDouble(TaskScheduling::getTempoFim))
-								 .get();
+                            .filter(rt -> rt.getTempoFim() > tempoInicioFase)
+                            .min(comparingDouble(TaskScheduling::getTempoFim))
+                            .get();
 	}
 
 	private List<TaskScheduling> getTaskSchedulingConcomitantes(TaskScheduling taskMaisCedoASerConcluida) {
 		Double tempoFim = taskMaisCedoASerConcluida.getTempoFim();
 		return escalaTarefas.stream()
-								 .filter(rt -> rt.getTempoInicio() <= tempoFim && tempoFim <= rt.getTempoFim())
-								 .collect(toList());
+                            .filter(rt -> rt.getTempoInicio() < tempoFim && tempoFim < rt.getTempoFim())
+                            .collect(toList());
 	}
 
 	private Double calculaTempoTotalProjeto() {
 		return escalaTarefas.stream()
-								 .max((rt1, rt2) -> rt1.getTempoFim().compareTo(rt2.getTempoFim()))
-								 .get()
-								 .getTempoFim();
+                            .max((rt1, rt2) -> rt1.getTempoFim().compareTo(rt2.getTempoFim()))
+                            .get()
+                            .getTempoFim();
 	}
 
 	private TaskScheduling calculaTaskScheduling(Task task) {
@@ -250,8 +257,8 @@ public class MatrizDedicacao {
 	
 	public TaskScheduling getTaskScheduling(Task task) {
 		return escalaTarefas.stream()
-								 .filter(r -> r.getTask().equals(task))
-								 .findFirst().get();
+                            .filter(r -> r.getTask().equals(task))
+                            .findFirst().get();
 	}
 
 	private List<GrauDedicacao> getGrausDedicacao(int task) {
@@ -265,11 +272,11 @@ public class MatrizDedicacao {
 	
 	private List<Skill> getSkillsDosEmployeesQueAtuamNaTask(int task) {
 		return getGrausDedicacao(task).stream()
-									  .filter(g -> g.getValor() > DOUBLE_ZERO)
-									  .map(g -> g.getEmployee())
-									  .flatMap(e -> e.getSkills().stream())
-									  .distinct()
-									  .collect(Collectors.toList());
+                                      .filter(g -> g.getValor() > DOUBLE_ZERO)
+                                      .map(g -> g.getEmployee())
+                                      .flatMap(e -> e.getSkills().stream())
+                                      .distinct()
+                                      .collect(Collectors.toList());
 	}
 	
 	public GrauDedicacao getGrauDedicacao(Employee employee, Task task) {

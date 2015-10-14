@@ -70,7 +70,7 @@ public class Task {
 	}
 
 	public boolean hasPreviousTasks() {
-		return this.previousTasks.isEmpty();
+		return !this.previousTasks.isEmpty();
 	}
 	
 }
