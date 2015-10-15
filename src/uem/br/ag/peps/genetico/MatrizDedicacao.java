@@ -6,6 +6,7 @@ import static java.math.BigDecimal.valueOf;
 import static java.math.MathContext.DECIMAL32;
 import static java.util.Comparator.comparingDouble;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ZERO;
 
 import java.math.BigDecimal;
@@ -44,6 +45,12 @@ public class MatrizDedicacao {
 		this.matrizDedicacao[employee.getCodigo()][task.getNumero()] = grauDedicacao;
 	}
 	
+	public void efetuaCalculosProjeto() {
+		calculaDuracoesTasks();
+		calculaTaskScheduling();
+		calculaFasesRealizacaoProjeto();
+	}
+	
 	/**
 	 * tjduracao
 	 */
@@ -54,6 +61,12 @@ public class MatrizDedicacao {
 			final BigDecimal duracaoTask = esforcoTask.divide(calculaSomatorioDedicacaoTask(taskNumero), DECIMAL32);
 			
 			escalaTarefas.add(taskNumero, new TaskScheduling(task, duracaoTask.doubleValue()));
+		}
+	}
+	
+	public void calculaTaskScheduling() {
+		for (Task task : ProblemaBuilder.getInstance().getTasks()) {
+			calculaTaskScheduling(task);
 		}
 	}
 
@@ -129,9 +142,7 @@ public class MatrizDedicacao {
 	 * @return
 	 */
 	public boolean isSolucaoValidaPeranteRestricao3() {
-		for (Task task : ProblemaBuilder.getInstance().getTasks()) {
-			calculaTaskScheduling(task);
-		}
+		calculaTaskScheduling();
 		
 		calculaFasesRealizacaoProjeto();
 		
@@ -185,7 +196,7 @@ public class MatrizDedicacao {
 		return esforcoFase;
 	}
 	
-	private void calculaFasesRealizacaoProjeto() {
+	public void calculaFasesRealizacaoProjeto() {
 		final Double tempoTotalProjeto = calculaTempoTotalProjeto();
 
 		Double inicioFase = DOUBLE_ZERO;
@@ -221,7 +232,7 @@ public class MatrizDedicacao {
                             .collect(toList());
 	}
 
-	private Double calculaTempoTotalProjeto() {
+	public Double calculaTempoTotalProjeto() {
 		return escalaTarefas.stream()
                             .max((rt1, rt2) -> rt1.getTempoFim().compareTo(rt2.getTempoFim()))
                             .get()
@@ -264,7 +275,7 @@ public class MatrizDedicacao {
 	private List<GrauDedicacao> getGrausDedicacao(int task) {
 		final List<GrauDedicacao> grausDedicacao = Lists.newArrayList();
 		for (int employee = 0; employee < matrizDedicacao.length; employee++) {
-			grausDedicacao.add(employee, matrizDedicacao[employee][task]);
+			grausDedicacao.add(employee, getGrauDedicacao(employee, task));
 		}
 		
 		return grausDedicacao;
@@ -280,7 +291,24 @@ public class MatrizDedicacao {
 	}
 	
 	public GrauDedicacao getGrauDedicacao(Employee employee, Task task) {
-		return matrizDedicacao[employee.getCodigo()][task.getNumero()];
+		return getGrauDedicacao(employee.getCodigo(), task.getNumero());
+	}
+	
+	private GrauDedicacao getGrauDedicacao(int codigoEmployee, int taskNumber) {
+		return matrizDedicacao[codigoEmployee][taskNumber];
+	}
+	
+	public String toBinaryString() {
+		String matrizDedicacaoBinaria = EMPTY;
+		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
+			for (Task task: ProblemaBuilder.getInstance().getTasks()) {
+				final GrauDedicacao grauDedicacao = getGrauDedicacao(employee, task);
+				
+				matrizDedicacaoBinaria += grauDedicacao.getValorAsBinary();
+			}
+		}
+		
+		return matrizDedicacaoBinaria;
 	}
 
 	public GrauDedicacao[][] getMatrizDedicacao() {
@@ -289,6 +317,10 @@ public class MatrizDedicacao {
 
 	public List<TaskScheduling> getEscalaTarefas() {
 		return escalaTarefas;
+	}
+	
+	public List<FaseProjeto> getFasesProjeto() {
+		return fasesProjeto;
 	}
 
 }

@@ -105,7 +105,7 @@ public class MatrizDedicacaoTest {
 		matrizDedicacao.addGrauDedicacao(employee1, task2, 0.7);
 		matrizDedicacao.addGrauDedicacao(employee1, task3, 0.6);
 		
-		matrizDedicacao.calculaDuracoesTasks();
+		matrizDedicacao.efetuaCalculosProjeto();
 
 		assertEquals(Double.valueOf(6.666667), matrizDedicacao.getTaskScheduling(task0).getDuracao());
 		assertEquals(Double.valueOf(3.0), matrizDedicacao.getTaskScheduling(task1).getDuracao());
@@ -138,9 +138,63 @@ public class MatrizDedicacaoTest {
 		// e0 [	0.4		1.0		0.3		0.8	]
 		// e1 [	0.2		0.0		0.7		0.6	]
 		
-		matrizDedicacao.calculaDuracoesTasks();
+		matrizDedicacao.efetuaCalculosProjeto();
 		
 		assertEquals(Double.valueOf(33738.09572), matrizDedicacao.calculaCustoProjeto());
+	}
+	
+	@Test
+	public void testCalculoTempoTotalProjeto() {
+		final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
+		
+		final Task task0 = problemaBuilder.getTask(0);
+		final Task task1 = problemaBuilder.getTask(1);
+		final Task task2 = problemaBuilder.getTask(2);
+		final Task task3 = problemaBuilder.getTask(3);
+		
+		final Employee employee0 = problemaBuilder.getEmployee(0);
+		matrizDedicacao.addGrauDedicacao(employee0, task0, 0.4);
+		matrizDedicacao.addGrauDedicacao(employee0, task1, 1.0);
+		matrizDedicacao.addGrauDedicacao(employee0, task2, 0.3);
+		matrizDedicacao.addGrauDedicacao(employee0, task3, 0.8);
+		
+		final Employee employee1 = problemaBuilder.getEmployee(1);
+		matrizDedicacao.addGrauDedicacao(employee1, task0, 0.2);
+		matrizDedicacao.addGrauDedicacao(employee1, task1, 0.0);
+		matrizDedicacao.addGrauDedicacao(employee1, task2, 0.7);
+		matrizDedicacao.addGrauDedicacao(employee1, task3, 0.6);
+		
+		// 		t0		t1		t2		t3	
+		// e0 [	0.4		1.0		0.3		0.8	]
+		// e1 [	0.2		0.0		0.7		0.6	]
+		
+		matrizDedicacao.efetuaCalculosProjeto();
+		
+		assertEquals(Double.valueOf(15.3809527), matrizDedicacao.calculaTempoTotalProjeto());
+	}
+	
+	@Test
+	public void testMatrizDedicacaoBinaryString() {
+		final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
+		
+		final Task task0 = problemaBuilder.getTask(0);
+		final Task task1 = problemaBuilder.getTask(1);
+		final Task task2 = problemaBuilder.getTask(2);
+		final Task task3 = problemaBuilder.getTask(3);
+		
+		final Employee employee0 = problemaBuilder.getEmployee(0);
+		matrizDedicacao.addGrauDedicacao(employee0, task0, 0.43);
+		matrizDedicacao.addGrauDedicacao(employee0, task1, 1.0);
+		matrizDedicacao.addGrauDedicacao(employee0, task2, 0.29);
+		matrizDedicacao.addGrauDedicacao(employee0, task3, 0.86);
+		
+		final Employee employee1 = problemaBuilder.getEmployee(1);
+		matrizDedicacao.addGrauDedicacao(employee1, task0, 0.29);
+		matrizDedicacao.addGrauDedicacao(employee1, task1, 0.0);
+		matrizDedicacao.addGrauDedicacao(employee1, task2, 0.71);
+		matrizDedicacao.addGrauDedicacao(employee1, task3, 0.57);
+		
+		assertEquals("011111010110010000101100", matrizDedicacao.toBinaryString());
 	}
 	
 	@Test
@@ -164,7 +218,7 @@ public class MatrizDedicacaoTest {
 		matrizDedicacao.addGrauDedicacao(employee1, task2, 0.7);
 		matrizDedicacao.addGrauDedicacao(employee1, task3, 0.6);
 		
-		matrizDedicacao.calculaDuracoesTasks();
+		matrizDedicacao.efetuaCalculosProjeto();
 		
 		Assert.assertTrue("Deve ser uma solução factível, pois todas as tarefas possuem certa dedicação", 
 				matrizDedicacao.isSolucaoValidaPeranteRestricao1());
@@ -247,7 +301,7 @@ public class MatrizDedicacaoTest {
 		matrizDedicacao.addGrauDedicacao(employee1, task2, 0.7);
 		matrizDedicacao.addGrauDedicacao(employee1, task3, 0.6);
 		
-		matrizDedicacao.calculaDuracoesTasks();
+		matrizDedicacao.efetuaCalculosProjeto();
 		
 		Assert.assertFalse("Não deve ser uma solução factível, pois o esforço para realizar a tarefa 2 ultrapassa o esforço limite.", 
 				matrizDedicacao.isSolucaoValidaPeranteRestricao3());
