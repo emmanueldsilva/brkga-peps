@@ -140,7 +140,7 @@ public class MatrizDedicacaoTest {
 		
 		matrizDedicacao.efetuaCalculosProjeto();
 		
-		assertEquals(Double.valueOf(33738.09572), matrizDedicacao.calculaCustoProjeto());
+		assertEquals(Double.valueOf(33738.09572), matrizDedicacao.getCustoTotalProjeto());
 	}
 	
 	@Test
@@ -170,7 +170,7 @@ public class MatrizDedicacaoTest {
 		
 		matrizDedicacao.efetuaCalculosProjeto();
 		
-		assertEquals(Double.valueOf(15.3809527), matrizDedicacao.calculaTempoTotalProjeto());
+		assertEquals(Double.valueOf(15.3809527), matrizDedicacao.getDuracaoTotalProjeto());
 	}
 	
 	@Test
@@ -253,6 +253,8 @@ public class MatrizDedicacaoTest {
 		
 		Assert.assertFalse("Não deve ser uma solução factível, pois a tarefa 2 está sem dedicação de nenhum empregado.", 
 				matrizDedicacao.isSolucaoValidaPeranteRestricao1());
+
+		Assert.assertEquals(1, matrizDedicacao.getTarefasNaoRealizadas());
 	}
 	
 	@Test
@@ -278,6 +280,8 @@ public class MatrizDedicacaoTest {
 		
 		Assert.assertFalse("Não deve ser uma solução factível, pois tarefa 1 não possui empregados qualificados para realizá-las", 
 				matrizDedicacao.isSolucaoValidaPeranteRestricao2());
+		
+		Assert.assertEquals(1, matrizDedicacao.getHabilidadesNecessarias());
 	}
 	
 	@Test
@@ -305,5 +309,7 @@ public class MatrizDedicacaoTest {
 		
 		Assert.assertFalse("Não deve ser uma solução factível, pois o esforço para realizar a tarefa 2 ultrapassa o esforço limite.", 
 				matrizDedicacao.isSolucaoValidaPeranteRestricao3());
+		
+		Assert.assertEquals(Double.valueOf(0.5), matrizDedicacao.getTrabalhoExtra());
 	}
 }

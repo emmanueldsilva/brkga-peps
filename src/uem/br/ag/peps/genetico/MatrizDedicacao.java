@@ -1,5 +1,6 @@
 package uem.br.ag.peps.genetico;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 import static java.math.BigDecimal.valueOf;
@@ -25,9 +26,19 @@ public class MatrizDedicacao {
 	
 	private GrauDedicacao[][] matrizDedicacao = null;
 	
-	private List<FaseProjeto> fasesProjeto = new ArrayList<FaseProjeto>();
+	private List<FaseProjeto> fasesProjeto = newArrayList();
 	
-	private List<TaskScheduling> escalaTarefas = new ArrayList<TaskScheduling>();
+	private List<TaskScheduling> escalaTarefas = newArrayList();
+	
+	private Double custoTotalProjeto;
+	
+	private Double duracaoTotalProjeto;
+	
+	private int tarefasNaoRealizadas;
+	
+	private int habilidadesNecessarias;
+	
+	private Double trabalhoExtra;
 
 	public MatrizDedicacao() {
 		int numeroEmpregados = ProblemaBuilder.getInstance().getEmployees().size();
@@ -49,18 +60,20 @@ public class MatrizDedicacao {
 		calculaDuracoesTasks();
 		calculaTaskScheduling();
 		calculaFasesRealizacaoProjeto();
+		calculaCustoProjeto();
+		calculaEsforcoExtraTotalProjeto();
 	}
 	
 	/**
 	 * tjduracao
 	 */
 	public void calculaDuracoesTasks() {
-		for (int taskNumero = 0; taskNumero < matrizDedicacao[0].length; taskNumero++) {
-			final Task task = ProblemaBuilder.getInstance().getTask(taskNumero);
+		escalaTarefas = Lists.newArrayList();
+		for (Task task : ProblemaBuilder.getInstance().getTasks()) {
 			final BigDecimal esforcoTask = BigDecimal.valueOf(task.getCusto());
-			final BigDecimal duracaoTask = esforcoTask.divide(calculaSomatorioDedicacaoTask(taskNumero), DECIMAL32);
+			final BigDecimal duracaoTask = esforcoTask.divide(calculaSomatorioDedicacaoTask(task), DECIMAL32);
 			
-			escalaTarefas.add(taskNumero, new TaskScheduling(task, duracaoTask.doubleValue()));
+			escalaTarefas.add(task.getNumero(), new TaskScheduling(task, duracaoTask.doubleValue()));
 		}
 	}
 	
@@ -71,14 +84,9 @@ public class MatrizDedicacao {
 	}
 
 	public BigDecimal calculaSomatorioDedicacaoTask(Task task) {
-		return calculaSomatorioDedicacaoTask(task.getNumero());
-	}
-	
-	private BigDecimal calculaSomatorioDedicacaoTask(int task) {
 		BigDecimal somatorioDedicacaoTask = BigDecimal.ZERO;
-		
-		for (int employee = 0; employee < matrizDedicacao.length; employee++) {
-			final GrauDedicacao grauDedicacao = matrizDedicacao[employee][task];
+		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
+			final GrauDedicacao grauDedicacao = getGrauDedicacao(employee, task);
 			somatorioDedicacaoTask = somatorioDedicacaoTask.add(BigDecimal.valueOf(grauDedicacao.getValor()));
 		}
 		
@@ -87,21 +95,20 @@ public class MatrizDedicacao {
 	
 	public Double calculaCustoProjeto() {
 		BigDecimal custoProjeto = BigDecimal.ZERO;
-		
-		for (int employee = 0; employee < matrizDedicacao.length; employee++) {
-			final BigDecimal salario = BigDecimal.valueOf(ProblemaBuilder.getInstance().getEmployee(employee).getSalario());
+		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
+			final BigDecimal salario = BigDecimal.valueOf(employee.getSalario());
 			
-			for (int task = 0; task < matrizDedicacao[employee].length; task++) {
-				final TaskScheduling taskScheduling = getTaskScheduling(ProblemaBuilder.getInstance().getTask(task));
+			for (Task task : ProblemaBuilder.getInstance().getTasks()) {
+				final TaskScheduling taskScheduling = getTaskScheduling(task);
 				final BigDecimal duracaoTask = BigDecimal.valueOf(taskScheduling.getDuracao());
-				final GrauDedicacao grauDedicacao = matrizDedicacao[employee][task];
+				final GrauDedicacao grauDedicacao = getGrauDedicacao(employee, task);
 
 				final BigDecimal dedicacao = BigDecimal.valueOf(grauDedicacao.getValor());
 				custoProjeto = custoProjeto.add(salario.multiply(dedicacao).multiply(duracaoTask));
 			}
 		}
 		
-		return custoProjeto.doubleValue();
+		return this.custoTotalProjeto = custoProjeto.doubleValue();
 	}
 	
 	/**
@@ -109,13 +116,18 @@ public class MatrizDedicacao {
 	 * @return
 	 */
 	public boolean isSolucaoValidaPeranteRestricao1() {
-		for (int task = 0; task < matrizDedicacao[0].length; task++) {
+		return calculaNumeroTarefasNaoRealizadas() == 0;
+	}
+
+	private int calculaNumeroTarefasNaoRealizadas() {
+		int numeroTarefasNaoRealizadas = 0; 
+		for (Task task: ProblemaBuilder.getInstance().getTasks()) {
 			if (calculaSomatorioDedicacaoTask(task).compareTo(ZERO) <= 0) {
-				return false;
+				numeroTarefasNaoRealizadas++;
 			}
 		}
 		
-		return true;
+		return this.tarefasNaoRealizadas = numeroTarefasNaoRealizadas;
 	}
 	
 	/**
@@ -124,11 +136,12 @@ public class MatrizDedicacao {
 	 * @return
 	 */
 	public boolean isSolucaoValidaPeranteRestricao2() {
-		for (int task = 0; task < matrizDedicacao[0].length; task++) {
+		for (Task task : ProblemaBuilder.getInstance().getTasks()) {
 			final List<Skill> employeesSkills = getSkillsDosEmployeesQueAtuamNaTask(task);
-			final List<Skill> taskSkills = ProblemaBuilder.getInstance().getTask(task).getSkills();
+			final List<Skill> taskSkills = task.getSkills();
 			employeesSkills.retainAll(taskSkills);
 			
+			this.habilidadesNecessarias = Math.abs(employeesSkills.size() - taskSkills.size());
 			
 			if (!employeesSkills.equals(taskSkills)) return false;
 		}
@@ -142,22 +155,18 @@ public class MatrizDedicacao {
 	 * @return
 	 */
 	public boolean isSolucaoValidaPeranteRestricao3() {
-		calculaTaskScheduling();
-		
-		calculaFasesRealizacaoProjeto();
-		
-		final BigDecimal esforcoExtraTotalProjeto = calculaEsforcoExtraTotalProjeto();
+		final BigDecimal esforcoExtraTotalProjeto = valueOf(calculaEsforcoExtraTotalProjeto());
 		
 		return esforcoExtraTotalProjeto.compareTo(ZERO) == 0;
 	}
 
-	private BigDecimal calculaEsforcoExtraTotalProjeto() {
+	private Double calculaEsforcoExtraTotalProjeto() {
 		BigDecimal esforcoExtraTotalProjeto = ZERO;
 		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
 			esforcoExtraTotalProjeto = esforcoExtraTotalProjeto.add(calculaEsforcoExtraFuncionario(employee));
 		}
 		
-		return esforcoExtraTotalProjeto;
+		return this.trabalhoExtra = esforcoExtraTotalProjeto.doubleValue();
 	}
 
 	private BigDecimal calculaEsforcoExtraFuncionario(Employee employee) {
@@ -197,10 +206,11 @@ public class MatrizDedicacao {
 	}
 	
 	public void calculaFasesRealizacaoProjeto() {
-		final Double tempoTotalProjeto = calculaTempoTotalProjeto();
+		this.duracaoTotalProjeto = calculaTempoTotalProjeto();
 
 		Double inicioFase = DOUBLE_ZERO;
-		while (inicioFase < tempoTotalProjeto) {
+		fasesProjeto = newArrayList();
+		while (inicioFase < duracaoTotalProjeto) {
 			final TaskScheduling taskMaisCedoASerConcluida = getPrimeiraEscalaTarefaASerConcluida(inicioFase);
 			final List<TaskScheduling> taskSchedulingConcomitantes = getTaskSchedulingConcomitantes(taskMaisCedoASerConcluida);
 			taskSchedulingConcomitantes.add(taskMaisCedoASerConcluida);
@@ -272,16 +282,16 @@ public class MatrizDedicacao {
                             .findFirst().get();
 	}
 
-	private List<GrauDedicacao> getGrausDedicacao(int task) {
+	private List<GrauDedicacao> getGrausDedicacao(Task task) {
 		final List<GrauDedicacao> grausDedicacao = Lists.newArrayList();
-		for (int employee = 0; employee < matrizDedicacao.length; employee++) {
-			grausDedicacao.add(employee, getGrauDedicacao(employee, task));
+		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
+			grausDedicacao.add(employee.getCodigo(), getGrauDedicacao(employee, task));
 		}
 		
 		return grausDedicacao;
 	}
 	
-	private List<Skill> getSkillsDosEmployeesQueAtuamNaTask(int task) {
+	private List<Skill> getSkillsDosEmployeesQueAtuamNaTask(Task task) {
 		return getGrausDedicacao(task).stream()
                                       .filter(g -> g.getValor() > DOUBLE_ZERO)
                                       .map(g -> g.getEmployee())
@@ -323,4 +333,24 @@ public class MatrizDedicacao {
 		return fasesProjeto;
 	}
 
+	public Double getCustoTotalProjeto() {
+		return custoTotalProjeto;
+	}
+
+	public Double getDuracaoTotalProjeto() {
+		return duracaoTotalProjeto;
+	}
+
+	public int getTarefasNaoRealizadas() {
+		return tarefasNaoRealizadas;
+	}
+
+	public int getHabilidadesNecessarias() {
+		return habilidadesNecessarias;
+	}
+
+	public Double getTrabalhoExtra() {
+		return trabalhoExtra;
+	}
+	
 }
