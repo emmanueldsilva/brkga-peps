@@ -71,7 +71,13 @@ public class MatrizDedicacao {
 		escalaTarefas = Lists.newArrayList();
 		for (Task task : ProblemaBuilder.getInstance().getTasks()) {
 			final BigDecimal esforcoTask = BigDecimal.valueOf(task.getCusto());
-			final BigDecimal duracaoTask = esforcoTask.divide(calculaSomatorioDedicacaoTask(task), DECIMAL32);
+			
+			final BigDecimal somatorioDedicaoTask = calculaSomatorioDedicacaoTask(task);
+			
+			BigDecimal duracaoTask = ZERO;
+			if (somatorioDedicaoTask.compareTo(ZERO) > 0) {
+				duracaoTask = esforcoTask.divide(somatorioDedicaoTask, DECIMAL32);
+			}			
 			
 			escalaTarefas.add(task.getNumero(), new TaskScheduling(task, duracaoTask.doubleValue()));
 		}

@@ -16,7 +16,11 @@ public class Individuo {
 	private Boolean factivel;
 	
 	public Individuo() {
-		this.matrizDedicacao = new MatrizDedicacao();
+		this(new MatrizDedicacao());
+	}
+	
+	public Individuo(MatrizDedicacao matrizDedicacao) {
+		this.matrizDedicacao = matrizDedicacao;
 		this.valorFitness = null;
 		this.factivel = null;
 	}
@@ -43,7 +47,7 @@ public class Individuo {
 	}
 	
 	private BigDecimal calculaValorFitnessSolucaoNaoFactivel(ParametrosPesos parametrosPesos) {
-		return ONE.divide(calculaCusto(parametrosPesos).add(calculaPenalidade(parametrosPesos), DECIMAL32));
+		return ONE.divide(calculaCusto(parametrosPesos).add(calculaPenalidade(parametrosPesos)), DECIMAL32);
 	}
 
 	private BigDecimal calculaCusto(ParametrosPesos parametrosPesos) {
