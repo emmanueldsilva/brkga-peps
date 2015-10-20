@@ -1,6 +1,5 @@
 package uem.br.ag.peps.genetico;
 
-
 public class ParametrosPesos {
 	
 	private Double pesoCustoProjeto;
@@ -14,53 +13,55 @@ public class ParametrosPesos {
 	private Double pesoHabilidadesNecessarias;
 	
 	private Double pesoTrabalhoExtra;
+	
+	public static ParametrosPesos instance;
+	
+	private synchronized static void newInstance() {
+		instance = new ParametrosPesos();
+	}
+
+	public static ParametrosPesos getInstance() {
+		if (instance == null) {
+			newInstance();
+		}
+		
+		return instance;
+	}
+
+	private ParametrosPesos() {	}
+	
+	public void atribuiParametros(Double pesoCustoProjeto, Double pesoDuracaoProjeto, Double pesoPenalidade, 
+			Double pesoTrabalhoNaoRealizado, Double pesoHabilidadesNecessarias, Double pesoTrabalhoExtra) {
+		this.pesoCustoProjeto = pesoCustoProjeto;
+		this.pesoDuracaoProjeto = pesoDuracaoProjeto;
+		this.pesoPenalidade = pesoPenalidade;
+		this.pesoTrabalhoNaoRealizado = pesoTrabalhoNaoRealizado;
+		this.pesoHabilidadesNecessarias = pesoHabilidadesNecessarias;
+		this.pesoTrabalhoExtra = pesoTrabalhoExtra;
+	}
 
 	public Double getPesoCustoProjeto() {
 		return pesoCustoProjeto;
-	}
-
-	public void setPesoCustoProjeto(Double pesoCustoProjeto) {
-		this.pesoCustoProjeto = pesoCustoProjeto;
 	}
 
 	public Double getPesoDuracaoProjeto() {
 		return pesoDuracaoProjeto;
 	}
 
-	public void setPesoDuracaoProjeto(Double pesoDuracaoProjeto) {
-		this.pesoDuracaoProjeto = pesoDuracaoProjeto;
-	}
-
 	public Double getPesoPenalidade() {
 		return pesoPenalidade;
-	}
-
-	public void setPesoPenalidade(Double pesoPenalidade) {
-		this.pesoPenalidade = pesoPenalidade;
 	}
 
 	public Double getPesoTrabalhoNaoRealizado() {
 		return pesoTrabalhoNaoRealizado;
 	}
 
-	public void setPesoTrabalhoNaoRealizado(Double pesoTrabalhoNaoRealizado) {
-		this.pesoTrabalhoNaoRealizado = pesoTrabalhoNaoRealizado;
-	}
-
 	public Double getPesoHabilidadesNecessarias() {
 		return pesoHabilidadesNecessarias;
 	}
 
-	public void setPesoHabilidadesNecessarias(Double pesoHabilidadesNecessarias) {
-		this.pesoHabilidadesNecessarias = pesoHabilidadesNecessarias;
-	}
-
 	public Double getPesoTrabalhoExtra() {
 		return pesoTrabalhoExtra;
-	}
-
-	public void setPesoTrabalhoExtra(Double pesoTrabalhoExtra) {
-		this.pesoTrabalhoExtra = pesoTrabalhoExtra;
 	}
 
 }

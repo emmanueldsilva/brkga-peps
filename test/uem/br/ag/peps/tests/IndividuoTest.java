@@ -16,13 +16,24 @@ import uem.br.ag.peps.problema.ProblemaBuilder;
 
 public class IndividuoTest {
 
+	private static final Double PESO_CUSTO_PROJETO = 0.4;
+	private static final Double PESO_DURACAO_PROJETO = 0.6;
+	private static final Double PESO_PENALIDADE = 100.0;
+	private static final Double PESO_TRABALHO_EXTRA = 1.0;
+	private static final Double PESO_TRABALHO_NAO_REALIZADO = 1.0;
+	private static final Double PESO_HABILIDADES_NECESSARIAS = 1.0;
+
 	private final ProblemaBuilder problemaBuilder = ProblemaBuilder.getInstance();
+	
+	private final ParametrosPesos parametrosPesos = ParametrosPesos.getInstance();
 	
 	@Before
 	public void before() {
 		problemaBuilder.clear();
 		problemaBuilder.setParametrosPath("/home/emmanuel/projetos/ag-peps/test-resources/test-intances/peps-4-tasks-2-employees.conf");
 		problemaBuilder.readParametrosArquivo();
+		
+		buildParametrosPesos();
 	}
 	
 	@Test
@@ -52,7 +63,7 @@ public class IndividuoTest {
 		individuo.verificaFactibilidade();
 		assertTrue("Indivíduo é uma solução factível", individuo.isFactivel());
 		
-		individuo.calculaValorFitness(buildParametrosPesos());
+		individuo.calculaValorFitness();
 		assertEquals(Double.valueOf(0.00007471235), individuo.getValorFitness());
 	}
 	
@@ -83,7 +94,7 @@ public class IndividuoTest {
 		individuo.verificaFactibilidade();
 		assertFalse("Indivíduo não é uma solução factível", individuo.isFactivel());
 		
-		individuo.calculaValorFitness(buildParametrosPesos());
+		individuo.calculaValorFitness();
 		assertEquals(Double.valueOf(0.000101175), individuo.getValorFitness());
 	}
 	
@@ -114,7 +125,7 @@ public class IndividuoTest {
 		individuo.verificaFactibilidade();
 		assertFalse("Indivíduo não é uma solução factível", individuo.isFactivel());
 		
-		individuo.calculaValorFitness(buildParametrosPesos());
+		individuo.calculaValorFitness();
 		assertEquals(Double.valueOf(0.00008139565), individuo.getValorFitness());
 	}
 	
@@ -145,20 +156,17 @@ public class IndividuoTest {
 		individuo.verificaFactibilidade();
 		assertFalse("Indivíduo não é uma solução factível", individuo.isFactivel());
 		
-		individuo.calculaValorFitness(buildParametrosPesos());
+		individuo.calculaValorFitness();
 		assertEquals(Double.valueOf(0.00007415748), individuo.getValorFitness());
 	}
 
-	private ParametrosPesos buildParametrosPesos() {
-		ParametrosPesos parametrosPesos = new ParametrosPesos();
-		parametrosPesos.setPesoDuracaoProjeto(0.6);
-		parametrosPesos.setPesoCustoProjeto(0.4);
-		
-		parametrosPesos.setPesoPenalidade(100.0);
-		parametrosPesos.setPesoHabilidadesNecessarias(1.0);
-		parametrosPesos.setPesoTrabalhoNaoRealizado(1.0);
-		parametrosPesos.setPesoTrabalhoExtra(1.0);
-		return parametrosPesos;
+	private void buildParametrosPesos() {
+		parametrosPesos.atribuiParametros(PESO_CUSTO_PROJETO, 
+										  PESO_DURACAO_PROJETO, 
+										  PESO_PENALIDADE, 
+										  PESO_TRABALHO_NAO_REALIZADO, 
+										  PESO_HABILIDADES_NECESSARIAS, 
+										  PESO_TRABALHO_EXTRA);
 	}
 	
 }

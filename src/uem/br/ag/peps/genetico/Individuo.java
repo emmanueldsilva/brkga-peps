@@ -15,10 +15,6 @@ public class Individuo {
 	
 	private Boolean factivel;
 	
-	public Individuo() {
-		this(new MatrizDedicacao());
-	}
-	
 	public Individuo(MatrizDedicacao matrizDedicacao) {
 		this.matrizDedicacao = matrizDedicacao;
 		this.valorFitness = null;
@@ -31,26 +27,28 @@ public class Individuo {
 						matrizDedicacao.isSolucaoValidaPeranteRestricao3();
 	}
 	
-	public void calculaValorFitness(ParametrosPesos parametrosPesos) {
+	public void calculaValorFitness() {
 		BigDecimal valorFitness = ZERO;
 		if (factivel) {
-			valorFitness = calculaValorFitnessSolucaoFactivel(parametrosPesos);
+			valorFitness = calculaValorFitnessSolucaoFactivel();
 		} else {
-			valorFitness = calculaValorFitnessSolucaoNaoFactivel(parametrosPesos);
+			valorFitness = calculaValorFitnessSolucaoNaoFactivel();
 		}
 		
 		this.valorFitness = valorFitness.doubleValue();
 	}
 
-	private BigDecimal calculaValorFitnessSolucaoFactivel(ParametrosPesos parametrosPesos) {
-		return ONE.divide(calculaCusto(parametrosPesos), DECIMAL32);
+	private BigDecimal calculaValorFitnessSolucaoFactivel() {
+		return ONE.divide(calculaCusto(), DECIMAL32);
 	}
 	
-	private BigDecimal calculaValorFitnessSolucaoNaoFactivel(ParametrosPesos parametrosPesos) {
-		return ONE.divide(calculaCusto(parametrosPesos).add(calculaPenalidade(parametrosPesos)), DECIMAL32);
+	private BigDecimal calculaValorFitnessSolucaoNaoFactivel() {
+		return ONE.divide(calculaCusto().add(calculaPenalidade()), DECIMAL32);
 	}
 
-	private BigDecimal calculaCusto(ParametrosPesos parametrosPesos) {
+	private BigDecimal calculaCusto() {
+		final ParametrosPesos parametrosPesos = ParametrosPesos.getInstance();
+		
 		final BigDecimal pesoCustoProjeto = valueOf(parametrosPesos.getPesoCustoProjeto());
 		final BigDecimal pesoDuracaoProjeto = valueOf(parametrosPesos.getPesoDuracaoProjeto());
 		final BigDecimal custoProjeto = valueOf(matrizDedicacao.getCustoTotalProjeto());
@@ -59,7 +57,9 @@ public class Individuo {
 		return pesoCustoProjeto.multiply(custoProjeto).add(pesoDuracaoProjeto.multiply(duracaoProjeto));
 	}
 	
-	private BigDecimal calculaPenalidade(ParametrosPesos parametrosPesos) {
+	private BigDecimal calculaPenalidade() {
+		final ParametrosPesos parametrosPesos = ParametrosPesos.getInstance();
+		
 		BigDecimal penalidade = valueOf(parametrosPesos.getPesoPenalidade());
 		penalidade = penalidade.add(valueOf(parametrosPesos.getPesoTrabalhoNaoRealizado()).multiply(valueOf(matrizDedicacao.getTarefasNaoRealizadas())));
 		penalidade = penalidade.add(valueOf(parametrosPesos.getPesoHabilidadesNecessarias()).multiply(valueOf(matrizDedicacao.getHabilidadesNecessarias())));

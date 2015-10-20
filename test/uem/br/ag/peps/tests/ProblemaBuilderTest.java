@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import uem.br.ag.peps.entidade.Employee;
@@ -14,12 +15,17 @@ import uem.br.ag.peps.problema.ProblemaBuilder;
 
 public class ProblemaBuilderTest {
 
-	@Test
-	public void testCriacaoProblema() {
-		final ProblemaBuilder problemaBuilder = ProblemaBuilder.getInstance();
+	private final ProblemaBuilder problemaBuilder = ProblemaBuilder.getInstance();
+	
+	@Before
+	public void before() {
+		problemaBuilder.clear();
 		problemaBuilder.setParametrosPath("/home/emmanuel/projetos/ag-peps/test-resources/test-intances/peps-4-tasks-2-employees.conf");
 		problemaBuilder.readParametrosArquivo();
-		
+	}
+
+	@Test
+	public void testCriacaoProblema() {
 		assertEmployees(problemaBuilder);
 		assertSkills(problemaBuilder);
 		assertTasks(problemaBuilder);
