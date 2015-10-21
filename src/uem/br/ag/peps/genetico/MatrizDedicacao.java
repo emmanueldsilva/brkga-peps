@@ -19,6 +19,7 @@ import uem.br.ag.peps.entidade.Employee;
 import uem.br.ag.peps.entidade.Skill;
 import uem.br.ag.peps.entidade.Task;
 import uem.br.ag.peps.problema.ProblemaBuilder;
+import uem.br.ag.peps.utils.RandomFactory;
 
 import com.google.common.collect.Lists;
 
@@ -326,7 +327,15 @@ public class MatrizDedicacao {
 		
 		return matrizDedicacaoBinaria;
 	}
-
+	
+	public void popularMatrizAleatoriamente() {
+		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
+			for (Task task: ProblemaBuilder.getInstance().getTasks()) {
+				addGrauDedicacao(employee, task, RandomFactory.getInstance().randomGrauDedicacao());
+			}
+		}
+	}
+	
 	public GrauDedicacao[][] getMatrizDedicacao() {
 		return matrizDedicacao;
 	}

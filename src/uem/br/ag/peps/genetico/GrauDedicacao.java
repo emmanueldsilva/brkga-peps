@@ -38,6 +38,33 @@ public class GrauDedicacao {
 		this.valor = valor;
 	}
 	
+	public void setValor(String binaryValue) {
+		this.valor = parseBinaryValue(binaryValue);
+	}
+	
+	private Double parseBinaryValue(String binaryValue) {
+    	switch (Integer.parseInt(binaryValue, 2)) {
+		case 0:
+			return 0.0;
+		case 1:
+			return 0.14;
+		case 2:
+			return 0.29;
+		case 3:
+			return 0.43;
+		case 4:
+			return 0.57;
+		case 5:
+			return 0.71;
+		case 6:
+			return 0.86;
+		case 7:
+			return 1.00;
+		default:
+			throw new RuntimeException("Valor indefinido: " + binaryValue);
+		}
+	}
+	
 	public String getValorAsBinary() {
 		return leftPad(toBinaryString(round(getValor() * 7)), 3, '0');
 	}

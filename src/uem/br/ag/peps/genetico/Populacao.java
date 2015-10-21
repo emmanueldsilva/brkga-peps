@@ -23,15 +23,11 @@ public class Populacao {
     }
  
     private void gerarIndividuoAleatorio() {
-    	MatrizDedicacao matrizDedicacao = buildMatrizDedicacaoAleatoria();
-    	
-        Individuo individuo = new Individuo(matrizDedicacao);
+    	final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
+    	matrizDedicacao.popularMatrizAleatoriamente();
+        final Individuo individuo = new Individuo(matrizDedicacao);
         addIndividuo(individuo);
     }
-
-	private MatrizDedicacao buildMatrizDedicacaoAleatoria() {
-		return null;
-	}
 
 	private void addIndividuo(Individuo individuo) {
 		individuos.add(individuo);
