@@ -48,13 +48,20 @@ public class MatrizDedicacao {
 		this.matrizDedicacao = new GrauDedicacao[numeroEmpregados][numeroTarefas];
 	}
 	
+	public void addGrauDedicacao(Employee employee, Task task, String binaryValue) {
+		addGrauDedicacao(employee, task, new GrauDedicacao(employee, task, binaryValue));
+	}
+	
 	public void addGrauDedicacao(Employee employee, Task task, Double value) {
-		final GrauDedicacao grauDedicacao = new GrauDedicacao();
-		grauDedicacao.setEmployee(employee);
-		grauDedicacao.setTask(task);
-		grauDedicacao.setValor(value);
-		
-		this.matrizDedicacao[employee.getCodigo()][task.getNumero()] = grauDedicacao;
+		addGrauDedicacao(employee, task, new GrauDedicacao(employee, task, value));
+	}
+	
+	private void addGrauDedicacao(Employee employee, Task task, GrauDedicacao grauDedicacao) {
+		this.setGrauDedicacao(employee.getCodigo(), task.getNumero(), grauDedicacao);
+	}
+	
+	public void setGrauDedicacao(int codigoEmployee, int numeroTask, GrauDedicacao grauDedicacao) {
+		this.matrizDedicacao[codigoEmployee][numeroTask] = grauDedicacao;
 	}
 	
 	public void efetuaCalculosProjeto() {
@@ -311,8 +318,26 @@ public class MatrizDedicacao {
 		return getGrauDedicacao(employee.getCodigo(), task.getNumero());
 	}
 	
-	private GrauDedicacao getGrauDedicacao(int codigoEmployee, int taskNumber) {
+	public GrauDedicacao getGrauDedicacao(int codigoEmployee, int taskNumber) {
 		return matrizDedicacao[codigoEmployee][taskNumber];
+	}
+	
+	public void efetuarMutacao() {
+		int posicaoGene = RandomFactory.getInstance().nextInt(toBinaryString().length());
+		
+		StringBuilder sb = new StringBuilder(toBinaryString());
+		sb.setCharAt(posicaoGene, sb.charAt(posicaoGene) == '0'? '1' : '0');
+		
+		String novaMatriz = sb.toString();
+		int contadorBits = 0;
+		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
+			for (Task task: ProblemaBuilder.getInstance().getTasks()) {
+				final String valorDedicacao = novaMatriz.substring(contadorBits, contadorBits + 4);
+				getGrauDedicacao(employee, task).setValor(valorDedicacao);
+				
+				contadorBits++;
+			}
+		}
 	}
 	
 	public String toBinaryString() {

@@ -13,6 +13,16 @@ public class GrauDedicacao {
 	private Task task;
 	
 	private Double valor;
+	
+	public GrauDedicacao(Employee employee, Task task, String binaryValue) {
+		this(employee, task, parseBinaryValue(binaryValue));
+	}
+	
+	public GrauDedicacao(Employee employee, Task task, Double valor) {
+		this.employee = employee;
+		this.task = task;
+		this.valor = valor;
+	}
 
 	public Employee getEmployee() {
 		return employee;
@@ -42,8 +52,8 @@ public class GrauDedicacao {
 		this.valor = parseBinaryValue(binaryValue);
 	}
 	
-	private Double parseBinaryValue(String binaryValue) {
-    	switch (Integer.parseInt(binaryValue, 2)) {
+	private static Double parseBinaryValue(String binaryValue) {
+		switch (Integer.parseInt(binaryValue, 2)) {
 		case 0:
 			return 0.0;
 		case 1:

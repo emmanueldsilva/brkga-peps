@@ -67,6 +67,10 @@ public class Individuo {
 		
 		return penalidade;
 	}
+	
+	public void efetuarMutacao() {
+		matrizDedicacao.efetuarMutacao();
+	}
 
 	public MatrizDedicacao getMatrizDedicacao() {
 		return matrizDedicacao;
@@ -91,5 +95,44 @@ public class Individuo {
 	public void setFactivel(boolean isFactivel) {
 		this.factivel = isFactivel;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((factivel == null) ? 0 : factivel.hashCode());
+		result = prime * result + ((matrizDedicacao == null) ? 0 : matrizDedicacao.hashCode());
+		result = prime * result + ((valorFitness == null) ? 0 : valorFitness.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Individuo other = (Individuo) obj;
+		if (factivel == null) {
+			if (other.factivel != null)
+				return false;
+		} else if (!factivel.equals(other.factivel))
+			return false;
+		if (matrizDedicacao == null) {
+			if (other.matrizDedicacao != null)
+				return false;
+		} else if (!matrizDedicacao.equals(other.matrizDedicacao))
+			return false;
+		if (valorFitness == null) {
+			if (other.valorFitness != null)
+				return false;
+		} else if (!valorFitness.equals(other.valorFitness))
+			return false;
+		return true;
+	}
+	
+	
 	
 }
