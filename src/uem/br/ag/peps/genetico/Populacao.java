@@ -17,11 +17,9 @@ public class Populacao {
 	
 	public Populacao(int tamanhoPopulacao) {
 		this.tamanhoPopulacao = tamanhoPopulacao;
-		
-        gerarIndividuos();
     }
  
-    private void gerarIndividuos() {
+    public void gerarIndividuos() {
         for (int i = 0; i < tamanhoPopulacao; i++) {
             gerarIndividuoAleatorio();
         }
@@ -33,10 +31,6 @@ public class Populacao {
         final Individuo individuo = new Individuo(matrizDedicacao);
         addIndividuo(individuo);
     }
-
-	private void addIndividuo(Individuo individuo) {
-		individuos.add(individuo);
-	}
 
 	public void avaliarIndividuos() {
 		individuos.forEach(i -> { 
@@ -78,28 +72,28 @@ public class Populacao {
 				count++;
 			}
 			
-			MatrizDedicacao matrizDedicacaoFilho1 = buildMatrizDedicacaoFilho(pai1, pai2);
+			int numeroEmployees = ProblemaBuilder.getInstance().getEmployees().size();
+			int linha = RandomFactory.getInstance().nextInt(numeroEmployees);
+			
+			int numeroTasks = ProblemaBuilder.getInstance().getTasks().size();
+			int coluna = RandomFactory.getInstance().nextInt(numeroTasks);
+			
+			MatrizDedicacao matrizDedicacaoFilho1 = buildMatrizDedicacaoFilho(pai1, pai2, linha, coluna);
 			novosFilhos.add(new Individuo(matrizDedicacaoFilho1));
 			
-			MatrizDedicacao matrizDedicacaoFilho2 = buildMatrizDedicacaoFilho(pai2, pai1);
+			MatrizDedicacao matrizDedicacaoFilho2 = buildMatrizDedicacaoFilho(pai2, pai1, linha, coluna);
 			novosFilhos.add(new Individuo(matrizDedicacaoFilho2));
 		}
 		
 		individuos.addAll(novosFilhos);
 	}
 
-	private MatrizDedicacao buildMatrizDedicacaoFilho(Individuo pai1, Individuo pai2) {
-		int numeroEmployees = ProblemaBuilder.getInstance().getEmployees().size();
-		int linha = RandomFactory.getInstance().nextInt(numeroEmployees);
-		
-		int numeroTasks = ProblemaBuilder.getInstance().getTasks().size();
-		int coluna = RandomFactory.getInstance().nextInt(numeroTasks);
-		
+	private MatrizDedicacao buildMatrizDedicacaoFilho(Individuo pai1, Individuo pai2, int linha, int coluna) {
 		MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
-		for (int i = 0; i < numeroEmployees; i++) {
-			for (int j = 0; j < numeroTasks; j++) {
+		for (int i = 0; i < ProblemaBuilder.getInstance().getEmployees().size(); i++) {
+			for (int j = 0; j < ProblemaBuilder.getInstance().getTasks().size(); j++) {
 				GrauDedicacao grauDedicacao;
-				if ((i < linha && j < coluna) || (i >= linha && j >= coluna)) {
+				if ((i <= linha && j < coluna) || (i > linha && j >= coluna)) {
 					grauDedicacao = pai1.getMatrizDedicacao().getGrauDedicacao(i, j);
 				} else {
 					grauDedicacao = pai2.getMatrizDedicacao().getGrauDedicacao(i, j);
@@ -125,5 +119,12 @@ public class Populacao {
 		
 	}
 	
+	public void addIndividuo(Individuo individuo) {
+		this.individuos.add(individuo);
+	}
+
+	public List<Individuo> getIndividuos() {
+		return individuos;
+	}
 	
 }

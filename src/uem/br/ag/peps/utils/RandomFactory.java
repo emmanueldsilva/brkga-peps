@@ -24,6 +24,10 @@ public class RandomFactory {
         return this.random.nextInt(n);
     }
     
+    public void setSeed(long seed) {
+    	this.random.setSeed(seed);
+    }
+    
     public Double randomGrauDedicacao() {
     	switch (nextInt(8)) {
 		case 0:

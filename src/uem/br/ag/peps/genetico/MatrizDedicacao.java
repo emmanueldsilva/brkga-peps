@@ -48,10 +48,6 @@ public class MatrizDedicacao {
 		this.matrizDedicacao = new GrauDedicacao[numeroEmpregados][numeroTarefas];
 	}
 	
-	public void addGrauDedicacao(Employee employee, Task task, String binaryValue) {
-		addGrauDedicacao(employee, task, new GrauDedicacao(employee, task, binaryValue));
-	}
-	
 	public void addGrauDedicacao(Employee employee, Task task, Double value) {
 		addGrauDedicacao(employee, task, new GrauDedicacao(employee, task, value));
 	}
@@ -332,10 +328,10 @@ public class MatrizDedicacao {
 		int contadorBits = 0;
 		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
 			for (Task task: ProblemaBuilder.getInstance().getTasks()) {
-				final String valorDedicacao = novaMatriz.substring(contadorBits, contadorBits + 4);
+				final String valorDedicacao = novaMatriz.substring(contadorBits, contadorBits + 3);
 				getGrauDedicacao(employee, task).setValor(valorDedicacao);
 				
-				contadorBits++;
+				contadorBits += 3;
 			}
 		}
 	}

@@ -29,6 +29,7 @@ public class AlgoritmoGenetico {
             long start = System.currentTimeMillis();  
              
             Populacao populacao = new Populacao(parametrosAlgoritmo.getNumeroGeracoes());
+            populacao.gerarIndividuos();
             for (int i = 0; i < parametrosAlgoritmo.getNumeroGeracoes(); i++) {
 //              System.out.println("avaliar população");
                 populacao.avaliarIndividuos();

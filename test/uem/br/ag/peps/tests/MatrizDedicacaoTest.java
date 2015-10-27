@@ -12,6 +12,7 @@ import uem.br.ag.peps.entidade.Task;
 import uem.br.ag.peps.genetico.GrauDedicacao;
 import uem.br.ag.peps.genetico.MatrizDedicacao;
 import uem.br.ag.peps.problema.ProblemaBuilder;
+import uem.br.ag.peps.utils.RandomFactory;
 
 public class MatrizDedicacaoTest {
 
@@ -312,4 +313,40 @@ public class MatrizDedicacaoTest {
 		
 		Assert.assertEquals(Double.valueOf(0.5), matrizDedicacao.getTrabalhoExtra());
 	}
+	
+	@Test
+	public void testMutacaoMatrizDedicacao() {
+		RandomFactory.getInstance().setSeed(1);
+		
+		final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
+		
+		final Task task0 = problemaBuilder.getTask(0);
+		final Task task1 = problemaBuilder.getTask(1);
+		final Task task2 = problemaBuilder.getTask(2);
+		final Task task3 = problemaBuilder.getTask(3);
+		
+		final Employee employee0 = problemaBuilder.getEmployee(0);
+		matrizDedicacao.addGrauDedicacao(employee0, task0, 0.43);
+		matrizDedicacao.addGrauDedicacao(employee0, task1, 1.0);
+		matrizDedicacao.addGrauDedicacao(employee0, task2, 0.29);
+		matrizDedicacao.addGrauDedicacao(employee0, task3, 0.86);
+		
+		final Employee employee1 = problemaBuilder.getEmployee(1);
+		matrizDedicacao.addGrauDedicacao(employee1, task0, 0.29);
+		matrizDedicacao.addGrauDedicacao(employee1, task1, 0.0);
+		matrizDedicacao.addGrauDedicacao(employee1, task2, 0.71);
+		matrizDedicacao.addGrauDedicacao(employee1, task3, 0.57);
+		
+		matrizDedicacao.efetuarMutacao();
+		
+		Assert.assertEquals(Double.valueOf(0.43), matrizDedicacao.getGrauDedicacao(employee0, task0).getValor());
+		Assert.assertEquals(Double.valueOf(1.0), matrizDedicacao.getGrauDedicacao(employee0, task1).getValor());
+		Assert.assertEquals(Double.valueOf(0.29), matrizDedicacao.getGrauDedicacao(employee0, task2).getValor());
+		Assert.assertEquals(Double.valueOf(0.29), matrizDedicacao.getGrauDedicacao(employee0, task3).getValor());
+		Assert.assertEquals(Double.valueOf(0.29), matrizDedicacao.getGrauDedicacao(employee1, task0).getValor());
+		Assert.assertEquals(Double.valueOf(0.0), matrizDedicacao.getGrauDedicacao(employee1, task1).getValor());
+		Assert.assertEquals(Double.valueOf(0.71), matrizDedicacao.getGrauDedicacao(employee1, task2).getValor());
+		Assert.assertEquals(Double.valueOf(0.57), matrizDedicacao.getGrauDedicacao(employee1, task3).getValor());
+	}
+	
 }
