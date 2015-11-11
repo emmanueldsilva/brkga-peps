@@ -93,7 +93,7 @@ public class Populacao {
 		for (int i = 0; i < ProblemaBuilder.getInstance().getEmployees().size(); i++) {
 			for (int j = 0; j < ProblemaBuilder.getInstance().getTasks().size(); j++) {
 				GrauDedicacao grauDedicacao;
-				if ((i <= linha && j < coluna) || (i > linha && j >= coluna)) {
+				if ((i <= linha && j <= coluna) || (i > linha && j > coluna)) {
 					grauDedicacao = pai1.getMatrizDedicacao().getGrauDedicacao(i, j);
 				} else {
 					grauDedicacao = pai2.getMatrizDedicacao().getGrauDedicacao(i, j);
