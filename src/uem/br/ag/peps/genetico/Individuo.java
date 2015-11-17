@@ -95,6 +95,14 @@ public class Individuo {
 	public void setFactivel(boolean isFactivel) {
 		this.factivel = isFactivel;
 	}
+	
+	public String fitnessToString() {
+		if (valorFitness == null) {
+			return "NULL";
+		}
+		
+		return new BigDecimal(getValorFitness(), DECIMAL32) + "";
+	}
 
 	@Override
 	public int hashCode() {

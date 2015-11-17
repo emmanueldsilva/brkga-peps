@@ -5,6 +5,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import java.util.List;
 
 import uem.br.ag.peps.problema.ProblemaBuilder;
+import uem.br.ag.peps.utils.PrintFactory;
 import uem.br.ag.peps.utils.RandomFactory;
 
 import com.google.common.collect.Lists;
@@ -28,6 +29,7 @@ public class Populacao {
     private void gerarIndividuoAleatorio() {
     	final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
     	matrizDedicacao.popularMatrizAleatoriamente();
+    	matrizDedicacao.efetuaCalculosProjeto();
         final Individuo individuo = new Individuo(matrizDedicacao);
         addIndividuo(individuo);
     }
@@ -44,7 +46,7 @@ public class Populacao {
 	}
 
 	public void selecionarMaisAptosPorTorneio() {
-		while (individuos.size() > tamanhoPopulacao) {
+		while (individuos.size() >= tamanhoPopulacao) {
 			Individuo individuo1 = getIndividuoAleatorio();
 			Individuo individuo2 = getIndividuoAleatorio();
 			 
@@ -57,7 +59,7 @@ public class Populacao {
 	}
 	
 	public Individuo getIndividuoAleatorio() {
-		return individuos.get(RandomFactory.getInstance().nextInt(tamanhoPopulacao));
+		return individuos.get(RandomFactory.getInstance().nextInt(tamanhoPopulacao - 1));
 	}
 
 	public void efetuarCruzamento() {
@@ -103,6 +105,7 @@ public class Populacao {
 			}
 		}
 		
+		matrizDedicacao.efetuaCalculosProjeto();
 		return matrizDedicacao;
 	}
 
@@ -115,8 +118,7 @@ public class Populacao {
 	}
 
 	public void imprimirPopulacao() {
-		// TODO Auto-generated method stub
-		
+		PrintFactory.imprimePopulacao(individuos);
 	}
 	
 	public void addIndividuo(Individuo individuo) {
