@@ -46,7 +46,7 @@ public class Populacao {
 	}
 
 	public void selecionarMaisAptosPorTorneio() {
-		while (individuos.size() >= tamanhoPopulacao) {
+		while (individuos.size() > tamanhoPopulacao) {
 			Individuo individuo1 = getIndividuoAleatorio();
 			Individuo individuo2 = getIndividuoAleatorio();
 			 
@@ -62,9 +62,10 @@ public class Populacao {
 		return individuos.get(RandomFactory.getInstance().nextInt(tamanhoPopulacao - 1));
 	}
 
-	public void efetuarCruzamento() {
+	public void efetuarCruzamento(Double percentualCruzamento) {
+		int numeroIndividuosCruzamento = Double.valueOf(individuos.size() * (percentualCruzamento/100)).intValue();
 		final List<Individuo> novosFilhos = newArrayList();
-		for (int cont = 0; cont < tamanhoPopulacao/2; cont++) {
+		for (int cont = 0; cont < numeroIndividuosCruzamento; cont++) {
 			Individuo pai1 = getIndividuoAleatorio();
 			Individuo pai2 = getIndividuoAleatorio();
 			
@@ -74,20 +75,24 @@ public class Populacao {
 				count++;
 			}
 			
-			int numeroEmployees = ProblemaBuilder.getInstance().getEmployees().size();
-			int linha = RandomFactory.getInstance().nextInt(numeroEmployees);
-			
-			int numeroTasks = ProblemaBuilder.getInstance().getTasks().size();
-			int coluna = RandomFactory.getInstance().nextInt(numeroTasks);
-			
-			MatrizDedicacao matrizDedicacaoFilho1 = buildMatrizDedicacaoFilho(pai1, pai2, linha, coluna);
-			novosFilhos.add(new Individuo(matrizDedicacaoFilho1));
-			
-			MatrizDedicacao matrizDedicacaoFilho2 = buildMatrizDedicacaoFilho(pai2, pai1, linha, coluna);
-			novosFilhos.add(new Individuo(matrizDedicacaoFilho2));
+			efetuaCrossover(novosFilhos, pai1, pai2);
 		}
 		
 		individuos.addAll(novosFilhos);
+	}
+
+	public void efetuaCrossover(List<Individuo> novosFilhos, Individuo pai1, Individuo pai2) {
+		int numeroEmployees = ProblemaBuilder.getInstance().getEmployees().size();
+		int linha = RandomFactory.getInstance().nextInt(numeroEmployees);
+		
+		int numeroTasks = ProblemaBuilder.getInstance().getTasks().size();
+		int coluna = RandomFactory.getInstance().nextInt(numeroTasks);
+		
+		final MatrizDedicacao matrizDedicacaoFilho1 = buildMatrizDedicacaoFilho(pai1, pai2, linha, coluna);
+		novosFilhos.add(new Individuo(matrizDedicacaoFilho1));
+		
+		final MatrizDedicacao matrizDedicacaoFilho2 = buildMatrizDedicacaoFilho(pai2, pai1, linha, coluna);
+		novosFilhos.add(new Individuo(matrizDedicacaoFilho2));
 	}
 
 	private MatrizDedicacao buildMatrizDedicacaoFilho(Individuo pai1, Individuo pai2, int linha, int coluna) {
@@ -110,15 +115,77 @@ public class Populacao {
 	}
 
 	public void efetuarMutacao(Double percentualMutacao) {
-		individuos.forEach(i -> {
-            if (RandomFactory.getInstance().nextInt(100) < percentualMutacao) {
-                i.efetuarMutacao();
-            }
-		});
+		int numeroIndividuosMutacao = Double.valueOf(individuos.size() * (percentualMutacao/100)).intValue();
+		for (int i = 0; i < numeroIndividuosMutacao; i++) {
+			getIndividuoAleatorio().efetuarMutacao();
+		}
 	}
 
 	public void imprimirPopulacao() {
 		PrintFactory.imprimePopulacao(individuos);
+	}
+	
+	public Double getMaiorValorFitness() {
+		return individuos.stream()
+			.mapToDouble(Individuo::getValorFitness)
+			.max()
+			.getAsDouble();
+	}
+	
+	public Double getMenorValorFitness() {
+		return individuos.stream()
+			.mapToDouble(Individuo::getValorFitness)
+			.min()
+			.getAsDouble();
+	}
+	
+	public Double getMediaValorFitness() {
+		return individuos.stream()
+			.mapToDouble(Individuo::getValorFitness)
+			.average()
+			.getAsDouble();
+	}
+	
+	public Double getMenorValorCustoProjeto() {
+		return individuos.stream()
+			.mapToDouble(i -> i.getMatrizDedicacao().getCustoTotalProjeto())
+			.min()
+			.getAsDouble();
+	}
+	
+	public Double getMaiorValorCustoProjeto() {
+		return individuos.stream()
+			.mapToDouble(i -> i.getMatrizDedicacao().getCustoTotalProjeto())
+			.max()
+			.getAsDouble();
+	}
+	
+	public Double getMediaValorCustoProjeto() {
+		return individuos.stream()
+			.mapToDouble(i -> i.getMatrizDedicacao().getCustoTotalProjeto())
+			.average()
+			.getAsDouble();
+	}
+	
+	public Double getMenorDuracaoProjeto() {
+		return individuos.stream()
+			.mapToDouble(i -> i.getMatrizDedicacao().getDuracaoTotalProjeto())
+			.min()
+			.getAsDouble();
+	}
+	
+	public Double getMaiorDuracaoProjeto() {
+		return individuos.stream()
+			.mapToDouble(i -> i.getMatrizDedicacao().getDuracaoTotalProjeto())
+			.max()
+			.getAsDouble();
+	}
+	
+	public Double getMediaDuracaoProjeto() {
+		return individuos.stream()
+			.mapToDouble(i -> i.getMatrizDedicacao().getDuracaoTotalProjeto())
+			.average()
+			.getAsDouble();
 	}
 	
 	public void addIndividuo(Individuo individuo) {

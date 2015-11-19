@@ -10,6 +10,7 @@ import uem.br.ag.peps.genetico.Individuo;
 import uem.br.ag.peps.genetico.MatrizDedicacao;
 import uem.br.ag.peps.genetico.Populacao;
 import uem.br.ag.peps.problema.ProblemaBuilder;
+import uem.br.ag.peps.utils.PrintFactory;
 import uem.br.ag.peps.utils.RandomFactory;
 
 public class PopulacaoTest {
@@ -34,7 +35,7 @@ public class PopulacaoTest {
 		final Individuo individuo2 = new Individuo(buildMatrizDedicacao2());
 		populacao.addIndividuo(individuo2);
 		
-		populacao.efetuarCruzamento();
+		populacao.efetuaCrossover(populacao.getIndividuos(), individuo1, individuo2);
 		
 		Assert.assertEquals(4, populacao.getIndividuos().size());
 		
@@ -47,13 +48,14 @@ public class PopulacaoTest {
 		
 		Individuo individuo3 = populacao.getIndividuos().get(2);
 		MatrizDedicacao matrizDedicacao1 = individuo3.getMatrizDedicacao();
+		PrintFactory.imprimePopulacao(populacao.getIndividuos());
 		
-		Assert.assertEquals(Double.valueOf(0.0), matrizDedicacao1.getGrauDedicacao(employee0, task0).getValor());
+		Assert.assertEquals(Double.valueOf(0.43), matrizDedicacao1.getGrauDedicacao(employee0, task0).getValor());
 		Assert.assertEquals(Double.valueOf(0.14), matrizDedicacao1.getGrauDedicacao(employee0, task1).getValor());
-		Assert.assertEquals(Double.valueOf(0.29), matrizDedicacao1.getGrauDedicacao(employee0, task2).getValor());
-		Assert.assertEquals(Double.valueOf(0.86), matrizDedicacao1.getGrauDedicacao(employee0, task3).getValor());
+		Assert.assertEquals(Double.valueOf(0.57), matrizDedicacao1.getGrauDedicacao(employee0, task2).getValor());
+		Assert.assertEquals(Double.valueOf(0.71), matrizDedicacao1.getGrauDedicacao(employee0, task3).getValor());
 		Assert.assertEquals(Double.valueOf(0.29), matrizDedicacao1.getGrauDedicacao(employee1, task0).getValor());
-		Assert.assertEquals(Double.valueOf(0.0), matrizDedicacao1.getGrauDedicacao(employee1, task1).getValor());
+		Assert.assertEquals(Double.valueOf(0.43), matrizDedicacao1.getGrauDedicacao(employee1, task1).getValor());
 		Assert.assertEquals(Double.valueOf(0.86), matrizDedicacao1.getGrauDedicacao(employee1, task2).getValor());
 		Assert.assertEquals(Double.valueOf(0.29), matrizDedicacao1.getGrauDedicacao(employee1, task3).getValor());
 
@@ -61,15 +63,14 @@ public class PopulacaoTest {
 		Individuo individuo4 = populacao.getIndividuos().get(3);
 		MatrizDedicacao matrizDedicacao2 = individuo4.getMatrizDedicacao();
 		
-		Assert.assertEquals(Double.valueOf(0.43), matrizDedicacao2.getGrauDedicacao(employee0, task0).getValor());
+		Assert.assertEquals(Double.valueOf(0.0), matrizDedicacao2.getGrauDedicacao(employee0, task0).getValor());
 		Assert.assertEquals(Double.valueOf(1.00), matrizDedicacao2.getGrauDedicacao(employee0, task1).getValor());
-		Assert.assertEquals(Double.valueOf(0.57), matrizDedicacao2.getGrauDedicacao(employee0, task2).getValor());
-		Assert.assertEquals(Double.valueOf(0.71), matrizDedicacao2.getGrauDedicacao(employee0, task3).getValor());
+		Assert.assertEquals(Double.valueOf(0.29), matrizDedicacao2.getGrauDedicacao(employee0, task2).getValor());
+		Assert.assertEquals(Double.valueOf(0.86), matrizDedicacao2.getGrauDedicacao(employee0, task3).getValor());
 		Assert.assertEquals(Double.valueOf(1.0), matrizDedicacao2.getGrauDedicacao(employee1, task0).getValor());
-		Assert.assertEquals(Double.valueOf(0.43), matrizDedicacao2.getGrauDedicacao(employee1, task1).getValor());
+		Assert.assertEquals(Double.valueOf(0.0), matrizDedicacao2.getGrauDedicacao(employee1, task1).getValor());
 		Assert.assertEquals(Double.valueOf(0.71), matrizDedicacao2.getGrauDedicacao(employee1, task2).getValor());
 		Assert.assertEquals(Double.valueOf(0.57), matrizDedicacao2.getGrauDedicacao(employee1, task3).getValor());
-		
 	}
 
 	/**

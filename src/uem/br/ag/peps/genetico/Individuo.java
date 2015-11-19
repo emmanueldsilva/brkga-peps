@@ -88,7 +88,7 @@ public class Individuo {
 		this.valorFitness = valorFitness;
 	}
 
-	public boolean isFactivel() {
+	public Boolean isFactivel() {
 		return factivel;
 	}
 
