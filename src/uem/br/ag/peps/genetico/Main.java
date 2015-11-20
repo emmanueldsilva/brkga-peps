@@ -15,7 +15,7 @@ public class Main {
 		parametrosAlgoritmo.setNumeroExecucoes(1);
 		parametrosAlgoritmo.setNumeroGeracoes(1000);
 		parametrosAlgoritmo.setTamanhoPopulacao(64);
-		parametrosAlgoritmo.setPercentualCruzamento(50.0);
+		parametrosAlgoritmo.setPercentualCruzamento(10.0);
 		parametrosAlgoritmo.setPercentualMutacao(5.0);
 //		parametrosAlgoritmo.setPathBenchmark("/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst10-5-10-5.conf");
 //		parametrosAlgoritmo.setPathBenchmark("/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst20-10-10-5.conf");

@@ -26,6 +26,8 @@ public class AlgoritmoGenetico {
     }
 
     public void executarAlgoritmo() {
+    	PrintFactory printFactory = new PrintFactory();
+    	
         for (int cont = 0; cont < parametrosAlgoritmo.getNumeroExecucoes(); cont++) {
             long start = System.currentTimeMillis();  
              
@@ -38,7 +40,7 @@ public class AlgoritmoGenetico {
                 
               System.out.println("selecionar mais aptos");
                 populacao.selecionarMaisAptosPorTorneio();
-                PrintFactory.imprimeEstatisticas(populacao);
+                printFactory.geraEstatisticas(populacao, i);
 //                populacao.imprimirPopulacao();
 
               System.out.println("efetuar cruzamento");
@@ -57,12 +59,13 @@ public class AlgoritmoGenetico {
             System.out.println("selecionar mais aptos");
             populacao.selecionarMaisAptosPorTorneio();
 //            populacao.imprimirPopulacao();
-            PrintFactory.imprimeEstatisticas(populacao);
+            printFactory.geraEstatisticas(populacao, cont);
             populacao.getIndividuos().sort((i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness()));
              
             long delay = System.currentTimeMillis() - start;  
 //            populacao.imprimirPopulacao();
-            System.out.println("Demorou " + round((delay/1000) * 10000000)/10000000.0 + " segundos");  
+            System.out.println("Demorou " + round((delay/1000) * 10000000)/10000000.0 + " segundos");
+            printFactory.plotaGraficos();
         }
     }
 
@@ -73,5 +76,5 @@ public class AlgoritmoGenetico {
 	public ParametrosAlgoritmo getParametrosAlgoritmo() {
 		return parametrosAlgoritmo;
 	}
-
+	
 }
