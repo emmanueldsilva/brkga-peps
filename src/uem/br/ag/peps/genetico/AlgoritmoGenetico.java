@@ -26,9 +26,8 @@ public class AlgoritmoGenetico {
     }
 
     public void executarAlgoritmo() {
-    	PrintFactory printFactory = new PrintFactory();
-    	
         for (int cont = 0; cont < parametrosAlgoritmo.getNumeroExecucoes(); cont++) {
+        	final PrintFactory printFactory = new PrintFactory(parametrosAlgoritmo, cont + 1);
             long start = System.currentTimeMillis();  
              
             Populacao populacao = new Populacao(parametrosAlgoritmo.getTamanhoPopulacao());
@@ -59,7 +58,8 @@ public class AlgoritmoGenetico {
             System.out.println("selecionar mais aptos");
             populacao.selecionarMaisAptosPorTorneio();
 //            populacao.imprimirPopulacao();
-            printFactory.geraEstatisticas(populacao, cont);
+            printFactory.geraEstatisticas(populacao, parametrosAlgoritmo.getNumeroGeracoes());
+            printFactory.printIndividuo(populacao.getMelhorIndividuo());
             populacao.getIndividuos().sort((i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness()));
              
             long delay = System.currentTimeMillis() - start;  

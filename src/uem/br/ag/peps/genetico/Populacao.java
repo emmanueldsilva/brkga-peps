@@ -5,7 +5,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import java.util.List;
 
 import uem.br.ag.peps.problema.ProblemaBuilder;
-import uem.br.ag.peps.utils.PrintFactory;
 import uem.br.ag.peps.utils.RandomFactory;
 
 import com.google.common.collect.Lists;
@@ -121,8 +120,10 @@ public class Populacao {
 		}
 	}
 
-	public void imprimirPopulacao() {
-		PrintFactory.imprimePopulacao(individuos);
+	public Individuo getMelhorIndividuo() {
+		return individuos.stream()
+				.max((i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness()))
+				.get();
 	}
 	
 	public Double getMaiorValorFitness() {

@@ -10,7 +10,6 @@ import uem.br.ag.peps.genetico.Individuo;
 import uem.br.ag.peps.genetico.MatrizDedicacao;
 import uem.br.ag.peps.genetico.Populacao;
 import uem.br.ag.peps.problema.ProblemaBuilder;
-import uem.br.ag.peps.utils.PrintFactory;
 import uem.br.ag.peps.utils.RandomFactory;
 
 public class PopulacaoTest {
@@ -48,7 +47,6 @@ public class PopulacaoTest {
 		
 		Individuo individuo3 = populacao.getIndividuos().get(2);
 		MatrizDedicacao matrizDedicacao1 = individuo3.getMatrizDedicacao();
-		PrintFactory.imprimePopulacao(populacao.getIndividuos());
 		
 		Assert.assertEquals(Double.valueOf(0.43), matrizDedicacao1.getGrauDedicacao(employee0, task0).getValor());
 		Assert.assertEquals(Double.valueOf(0.14), matrizDedicacao1.getGrauDedicacao(employee0, task1).getValor());

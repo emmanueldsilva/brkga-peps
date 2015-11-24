@@ -13,10 +13,10 @@ public class Main {
 	public static void main(String[] args) {
 		final ParametrosAlgoritmo parametrosAlgoritmo = new ParametrosAlgoritmo();
 		parametrosAlgoritmo.setNumeroExecucoes(1);
-		parametrosAlgoritmo.setNumeroGeracoes(1000);
-		parametrosAlgoritmo.setTamanhoPopulacao(64);
-		parametrosAlgoritmo.setPercentualCruzamento(10.0);
-		parametrosAlgoritmo.setPercentualMutacao(5.0);
+		parametrosAlgoritmo.setNumeroGeracoes(100);
+		parametrosAlgoritmo.setTamanhoPopulacao(20);
+		parametrosAlgoritmo.setPercentualCruzamento(20.0);
+		parametrosAlgoritmo.setPercentualMutacao(1.0);
 //		parametrosAlgoritmo.setPathBenchmark("/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst10-5-10-5.conf");
 //		parametrosAlgoritmo.setPathBenchmark("/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst20-10-10-5.conf");
 		parametrosAlgoritmo.setPathBenchmark("/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst30-15-10-5.conf");
