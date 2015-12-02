@@ -96,6 +96,14 @@ public class Individuo {
 		this.factivel = isFactivel;
 	}
 	
+	public Double getCustoTotalProjeto() {
+		return matrizDedicacao.getCustoTotalProjeto();
+	}
+	
+	public Double getDuracaoTotalProjeto() {
+		return matrizDedicacao.getDuracaoTotalProjeto();
+	}
+	
 	public String fitnessToString() {
 		if (valorFitness == null) {
 			return "NULL";

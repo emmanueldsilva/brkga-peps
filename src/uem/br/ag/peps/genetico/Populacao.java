@@ -2,6 +2,7 @@ package uem.br.ag.peps.genetico;
 
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.util.Comparator;
 import java.util.List;
 
 import uem.br.ag.peps.problema.ProblemaBuilder;
@@ -41,7 +42,7 @@ public class Populacao {
 	}
 	
 	public void ordenarIndividuos() {
-		individuos.stream().sorted((individuo1, individuo2) -> individuo1.getValorFitness().compareTo(individuo2.getValorFitness()));
+		individuos.stream().sorted(individuoComparator());
 	}
 
 	public void selecionarMaisAptosPorTorneio() {
@@ -50,9 +51,9 @@ public class Populacao {
 			Individuo individuo2 = getIndividuoAleatorio();
 			 
 			if (individuo1.getValorFitness() < individuo2.getValorFitness()) {
-			    individuos.remove(individuo2);
-			} else {
 			    individuos.remove(individuo1);
+			} else {
+			    individuos.remove(individuo2);
 			}
 		}
 	}
@@ -122,8 +123,18 @@ public class Populacao {
 
 	public Individuo getMelhorIndividuo() {
 		return individuos.stream()
-				.max((i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness()))
-				.get();
+			.max(individuoComparator())
+			.get();
+	}
+	
+	public Individuo getPiorIndividuo() {
+		return individuos.stream()
+			.min(individuoComparator())
+			.get();
+	}
+
+	private Comparator<? super Individuo> individuoComparator() {
+		return (i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness());
 	}
 	
 	public Double getMaiorValorFitness() {

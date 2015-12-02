@@ -33,6 +33,7 @@ public class AlgoritmoGenetico {
             Populacao populacao = new Populacao(parametrosAlgoritmo.getTamanhoPopulacao());
             populacao.gerarIndividuos();
             for (int i = 0; i < parametrosAlgoritmo.getNumeroGeracoes(); i++) {
+              System.out.println("geração " + i);
               System.out.println("avaliar população");
                 populacao.avaliarIndividuos();
 //                populacao.imprimirPopulacao();
@@ -65,7 +66,7 @@ public class AlgoritmoGenetico {
             long delay = System.currentTimeMillis() - start;  
 //            populacao.imprimirPopulacao();
             System.out.println("Demorou " + round((delay/1000) * 10000000)/10000000.0 + " segundos");
-            printFactory.plotaGraficos();
+            printFactory.plotaGraficos(populacao);
         }
     }
 
