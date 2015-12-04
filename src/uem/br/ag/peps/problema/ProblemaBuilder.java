@@ -194,9 +194,17 @@ public class ProblemaBuilder {
 	public List<Employee> getEmployees() {
 		return employees;
 	}
+	
+	public int getNumeroEmployees() {
+		return employees.size();
+	}
 
 	public List<Task> getTasks() {
 		return tasks;
+	}
+	
+	public int getNumeroTasks() {
+		return tasks.size();
 	}
 
 }

@@ -73,24 +73,10 @@ public class PrintFactory {
 	}
 
 	private void printEstatisticaPopulacao(Populacao populacao, Integer geracao) {
-//		Individuo melhorIndividuo = populacao.getMelhorIndividuo();
-//		Individuo piorIndividuo = populacao.getPiorIndividuo();
-		
 		final CustomStringBuilder sb = new CustomStringBuilder();
 		sb.appendLine("--------------------------------------------------------------");
 		sb.appendLine("ESTATÍSTICAS GERAÇÃO " + geracao);
 		sb.appendLine();
-//		sb.appendLine("MELHOR FITNESS: " + melhorIndividuo.getValorFitness());
-//		sb.appendLine("MEDIA FITNESS: " + populacao.getMediaValorFitness());
-//		sb.appendLine("PIOR FITNESS: " + piorIndividuo.getValorFitness());
-//		sb.appendLine("--------------------------------------------------------------");
-//		sb.appendLine("MAIOR CUSTO PROJETO: " + CURRENCY_INSTANCE.format(piorIndividuo.getCustoTotalProjeto()));
-//		sb.appendLine("MEDIA CUSTO PROJETO: " + CURRENCY_INSTANCE.format(populacao.getMediaValorCustoProjeto()));
-//		sb.appendLine("MENOR CUSTO PROJETO: " + CURRENCY_INSTANCE.format(melhorIndividuo.getCustoTotalProjeto()));
-//		sb.appendLine("--------------------------------------------------------------");
-//		sb.appendLine("MAIOR DURAÇÃO PROJETO: " + piorIndividuo.getDuracaoTotalProjeto());
-//		sb.appendLine("MEDIA DURAÇÃO PROJETO: " + populacao.getMediaDuracaoProjeto());
-//		sb.appendLine("MENOR DURAÇÃO PROJETO: " + melhorIndividuo.getDuracaoTotalProjeto());
 		sb.appendLine("MELHOR FITNESS: " + populacao.getMaiorValorFitness());
 		sb.appendLine("MEDIA FITNESS: " + populacao.getMediaValorFitness());
 		sb.appendLine("PIOR FITNESS: " + populacao.getMenorValorFitness());
@@ -106,10 +92,29 @@ public class PrintFactory {
 		sb.appendLine();
 		sb.appendLine();
 		
-		appendEstatistica(sb.toString());
+		appendToEnd(sb.toString());
 	}
 	
-	private void appendEstatistica(String string) {
+	public void printEstatisticaExecucao(Double tempoExecucao, ParametrosAlgoritmo parametrosAlgoritmo) {
+		final CustomStringBuilder sb = new CustomStringBuilder();
+		sb.appendLine("--------------------------------------------------------------");
+		sb.appendLine("TEMPO DE EXECUÇÃO: " + tempoExecucao);
+		sb.appendLine();
+		sb.appendLine("NUMERO DE EMPLOYEES: " + ProblemaBuilder.getInstance().getNumeroEmployees());
+		sb.appendLine("NUMERO DE TASKS: " + ProblemaBuilder.getInstance().getNumeroTasks());
+		sb.appendLine();
+		sb.appendLine("BENCHMARK: " + new File(parametrosAlgoritmo.getPathBenchmark()).getName());
+		sb.appendLine("NÚMERO DE EXECUÇÕES: " + parametrosAlgoritmo.getNumeroGeracoes());
+		sb.appendLine("NÚMERO DE GERAÇÕES: " + parametrosAlgoritmo.getNumeroGeracoes());
+		sb.appendLine("TAMANHO POPULAÇÃO: " + parametrosAlgoritmo.getTamanhoPopulacao());
+		sb.appendLine("PERCENTUAL CRUZAMENTO: " + parametrosAlgoritmo.getPercentualCruzamento());
+		sb.appendLine("PERCENTUAL MUTAÇÃO: " + parametrosAlgoritmo.getPercentualMutacao());
+		sb.appendLine("PERCENTUAL MUTAÇÃO: " + parametrosAlgoritmo.getPercentualMutacao());
+		
+		appendToEnd(sb.toString());
+	}
+	
+	private void appendToEnd(String string) {
 		try {
 			write(new File(buildPathDiretorio() + "estatisticas" + execucao), string, true);
 		} catch (IOException e) {
@@ -163,11 +168,6 @@ public class PrintFactory {
 		range.setTickUnit(new NumberTickUnit(MILESIMO));
 		range.setTickUnit(new NumberTickUnit(MILESIMO));
 		
-//		XYPlot xyPlot = graficoFitness.getXYPlot();
-//		NumberAxis domainAxis = (NumberAxis) xyPlot.getDomainAxis();
-//		domainAxis.setTickUnit(new NumberTickUnit(10));
-		
-               
 		CategoryAxis domainAxis = categoryPlot.getDomainAxis();
 		domainAxis.setMaximumCategoryLabelLines(5);
 		domainAxis.setCategoryLabelPositions(
@@ -203,10 +203,11 @@ public class PrintFactory {
 	private String buildPathDiretorio() throws IOException {
 		String pathDiretorio = getUserDirectoryPath() + "/ag-peps/execucoes/";
 		pathDiretorio += new File(parametrosAlgoritmo.getPathBenchmark()).getName() + "/";
+		pathDiretorio += "exe" + parametrosAlgoritmo.getNumeroExecucoes() + "/";
 		pathDiretorio += "ger" + parametrosAlgoritmo.getNumeroGeracoes() + "/";
 		pathDiretorio += "pop" + parametrosAlgoritmo.getTamanhoPopulacao() + "/";
-		pathDiretorio += "cru" + parametrosAlgoritmo.getTamanhoPopulacao() + "/";
-		pathDiretorio += "mut" + parametrosAlgoritmo.getTamanhoPopulacao() + "/";
+		pathDiretorio += "cru" + parametrosAlgoritmo.getPercentualCruzamento().intValue() + "/";
+		pathDiretorio += "mut" + parametrosAlgoritmo.getPercentualMutacao().intValue() + "/";
 		
 		File file = new File(pathDiretorio);
 		if (!file.exists()) forceMkdir(file);
@@ -241,7 +242,7 @@ public class PrintFactory {
 		sb.appendLine();
 		sb.appendLine();
 		
-		appendEstatistica(sb.toString());
+		appendToEnd(sb.toString());
 	}
 	
 }

@@ -32,43 +32,32 @@ public class AlgoritmoGenetico {
              
             Populacao populacao = new Populacao(parametrosAlgoritmo.getTamanhoPopulacao());
             populacao.gerarIndividuos();
+            
             for (int i = 0; i < parametrosAlgoritmo.getNumeroGeracoes(); i++) {
-              System.out.println("geração " + i);
-              System.out.println("avaliar população");
-                populacao.avaliarIndividuos();
-//                populacao.imprimirPopulacao();
-                
-              System.out.println("selecionar mais aptos");
-                populacao.selecionarMaisAptosPorTorneio();
-                printFactory.geraEstatisticas(populacao, i);
-//                populacao.imprimirPopulacao();
-
-              System.out.println("efetuar cruzamento");
-                populacao.efetuarCruzamento(parametrosAlgoritmo.getPercentualCruzamento());
-//                populacao.imprimirPopulacao();
-                 
-              System.out.println("efetuar mutação");
-                populacao.efetuarMutacao(parametrosAlgoritmo.getPercentualMutacao());
-//                populacao.imprimirPopulacao();
+				populacao.avaliarIndividuos();
+				populacao.selecionarMaisAptosPorTorneio();
+				
+				printFactory.geraEstatisticas(populacao, i);
+				populacao.efetuarCruzamento(parametrosAlgoritmo.getPercentualCruzamento());
+				populacao.efetuarMutacao(parametrosAlgoritmo.getPercentualMutacao());
             }
 
-            System.out.println("avaliar população");
             populacao.avaliarIndividuos();
-//            populacao.imprimirPopulacao();
-            
-            System.out.println("selecionar mais aptos");
             populacao.selecionarMaisAptosPorTorneio();
-//            populacao.imprimirPopulacao();
+
             printFactory.geraEstatisticas(populacao, parametrosAlgoritmo.getNumeroGeracoes());
             printFactory.printIndividuo(populacao.getMelhorIndividuo());
             populacao.getIndividuos().sort((i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness()));
              
-            long delay = System.currentTimeMillis() - start;  
-//            populacao.imprimirPopulacao();
-            System.out.println("Demorou " + round((delay/1000) * 10000000)/10000000.0 + " segundos");
+            printFactory.printEstatisticaExecucao(calculaTempoExecucao(start), parametrosAlgoritmo);
             printFactory.plotaGraficos(populacao);
         }
     }
+
+	private Double calculaTempoExecucao(long start) {
+		long delay = System.currentTimeMillis() - start;  
+		return round((delay/1000) * 10000000)/10000000.0;
+	}
 
 	public List<Individuo> getPopulacao() {
 		return populacao;
