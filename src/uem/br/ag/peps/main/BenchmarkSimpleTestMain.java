@@ -55,7 +55,6 @@ public class BenchmarkSimpleTestMain {
 							algoritmoGenetico.inicializaDadosProblema();
 							algoritmoGenetico.executarAlgoritmo();
 							
-							
 							System.out.println("Fim da execução");
 							System.gc();
 						} 

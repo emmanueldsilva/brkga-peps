@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Locale;
 
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.CategoryAxis;
-import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.CategoryPlot;
@@ -42,6 +40,9 @@ public class PrintFactory {
 	private final String MELHOR_DURACAO_PROJETO = "Melhor Duração Projeto";
 	private final String MEDIA_DURACAO_PROJETO = "Média Duração Projeto";
 	private final String PIOR_DURACAO_PROJETO = "Pior Duração Projeto";
+	
+	private final Double MILESIMO = 0.001;
+	private final Double CENTENA_MILHAR = 100000.00;
 	
 	private static final NumberFormat CURRENCY_INSTANCE = NumberFormat.getCurrencyInstance(Locale.US);
 	
@@ -140,7 +141,7 @@ public class PrintFactory {
 		dataSetCustoProjeto.addValue(populacao.getMenorValorCustoProjeto(), MELHOR_CUSTO_PROJETO, geracao);
 	}
 	
-	public void plotaGraficos(Populacao populacao) {
+	public synchronized void plotaGraficos(Populacao populacao) {
 		try {
 			Individuo melhorIndividuo = populacao.getMelhorIndividuo();
 			Individuo piorIndividuo = populacao.getPiorIndividuo();
@@ -162,17 +163,10 @@ public class PrintFactory {
 		categoryPlot.setDomainCrosshairVisible(true);
 		categoryPlot.setRangeCrosshairVisible(true);
 		
-		double MILESIMO = 0.001;
 		NumberAxis range = (NumberAxis) categoryPlot.getRangeAxis();
 		range.setRange(piorIndividuo.getValorFitness() - MILESIMO, melhorIndividuo.getValorFitness() + MILESIMO);
 		range.setTickUnit(new NumberTickUnit(MILESIMO));
 		range.setTickUnit(new NumberTickUnit(MILESIMO));
-		
-		CategoryAxis domainAxis = categoryPlot.getDomainAxis();
-		domainAxis.setMaximumCategoryLabelLines(5);
-		domainAxis.setCategoryLabelPositions(
-		            CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0)
-		        );
 		
 		saveChartAsPNG(new File(pathDiretorio + "grafico_fitness_" + execucao + ".png"), graficoFitness, 1000, 300);
 	}
@@ -185,7 +179,6 @@ public class PrintFactory {
 		categoryPlot.setDomainCrosshairVisible(true);
 		categoryPlot.setRangeCrosshairVisible(true);
 		
-		double CENTENA_MILHAR = 100000.00;
 		NumberAxis range = (NumberAxis) categoryPlot.getRangeAxis();
 		range.setRange(piorIndividuo.getCustoTotalProjeto() - CENTENA_MILHAR, melhorIndividuo.getCustoTotalProjeto() + CENTENA_MILHAR);
 		range.setTickUnit(new NumberTickUnit(CENTENA_MILHAR));

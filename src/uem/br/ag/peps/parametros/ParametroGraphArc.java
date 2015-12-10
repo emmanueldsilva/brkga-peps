@@ -39,8 +39,4 @@ public class ParametroGraphArc extends ParametroLinha {
 		return no2;
 	}
 	
-	public static void main(String[] args) {
-		System.out.println("graph.arc.8=5 6".matches(ParametroGraphArc.pattern()));
-	}
-	
 }

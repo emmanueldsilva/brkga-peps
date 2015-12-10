@@ -30,8 +30,7 @@ public class Populacao {
     	final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
     	matrizDedicacao.popularMatrizAleatoriamente();
     	matrizDedicacao.efetuaCalculosProjeto();
-        final Individuo individuo = new Individuo(matrizDedicacao);
-        addIndividuo(individuo);
+        addIndividuo(new Individuo(matrizDedicacao));
     }
 
 	public void avaliarIndividuos() {
@@ -82,10 +81,10 @@ public class Populacao {
 	}
 
 	public void efetuaCrossover(List<Individuo> novosFilhos, Individuo pai1, Individuo pai2) {
-		int numeroEmployees = ProblemaBuilder.getInstance().getEmployees().size();
+		int numeroEmployees = ProblemaBuilder.getInstance().getNumeroEmployees();
 		int linha = RandomFactory.getInstance().nextInt(numeroEmployees);
 		
-		int numeroTasks = ProblemaBuilder.getInstance().getTasks().size();
+		int numeroTasks = ProblemaBuilder.getInstance().getNumeroTasks();
 		int coluna = RandomFactory.getInstance().nextInt(numeroTasks);
 		
 		final MatrizDedicacao matrizDedicacaoFilho1 = buildMatrizDedicacaoFilho(pai1, pai2, linha, coluna);
@@ -97,8 +96,8 @@ public class Populacao {
 
 	private MatrizDedicacao buildMatrizDedicacaoFilho(Individuo pai1, Individuo pai2, int linha, int coluna) {
 		MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
-		for (int i = 0; i < ProblemaBuilder.getInstance().getEmployees().size(); i++) {
-			for (int j = 0; j < ProblemaBuilder.getInstance().getTasks().size(); j++) {
+		for (int i = 0; i < ProblemaBuilder.getInstance().getNumeroEmployees(); i++) {
+			for (int j = 0; j < ProblemaBuilder.getInstance().getNumeroTasks(); j++) {
 				GrauDedicacao grauDedicacao;
 				if ((i <= linha && j <= coluna) || (i > linha && j > coluna)) {
 					grauDedicacao = pai1.getMatrizDedicacao().getGrauDedicacao(i, j);
@@ -109,7 +108,7 @@ public class Populacao {
 				matrizDedicacao.setGrauDedicacao(i, j, grauDedicacao);
 			}
 		}
-		
+
 		matrizDedicacao.efetuaCalculosProjeto();
 		return matrizDedicacao;
 	}

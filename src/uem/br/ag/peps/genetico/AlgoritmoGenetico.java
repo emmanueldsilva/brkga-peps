@@ -1,4 +1,4 @@
-	package uem.br.ag.peps.genetico;
+package uem.br.ag.peps.genetico;
 
 import static java.lang.Math.round;
 
@@ -30,13 +30,12 @@ public class AlgoritmoGenetico {
         	final PrintFactory printFactory = new PrintFactory(parametrosAlgoritmo, cont + 1);
             long start = System.currentTimeMillis();  
              
-            Populacao populacao = new Populacao(parametrosAlgoritmo.getTamanhoPopulacao());
+            final Populacao populacao = new Populacao(parametrosAlgoritmo.getTamanhoPopulacao());
             populacao.gerarIndividuos();
             
             for (int i = 0; i < parametrosAlgoritmo.getNumeroGeracoes(); i++) {
 				populacao.avaliarIndividuos();
 				populacao.selecionarMaisAptosPorTorneio();
-				
 				printFactory.geraEstatisticas(populacao, i);
 				populacao.efetuarCruzamento(parametrosAlgoritmo.getPercentualCruzamento());
 				populacao.efetuarMutacao(parametrosAlgoritmo.getPercentualMutacao());

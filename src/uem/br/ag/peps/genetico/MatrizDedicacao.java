@@ -234,7 +234,7 @@ public class MatrizDedicacao {
 	private TaskScheduling getPrimeiraEscalaTarefaASerConcluida(Double tempoInicioFase) {
 		if (DOUBLE_ZERO.equals(tempoInicioFase)) {
 			return escalaTarefas.stream()
-                                .filter(rt -> DOUBLE_ZERO.equals(rt.getTempoInicio()))
+                                .filter(rt -> DOUBLE_ZERO.equals(rt.getTempoInicio()) && rt.getTempoFim() > DOUBLE_ZERO)
                                 .findFirst()
                                 .get();
 		}
