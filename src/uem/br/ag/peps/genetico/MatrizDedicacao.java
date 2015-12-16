@@ -1,6 +1,8 @@
 package uem.br.ag.peps.genetico;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.difference;
+import static com.google.common.collect.Sets.newHashSet;
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 import static java.math.BigDecimal.valueOf;
@@ -146,17 +148,16 @@ public class MatrizDedicacao {
 	 * @return
 	 */
 	public boolean isSolucaoValidaPeranteRestricao2() {
+		int habilidadesNecessarias = 0;
 		for (Task task : ProblemaBuilder.getInstance().getTasks()) {
 			final List<Skill> employeesSkills = getSkillsDosEmployeesQueAtuamNaTask(task);
 			final List<Skill> taskSkills = task.getSkills();
 			employeesSkills.retainAll(taskSkills);
 			
-			this.habilidadesNecessarias = Math.abs(employeesSkills.size() - taskSkills.size());
-			
-			if (!employeesSkills.equals(taskSkills)) return false;
+			habilidadesNecessarias += difference(newHashSet(taskSkills), newHashSet(employeesSkills)).size();
 		}
 		
-		return true;
+		return habilidadesNecessarias == 0;
 	}
 	
 	/**
