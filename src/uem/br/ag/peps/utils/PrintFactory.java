@@ -1,5 +1,6 @@
 package uem.br.ag.peps.utils;
 
+import static org.apache.commons.io.FileUtils.forceDelete;
 import static org.apache.commons.io.FileUtils.forceMkdir;
 import static org.apache.commons.io.FileUtils.getUserDirectoryPath;
 import static org.apache.commons.io.FileUtils.write;
@@ -54,6 +55,17 @@ public class PrintFactory {
 	public PrintFactory(ParametrosAlgoritmo parametrosAlgoritmo, Integer execucao) {
 		this.parametrosAlgoritmo = parametrosAlgoritmo;
 		this.execucao = execucao;
+		
+		deleteRegistrosAnteriores();
+	}
+	
+	private void deleteRegistrosAnteriores() {
+		try {
+			File file = getRegistrosExecucaoFile();
+			if (file.exists()) forceDelete(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void imprimePopulacao(List<Individuo> individuos) {
@@ -111,10 +123,14 @@ public class PrintFactory {
 	
 	private void appendToEnd(String string) {
 		try {
-			write(new File(buildPathDiretorio() + "estatisticas" + execucao), string, true);
+			write(getRegistrosExecucaoFile(), string, true);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private File getRegistrosExecucaoFile() throws IOException {
+		return new File(buildPathDiretorio() + "estatisticas" + execucao + ".txt");
 	}
 
 	private void populaDataSetFitness(Populacao populacao, Integer geracao) {

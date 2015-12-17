@@ -36,7 +36,7 @@ public class Main {
 	
 	public static ParametrosAlgoritmo getParametrosDefault() {
 		final ParametrosAlgoritmo parametrosAlgoritmo = new ParametrosAlgoritmo();
-		parametrosAlgoritmo.setNumeroExecucoes(100);
+		parametrosAlgoritmo.setNumeroExecucoes(30);
 		parametrosAlgoritmo.setNumeroGeracoes(2000);
 		parametrosAlgoritmo.setTamanhoPopulacao(64);
 		parametrosAlgoritmo.setPercentualCruzamento(3.0);

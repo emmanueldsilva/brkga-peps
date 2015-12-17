@@ -1,11 +1,12 @@
 package uem.br.ag.peps.genetico;
 
-import static java.lang.Math.round;
-
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
 
 import uem.br.ag.peps.problema.ProblemaBuilder;
 import uem.br.ag.peps.utils.PrintFactory;
+import uem.br.ag.peps.utils.StatisticsPrintFactory;
 
 import com.google.common.collect.Lists;
 
@@ -14,6 +15,14 @@ public class AlgoritmoGenetico {
 	private List<Individuo> populacao = Lists.newArrayList();
 	
 	private ParametrosAlgoritmo parametrosAlgoritmo;
+	
+	private Integer hitRate = 0;
+	
+	private List<Double> melhoresFitness = Lists.newArrayList();
+	
+	private List<Double> melhoresCustosProjeto = Lists.newArrayList();
+	
+	private List<Double> melhoresDuracaoProjeto = Lists.newArrayList();
 	
 	public AlgoritmoGenetico(ParametrosAlgoritmo parametrosAlgoritmo) {
 		this.parametrosAlgoritmo = parametrosAlgoritmo;
@@ -44,18 +53,34 @@ public class AlgoritmoGenetico {
             populacao.avaliarIndividuos();
             populacao.selecionarMaisAptosPorTorneio();
 
+            final Individuo melhorIndividuo = populacao.getMelhorIndividuo();
+            
             printFactory.geraEstatisticas(populacao, parametrosAlgoritmo.getNumeroGeracoes());
-            printFactory.printIndividuo(populacao.getMelhorIndividuo());
+			printFactory.printIndividuo(melhorIndividuo);
             populacao.getIndividuos().sort((i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness()));
+            
+            if (melhorIndividuo.isFactivel()) {
+            	hitRate++;
+            	melhoresFitness.add(melhorIndividuo.getValorFitness());
+            	melhoresCustosProjeto.add(populacao.getMenorValorCustoProjeto());
+            	melhoresDuracaoProjeto.add(populacao.getMenorDuracaoProjeto());
+            }
              
             printFactory.printEstatisticaExecucao(calculaTempoExecucao(start), parametrosAlgoritmo);
             printFactory.plotaGraficos(populacao);
         }
+        
+        final StatisticsPrintFactory statisticsPrintFactory = new StatisticsPrintFactory(parametrosAlgoritmo, hitRate, melhoresFitness, melhoresCustosProjeto, melhoresDuracaoProjeto);
+        statisticsPrintFactory.printEstatisticasExecucoes();
     }
 
 	private Double calculaTempoExecucao(long start) {
-		long delay = System.currentTimeMillis() - start;  
-		return round((delay/1000) * 10000000)/10000000.0;
+		BigDecimal delay = new BigDecimal(System.currentTimeMillis() - start);
+		delay = delay.divide(new BigDecimal(1000), MathContext.DECIMAL32);
+		delay = delay.multiply(new BigDecimal(10000000));
+		delay = delay.divide(new BigDecimal(10000000), MathContext.DECIMAL32);
+		
+		return delay.doubleValue();
 	}
 
 	public List<Individuo> getPopulacao() {
@@ -67,3 +92,4 @@ public class AlgoritmoGenetico {
 	}
 	
 }
+
