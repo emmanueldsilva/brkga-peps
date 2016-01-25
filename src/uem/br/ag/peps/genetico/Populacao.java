@@ -61,7 +61,7 @@ public class Populacao {
 		return individuos.get(RandomFactory.getInstance().nextInt(tamanhoPopulacao - 1));
 	}
 
-	public void efetuarCruzamento(Double percentualCruzamento) {
+	public List<Individuo> efetuarCruzamento(Double percentualCruzamento) {
 		int numeroIndividuosCruzamento = Double.valueOf(individuos.size() * (percentualCruzamento/100)).intValue();
 		final List<Individuo> novosFilhos = newArrayList();
 		for (int cont = 0; cont < numeroIndividuosCruzamento; cont++) {
@@ -77,7 +77,7 @@ public class Populacao {
 			efetuaCrossover(novosFilhos, pai1, pai2);
 		}
 		
-		individuos.addAll(novosFilhos);
+		return novosFilhos;
 	}
 
 	public void efetuaCrossover(List<Individuo> novosFilhos, Individuo pai1, Individuo pai2) {
@@ -95,7 +95,7 @@ public class Populacao {
 	}
 
 	private MatrizDedicacao buildMatrizDedicacaoFilho(Individuo pai1, Individuo pai2, int linha, int coluna) {
-		MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
+		final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
 		for (int i = 0; i < ProblemaBuilder.getInstance().getNumeroEmployees(); i++) {
 			for (int j = 0; j < ProblemaBuilder.getInstance().getNumeroTasks(); j++) {
 				GrauDedicacao grauDedicacao;
@@ -105,7 +105,11 @@ public class Populacao {
 					grauDedicacao = pai2.getMatrizDedicacao().getGrauDedicacao(i, j);
 				}
 				
-				matrizDedicacao.setGrauDedicacao(i, j, grauDedicacao);
+				try {
+					matrizDedicacao.setGrauDedicacao(i, j, grauDedicacao.clone());
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -113,10 +117,10 @@ public class Populacao {
 		return matrizDedicacao;
 	}
 
-	public void efetuarMutacao(Double percentualMutacao) {
-		int numeroIndividuosMutacao = Double.valueOf(individuos.size() * (percentualMutacao/100)).intValue();
-		for (int i = 0; i < numeroIndividuosMutacao; i++) {
-			getIndividuoAleatorio().efetuarMutacao();
+	public void efetuarMutacao(List<Individuo> individuosFilhos, Double percentualMutacao) {
+		for (Individuo individuo : individuosFilhos) {
+			individuo.efetuarMutacao();
+			individuos.add(individuo);
 		}
 	}
 

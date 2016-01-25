@@ -29,7 +29,8 @@ public class RandomFactory {
     }
     
     public Double randomGrauDedicacao() {
-    	switch (nextInt(8)) {
+    	int nextInt = nextInt(8);
+		switch (nextInt) {
 		case 0:
 			return 0.0;
 		case 1:

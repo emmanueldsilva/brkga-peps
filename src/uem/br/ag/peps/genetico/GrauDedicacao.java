@@ -14,10 +14,6 @@ public class GrauDedicacao {
 	
 	private Double valor;
 	
-	public GrauDedicacao(Employee employee, Task task, String binaryValue) {
-		this(employee, task, parseBinaryValue(binaryValue));
-	}
-	
 	public GrauDedicacao(Employee employee, Task task, Double valor) {
 		this.employee = employee;
 		this.task = task;
@@ -78,5 +74,9 @@ public class GrauDedicacao {
 	public String getValorAsBinary() {
 		return leftPad(toBinaryString(round(getValor() * 7)), 3, '0');
 	}
-	
+
+	@Override
+	protected GrauDedicacao clone() throws CloneNotSupportedException {
+		return new GrauDedicacao(employee, task, valor);
+	}
 }

@@ -46,8 +46,9 @@ public class AlgoritmoGenetico {
 				populacao.avaliarIndividuos();
 				populacao.selecionarMaisAptosPorTorneio();
 				printFactory.geraEstatisticas(populacao, i);
-				populacao.efetuarCruzamento(parametrosAlgoritmo.getPercentualCruzamento());
-				populacao.efetuarMutacao(parametrosAlgoritmo.getPercentualMutacao());
+				
+				List<Individuo> individuosFilhos = populacao.efetuarCruzamento(parametrosAlgoritmo.getPercentualCruzamento());
+				populacao.efetuarMutacao(individuosFilhos, parametrosAlgoritmo.getPercentualMutacao());
             }
 
             populacao.avaliarIndividuos();
