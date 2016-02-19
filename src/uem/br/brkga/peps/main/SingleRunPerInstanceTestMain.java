@@ -4,7 +4,7 @@ import static java.util.Arrays.asList;
 
 import java.io.File;
 
-import uem.br.brkga.peps.genetico.AlgoritmoGenetico;
+import uem.br.brkga.peps.genetico.AlgoritmoBRKGA;
 import uem.br.brkga.peps.genetico.ParametrosAlgoritmo;
 import uem.br.brkga.peps.genetico.ParametrosPesos;
 
@@ -38,7 +38,7 @@ public class SingleRunPerInstanceTestMain {
 										  "/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst30-5-10-5.conf")) {
 			System.out.println("Iniciando execução: " + new File(pathBenchmark).getName());
 			
-			final AlgoritmoGenetico algoritmoGenetico = new AlgoritmoGenetico(getParametrosDefault(pathBenchmark));
+			final AlgoritmoBRKGA algoritmoGenetico = new AlgoritmoBRKGA(getParametrosDefault(pathBenchmark));
 			algoritmoGenetico.inicializaDadosProblema();
 			algoritmoGenetico.executarAlgoritmo();
 			

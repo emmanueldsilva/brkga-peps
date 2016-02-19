@@ -4,7 +4,7 @@ import static java.util.Arrays.asList;
 
 import java.io.File;
 
-import uem.br.brkga.peps.genetico.AlgoritmoGenetico;
+import uem.br.brkga.peps.genetico.AlgoritmoBRKGA;
 import uem.br.brkga.peps.genetico.ParametrosAlgoritmo;
 import uem.br.brkga.peps.genetico.ParametrosPesos;
 
@@ -51,7 +51,7 @@ public class BenchmarkTestMain {
 							parametrosAlgoritmo.setPercentualMutacao(percentualMutacao);
 							parametrosAlgoritmo.setPathBenchmark(pathBenchmark);
 
-							final AlgoritmoGenetico algoritmoGenetico = new AlgoritmoGenetico(parametrosAlgoritmo);
+							final AlgoritmoBRKGA algoritmoGenetico = new AlgoritmoBRKGA(parametrosAlgoritmo);
 							algoritmoGenetico.inicializaDadosProblema();
 							algoritmoGenetico.executarAlgoritmo();
 							

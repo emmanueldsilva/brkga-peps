@@ -1,6 +1,6 @@
 package uem.br.brkga.peps.main;
 
-import uem.br.brkga.peps.genetico.AlgoritmoGenetico;
+import uem.br.brkga.peps.genetico.AlgoritmoBRKGA;
 import uem.br.brkga.peps.genetico.ParametrosAlgoritmo;
 import uem.br.brkga.peps.genetico.ParametrosPesos;
 
@@ -30,7 +30,7 @@ public class Main {
 													    PESO_HABILIDADES_NECESSARIAS, 
 													    PESO_TRABALHO_EXTRA);
 		
-		final AlgoritmoGenetico algoritmoGenetico = new AlgoritmoGenetico(getParametrosDefault());
+		final AlgoritmoBRKGA algoritmoGenetico = new AlgoritmoBRKGA(getParametrosDefault());
 		algoritmoGenetico.inicializaDadosProblema();
 		algoritmoGenetico.executarAlgoritmo();
 	}

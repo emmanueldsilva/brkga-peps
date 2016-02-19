@@ -4,13 +4,17 @@ public class ParametrosAlgoritmo {
 	
 	private int tamanhoPopulacao;
 	
+	private Double tamanhoGrupoElite;
+	
+	private Double tamanhoGrupoMutantes;
+	
+	private Double tamanhoGrupoCombinatorio;
+	
 	private int numeroGeracoes;
 	
 	private int numeroExecucoes;
 	
-	private Double percentualCruzamento;
-	
-	private Double percentualMutacao;
+	private Double probabilidadeHerancaElite;
 	
 	private String pathBenchmark;
 
@@ -38,28 +42,44 @@ public class ParametrosAlgoritmo {
 		this.numeroExecucoes = numeroExecucoes;
 	}
 
-	public Double getPercentualCruzamento() {
-		return percentualCruzamento;
-	}
-
-	public void setPercentualCruzamento(Double percentualCruzamento) {
-		this.percentualCruzamento = percentualCruzamento;
-	}
-
-	public Double getPercentualMutacao() {
-		return percentualMutacao;
-	}
-
-	public void setPercentualMutacao(Double percentualMutacao) {
-		this.percentualMutacao = percentualMutacao;
-	}
-
 	public String getPathBenchmark() {
 		return pathBenchmark;
 	}
 
 	public void setPathBenchmark(String pathBenchmark) {
 		this.pathBenchmark = pathBenchmark;
+	}
+
+	public Double getTamanhoGrupoElite() {
+		return tamanhoGrupoElite;
+	}
+
+	public void setTamanhoGrupoElite(Double tamanhoGrupoElite) {
+		this.tamanhoGrupoElite = tamanhoGrupoElite;
+	}
+
+	public Double getTamanhoGrupoMutantes() {
+		return tamanhoGrupoMutantes;
+	}
+
+	public void setTamanhoGrupoMutantes(Double tamanhoGrupoMutantes) {
+		this.tamanhoGrupoMutantes = tamanhoGrupoMutantes;
+	}
+	
+	public Double getTamanhoGrupoCombinatorio() {
+		return tamanhoGrupoCombinatorio;
+	}
+
+	public void setTamanhoGrupoCombinatorio(Double tamanhoGrupoCombinatorio) {
+		this.tamanhoGrupoCombinatorio = tamanhoGrupoCombinatorio;
+	}
+
+	public Double getProbabilidadeHerancaElite() {
+		return probabilidadeHerancaElite;
+	}
+
+	public void setProbabilidadeHerancaElite(Double probabilidadeHerancaElite) {
+		this.probabilidadeHerancaElite = probabilidadeHerancaElite;
 	}
 	
 }

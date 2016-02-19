@@ -51,4 +51,8 @@ public class RandomFactory {
 		}
     }
     
+    public Double randomGeneCodificado() {
+    	return this.random.nextDouble();
+    }
+    
 }
