@@ -39,33 +39,36 @@ public class AlgoritmoBRKGA {
         	final PrintFactory printFactory = new PrintFactory(parametrosAlgoritmo, cont + 1);
             long start = System.currentTimeMillis();  
              
-            final Populacao populacao = new Populacao(parametrosAlgoritmo.getTamanhoPopulacao());
+            final Populacao populacao = new Populacao(parametrosAlgoritmo);
             populacao.gerarIndividuos();
             
             for (int i = 0; i < parametrosAlgoritmo.getNumeroGeracoes(); i++) {
 				populacao.avaliarIndividuos();
-				populacao.selecionarMaisAptos();
-				printFactory.geraEstatisticas(populacao, i);
+				populacao.ordenarIndividuos();
 				
-				populacao.efetuarCruzamento(parametrosAlgoritmo.getTamanhoGrupoCombinatorio(), parametrosAlgoritmo.getProbabilidadeHerancaElite());
-				populacao.gerarMutantes(parametrosAlgoritmo.getTamanhoGrupoMutantes());
+				final Populacao novaPopulacao = new Populacao(parametrosAlgoritmo);
+				novaPopulacao.addIndividuos(populacao.selecionarIndividuosMaisAptos());
+				novaPopulacao.gerarMutantes();
+//				printFactory.geraEstatisticas(populacao, i);
+				
+				novaPopulacao.efetuarCruzamento(parametrosAlgoritmo.getProbabilidadeHerancaElite());
             }
 
             populacao.avaliarIndividuos();
-            populacao.selecionarMaisAptos();
+            populacao.selecionarIndividuosMaisAptos();
 
-            final Individuo melhorIndividuo = populacao.getMelhorIndividuo();
-            
-            printFactory.geraEstatisticas(populacao, parametrosAlgoritmo.getNumeroGeracoes());
-			printFactory.printIndividuo(melhorIndividuo);
-            populacao.getIndividuos().sort((i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness()));
-            
-            if (melhorIndividuo.isFactivel()) {
-            	hitRate++;
-            	melhoresFitness.add(melhorIndividuo.getValorFitness());
-            	melhoresCustosProjeto.add(populacao.getMenorValorCustoProjeto());
-            	melhoresDuracaoProjeto.add(populacao.getMenorDuracaoProjeto());
-            }
+//            final Individuo melhorIndividuo = populacao.getMelhorIndividuo();
+//            
+//            printFactory.geraEstatisticas(populacao, parametrosAlgoritmo.getNumeroGeracoes());
+//			printFactory.printIndividuo(melhorIndividuo);
+//            populacao.getIndividuos().sort((i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness()));
+//            
+//            if (melhorIndividuo.isFactivel()) {
+//            	hitRate++;
+//            	melhoresFitness.add(melhorIndividuo.getValorFitness());
+//            	melhoresCustosProjeto.add(populacao.getMenorValorCustoProjeto());
+//            	melhoresDuracaoProjeto.add(populacao.getMenorDuracaoProjeto());
+//            }
              
             printFactory.printEstatisticaExecucao(calculaTempoExecucao(start), parametrosAlgoritmo);
             printFactory.plotaGraficos(populacao);

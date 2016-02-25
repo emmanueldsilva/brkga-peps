@@ -1,8 +1,11 @@
 package uem.br.brkga.peps.genetico;
 
+import static uem.br.brkga.peps.genetico.IndividuoCodificado.LINHAS;
+
 import java.util.Comparator;
 import java.util.List;
 
+import uem.br.brkga.peps.problema.ProblemaBuilder;
 import uem.br.brkga.peps.utils.RandomFactory;
 
 import com.google.common.collect.Lists;
@@ -11,10 +14,16 @@ public class Populacao {
 
 	private int tamanhoPopulacao;
 	
+	private int tamanhoGrupoElite;
+	
+	private int tamanhoGrupoMutantes;
+	
 	private List<IndividuoCodificado> individuos = Lists.newArrayList();
 	
-	public Populacao(int tamanhoPopulacao) {
-		this.tamanhoPopulacao = tamanhoPopulacao;
+	public Populacao(ParametrosAlgoritmo parametrosAlgoritmo) {
+		this.tamanhoPopulacao = parametrosAlgoritmo.getTamanhoPopulacao();
+		this.tamanhoGrupoElite = getNumeroIndividuosBy(parametrosAlgoritmo.getTamanhoGrupoElite());
+		this.tamanhoGrupoMutantes = getNumeroIndividuosBy(parametrosAlgoritmo.getTamanhoGrupoMutantes());
     }
  
     public void gerarIndividuos() {
@@ -37,54 +46,67 @@ public class Populacao {
     }
 
 	public void avaliarIndividuos() {
-//		individuos.forEach(i -> { 
-//			i.verificaFactibilidade();
-//			i.calculaValorFitness();	   
-//		});
+		individuos.forEach(i -> {
+			i.decodificar();
+			i.verificaFactibilidade();
+			i.calculaValorFitness();	   
+		});
 	}
 	
 	public void ordenarIndividuos() {
-//		individuos.stream().sorted(individuoComparator());
+		individuos.stream().sorted(individuoComparator());
 	}
 	
-	public void selecionarMaisAptos() {
-		//TODO
-		// aplicar elitismo
-		
-		while (individuos.size() > tamanhoPopulacao) {
+	public List<IndividuoCodificado> selecionarIndividuosMaisAptos() {
+		final List<IndividuoCodificado> individuosElite = Lists.newArrayList();
+		for (int i = 0; i < tamanhoGrupoElite; i++) {
+			individuosElite.add(individuos.get(i));
 		}
+		
+		return individuosElite;
 	}
 	
 	public IndividuoCodificado getIndividuoAleatorio() {
-		return individuos.get(RandomFactory.getInstance().nextInt(tamanhoPopulacao - 1));
+		return individuos.get(RandomFactory.getInstance().nextInt(individuos.size() - 1));
+	}
+	
+	public IndividuoCodificado getIndividuoEliteAleatorio() {
+		return individuos.get(RandomFactory.getInstance().nextInt(tamanhoGrupoElite - 1));
 	}
 
-	public void efetuarCruzamento(Double tamanhoGrupoCombinatorio, Double probabilidadeHerancaElite) {
-		//TODO
-		//Um pai deve ser do grupo elite e o outro aleatorio ou do grupo não elite
-		int numeroIndividuosCruzamento = getNumeroIndividuosBy(tamanhoGrupoCombinatorio);
-		for (int cont = 0; cont < numeroIndividuosCruzamento; cont++) {
-			IndividuoCodificado pai1 = getIndividuoAleatorio(); //elite
-			IndividuoCodificado pai2 = getIndividuoAleatorio(); //não elite ou aleatorio
+	public void efetuarCruzamento(Double probabilidadeHerancaElite) {
+		while (individuos.size() < tamanhoPopulacao) {
+			final IndividuoCodificado paiElite = getIndividuoEliteAleatorio();
+			final IndividuoCodificado paiOutro = getIndividuoAleatorio();
 			
-			IndividuoCodificado novoFilho = efetuaCrossover(pai1, pai2, probabilidadeHerancaElite);
+			final IndividuoCodificado novoFilho = efetuaCrossover(paiElite, paiOutro, probabilidadeHerancaElite);
 			individuos.add(novoFilho);
 		}
 	}
 
 	private int getNumeroIndividuosBy(Double tamanhoGrupo) {
-		return Double.valueOf(individuos.size() * (tamanhoGrupo/100)).intValue();
+		return Double.valueOf(tamanhoPopulacao * (tamanhoGrupo/100)).intValue();
 	}
 
-	public IndividuoCodificado efetuaCrossover(IndividuoCodificado pai1, IndividuoCodificado pai2, Double probabilidadeHerancaElite) {
-		//TODO
-		// utilizar a propabilidadeHerancaElite para verificar se o gene i deve ser do pai elite ou do outro.
+	public IndividuoCodificado efetuaCrossover(IndividuoCodificado paiElite, IndividuoCodificado paiOutro, Double probabilidadeHerancaElite) {
+		final IndividuoCodificado novoFilho = new IndividuoCodificado();
 		
-		return new IndividuoCodificado();
+		for (int i = 0; i < LINHAS; i++) {
+			for (int j = 0; j < ProblemaBuilder.getInstance().getNumeroTasks(); j++) {
+				final Double sorteio = RandomFactory.getInstance().randomDoubleRange1();
+				if (sorteio < probabilidadeHerancaElite/100) {
+					novoFilho.setGene(i, j, new Double(paiElite.getValor(i, j)));
+				} else {
+					novoFilho.setGene(i, j, new Double(paiOutro.getValor(i, j)));
+				}
+			}
+		}
+		
+		return paiOutro;
 	}
 	
-	public void gerarMutantes(Double tamanhoGrupoMutantes) {
-		for (int i = 0; i < getNumeroIndividuosBy(tamanhoGrupoMutantes); i++) {
+	public void gerarMutantes() {
+		for (int i = 0; i < tamanhoGrupoMutantes; i++) {
 			gerarIndividuoCodificado();
 		}
 	}
@@ -101,8 +123,8 @@ public class Populacao {
 //			.get();
 //	}
 
-	private Comparator<? super Individuo> individuoComparator() {
-		return (i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness());
+	private Comparator<? super IndividuoCodificado> individuoComparator() {
+		return (i1, i2) -> i1.getIndividuo().getValorFitness().compareTo(i2.getIndividuo().getValorFitness());
 	}
 	
 //	public Double getMaiorValorFitness() {
@@ -170,6 +192,10 @@ public class Populacao {
 	
 	public void addIndividuo(IndividuoCodificado individuoCodificado) {
 		this.individuos.add(individuoCodificado);
+	}
+	
+	public void addIndividuos(List<IndividuoCodificado> individuosCodificados) {
+		this.individuos.addAll(individuosCodificados);
 	}
 
 	public List<IndividuoCodificado> getIndividuosCodificados() {

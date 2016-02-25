@@ -5,7 +5,7 @@ import uem.br.brkga.peps.utils.RandomFactory;
 
 public class IndividuoCodificado {
 	
-	private final int LINHAS = 2;
+	public static final int LINHAS = 2;
 	
 	private Double[][] genes;
 	
@@ -18,14 +18,14 @@ public class IndividuoCodificado {
 	public void popularGenesAleatoriamente() {
 		for (int i = 0; i < LINHAS; i++) {
 			for (int j = 0; j < ProblemaBuilder.getInstance().getNumeroTasks(); j++) {
-				genes[i][j] = RandomFactory.getInstance().randomGeneCodificado();
+				setGene(i, j, RandomFactory.getInstance().randomDoubleRange1());
 			}
 		}
 		
 		decodificar();
 	}
 	
-	private void decodificar() {
+	public void decodificar() {
 //		this.individuo = 
 		//TODO 
 	}
@@ -36,6 +36,22 @@ public class IndividuoCodificado {
 	
 	public Double[][] getGenes() {
 		return genes;
+	}
+	
+	public Double getValor(int linha, int coluna) {
+		return genes[linha][coluna];
+	}
+	
+	public void setGene(int linha, int coluna, Double valor) {
+		genes[linha][coluna] = valor;
+	}
+
+	public void verificaFactibilidade() {
+		individuo.verificaFactibilidade();
+	}
+
+	public void calculaValorFitness() {
+		individuo.calculaValorFitness();
 	}
 
 }
