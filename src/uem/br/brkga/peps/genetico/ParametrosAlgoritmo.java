@@ -8,8 +8,6 @@ public class ParametrosAlgoritmo {
 	
 	private Double tamanhoGrupoMutantes;
 	
-	private Double tamanhoGrupoCombinatorio;
-	
 	private int numeroGeracoes;
 	
 	private int numeroExecucoes;
@@ -66,14 +64,6 @@ public class ParametrosAlgoritmo {
 		this.tamanhoGrupoMutantes = tamanhoGrupoMutantes;
 	}
 	
-	public Double getTamanhoGrupoCombinatorio() {
-		return tamanhoGrupoCombinatorio;
-	}
-
-	public void setTamanhoGrupoCombinatorio(Double tamanhoGrupoCombinatorio) {
-		this.tamanhoGrupoCombinatorio = tamanhoGrupoCombinatorio;
-	}
-
 	public Double getProbabilidadeHerancaElite() {
 		return probabilidadeHerancaElite;
 	}

@@ -85,17 +85,17 @@ public class PrintFactory {
 		sb.appendLine("--------------------------------------------------------------");
 		sb.appendLine("ESTATÍSTICAS GERAÇÃO " + geracao);
 		sb.appendLine();
-		sb.appendLine("MELHOR FITNESS: " + populacao.getMaiorValorFitness());
-		sb.appendLine("MEDIA FITNESS: " + populacao.getMediaValorFitness());
-		sb.appendLine("PIOR FITNESS: " + populacao.getMenorValorFitness());
+//		sb.appendLine("MELHOR FITNESS: " + populacao.getMaiorValorFitness());
+//		sb.appendLine("MEDIA FITNESS: " + populacao.getMediaValorFitness());
+//		sb.appendLine("PIOR FITNESS: " + populacao.getMenorValorFitness());
 		sb.appendLine("--------------------------------------------------------------");
-		sb.appendLine("MAIOR CUSTO PROJETO: " + CURRENCY_INSTANCE.format(populacao.getMaiorValorCustoProjeto()));
-		sb.appendLine("MEDIA CUSTO PROJETO: " + CURRENCY_INSTANCE.format(populacao.getMediaValorCustoProjeto()));
-		sb.appendLine("MENOR CUSTO PROJETO: " + CURRENCY_INSTANCE.format(populacao.getMenorValorCustoProjeto()));
+//		sb.appendLine("MAIOR CUSTO PROJETO: " + CURRENCY_INSTANCE.format(populacao.getMaiorValorCustoProjeto()));
+//		sb.appendLine("MEDIA CUSTO PROJETO: " + CURRENCY_INSTANCE.format(populacao.getMediaValorCustoProjeto()));
+//		sb.appendLine("MENOR CUSTO PROJETO: " + CURRENCY_INSTANCE.format(populacao.getMenorValorCustoProjeto()));
 		sb.appendLine("--------------------------------------------------------------");
-		sb.appendLine("MAIOR DURAÇÃO PROJETO: " + populacao.getMaiorDuracaoProjeto());
-		sb.appendLine("MEDIA DURAÇÃO PROJETO: " + populacao.getMediaDuracaoProjeto());
-		sb.appendLine("MENOR DURAÇÃO PROJETO: " + populacao.getMenorDuracaoProjeto());
+//		sb.appendLine("MAIOR DURAÇÃO PROJETO: " + populacao.getMaiorDuracaoProjeto());
+//		sb.appendLine("MEDIA DURAÇÃO PROJETO: " + populacao.getMediaDuracaoProjeto());
+//		sb.appendLine("MENOR DURAÇÃO PROJETO: " + populacao.getMenorDuracaoProjeto());
 		sb.appendLine("--------------------------------------------------------------");
 		sb.appendLine();
 		sb.appendLine();
@@ -115,8 +115,9 @@ public class PrintFactory {
 		sb.appendLine("NÚMERO DE EXECUÇÕES: " + parametrosAlgoritmo.getNumeroExecucoes());
 		sb.appendLine("NÚMERO DE GERAÇÕES: " + parametrosAlgoritmo.getNumeroGeracoes());
 		sb.appendLine("TAMANHO POPULAÇÃO: " + parametrosAlgoritmo.getTamanhoPopulacao());
-		sb.appendLine("PERCENTUAL CRUZAMENTO: " + parametrosAlgoritmo.getPercentualCruzamento());
-		sb.appendLine("PERCENTUAL MUTAÇÃO: " + parametrosAlgoritmo.getPercentualMutacao());
+		sb.appendLine("TAMANHO GRUPO ELITE: " + parametrosAlgoritmo.getTamanhoGrupoElite());
+		sb.appendLine("TAMANHO GRUPO MUTANTES: " + parametrosAlgoritmo.getTamanhoGrupoMutantes());
+		sb.appendLine("PROBABILIDADE HERANÇA ELITE: " + parametrosAlgoritmo.getProbabilidadeHerancaElite());
 		
 		appendToEnd(sb.toString());
 	}
@@ -134,27 +135,27 @@ public class PrintFactory {
 	}
 
 	private void populaDataSetFitness(Populacao populacao, Integer geracao) {
-		dataSetFitness.addValue(populacao.getMaiorValorFitness(), MELHOR_FITNESS, geracao);
-		dataSetFitness.addValue(populacao.getMediaValorFitness(), MEDIA_FITNESS, geracao);
-		dataSetFitness.addValue(populacao.getMenorValorFitness(), PIOR_FITNESS, geracao);
+//		dataSetFitness.addValue(populacao.getMaiorValorFitness(), MELHOR_FITNESS, geracao);
+//		dataSetFitness.addValue(populacao.getMediaValorFitness(), MEDIA_FITNESS, geracao);
+//		dataSetFitness.addValue(populacao.getMenorValorFitness(), PIOR_FITNESS, geracao);
 	}
 	
 	private void populaDataSetDuracaoProjeto(Populacao populacao, Integer geracao) {
-		dataSetDuracaoProjeto.addValue(populacao.getMaiorDuracaoProjeto(), PIOR_DURACAO_PROJETO, geracao);
-		dataSetDuracaoProjeto.addValue(populacao.getMediaDuracaoProjeto(), MEDIA_DURACAO_PROJETO, geracao);
-		dataSetDuracaoProjeto.addValue(populacao.getMenorDuracaoProjeto(), MELHOR_DURACAO_PROJETO, geracao);
+//		dataSetDuracaoProjeto.addValue(populacao.getMaiorDuracaoProjeto(), PIOR_DURACAO_PROJETO, geracao);
+//		dataSetDuracaoProjeto.addValue(populacao.getMediaDuracaoProjeto(), MEDIA_DURACAO_PROJETO, geracao);
+//		dataSetDuracaoProjeto.addValue(populacao.getMenorDuracaoProjeto(), MELHOR_DURACAO_PROJETO, geracao);
 	}
 	
 	private void populaDataSetCustoProjeto(Populacao populacao, Integer geracao) {
-		dataSetCustoProjeto.addValue(populacao.getMaiorValorCustoProjeto(), PIOR_CUSTO_PROJETO, geracao);
-		dataSetCustoProjeto.addValue(populacao.getMediaValorCustoProjeto(), MEDIA_CUSTO_PROJETO, geracao);
-		dataSetCustoProjeto.addValue(populacao.getMenorValorCustoProjeto(), MELHOR_CUSTO_PROJETO, geracao);
+//		dataSetCustoProjeto.addValue(populacao.getMaiorValorCustoProjeto(), PIOR_CUSTO_PROJETO, geracao);
+//		dataSetCustoProjeto.addValue(populacao.getMediaValorCustoProjeto(), MEDIA_CUSTO_PROJETO, geracao);
+//		dataSetCustoProjeto.addValue(populacao.getMenorValorCustoProjeto(), MELHOR_CUSTO_PROJETO, geracao);
 	}
 	
 	public synchronized void plotaGraficos(Populacao populacao) {
 		try {
-			Individuo melhorIndividuo = populacao.getMelhorIndividuo();
-			Individuo piorIndividuo = populacao.getPiorIndividuo();
+			Individuo melhorIndividuo = null;// = populacao.getMelhorIndividuo();
+			Individuo piorIndividuo = null; //populacao.getPiorIndividuo();
 			
 			String pathDiretorio = buildPathDiretorio();
 			buildGraficoFitness(pathDiretorio, melhorIndividuo, piorIndividuo);
@@ -200,8 +201,9 @@ public class PrintFactory {
 		pathDiretorio += "exe" + parametrosAlgoritmo.getNumeroExecucoes() + "/";
 		pathDiretorio += "ger" + parametrosAlgoritmo.getNumeroGeracoes() + "/";
 		pathDiretorio += "pop" + parametrosAlgoritmo.getTamanhoPopulacao() + "/";
-		pathDiretorio += "cru" + parametrosAlgoritmo.getPercentualCruzamento().intValue() + "/";
-		pathDiretorio += "mut" + parametrosAlgoritmo.getPercentualMutacao().intValue() + "/";
+		pathDiretorio += "elite" + parametrosAlgoritmo.getTamanhoGrupoElite().intValue() + "/";
+		pathDiretorio += "mut" + parametrosAlgoritmo.getTamanhoGrupoMutantes().intValue() + "/";
+		pathDiretorio += "prob" + parametrosAlgoritmo.getProbabilidadeHerancaElite().intValue() + "/";
 		
 		File file = new File(pathDiretorio);
 		if (!file.exists()) forceMkdir(file);

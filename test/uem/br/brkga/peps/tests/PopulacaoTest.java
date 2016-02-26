@@ -4,10 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import uem.br.brkga.peps.entidade.Employee;
-import uem.br.brkga.peps.entidade.Task;
-import uem.br.brkga.peps.genetico.Individuo;
-import uem.br.brkga.peps.genetico.MatrizDedicacao;
+import uem.br.brkga.peps.genetico.IndividuoCodificado;
+import uem.br.brkga.peps.genetico.ParametrosAlgoritmo;
 import uem.br.brkga.peps.genetico.Populacao;
 import uem.br.brkga.peps.problema.ProblemaBuilder;
 import uem.br.brkga.peps.utils.RandomFactory;
@@ -25,108 +23,41 @@ public class PopulacaoTest {
 	
 	@Test
 	public void testCruzamentoMatrizesDedicacao() {
+		final ParametrosAlgoritmo parametrosAlgoritmo = new ParametrosAlgoritmo();
+		parametrosAlgoritmo.setTamanhoPopulacao(2);
+		parametrosAlgoritmo.setTamanhoGrupoElite(50.0);
+		parametrosAlgoritmo.setTamanhoGrupoMutantes(50.0);
+		parametrosAlgoritmo.setProbabilidadeHerancaElite(60.0);
+		
 		RandomFactory.getInstance().setSeed(1);
-		final Populacao populacao = new Populacao(2);
+		final Populacao populacao = new Populacao(parametrosAlgoritmo);
 		
-		final Individuo individuo1 = new Individuo(buildMatrizDedicacao1());
-		populacao.addIndividuo(individuo1);
+		final IndividuoCodificado paiElite = new IndividuoCodificado(buildGenesCodificados1());
+		populacao.addIndividuo(paiElite);
 		
-		final Individuo individuo2 = new Individuo(buildMatrizDedicacao2());
-		populacao.addIndividuo(individuo2);
+		final IndividuoCodificado paiOutro = new IndividuoCodificado(buildGenesCodificados2());
+		populacao.addIndividuo(paiOutro);
 		
-		populacao.efetuaCrossover(populacao.getIndividuos(), individuo1, individuo2);
+		final IndividuoCodificado novoFilho = populacao.efetuaCrossover(paiElite, paiOutro, parametrosAlgoritmo.getProbabilidadeHerancaElite());
 		
-		Assert.assertEquals(4, populacao.getIndividuos().size());
-		
-		final Employee employee0 = problemaBuilder.getEmployee(0);
-		final Employee employee1 = problemaBuilder.getEmployee(1);
-		final Task task0 = problemaBuilder.getTask(0);
-		final Task task1 = problemaBuilder.getTask(1);
-		final Task task2 = problemaBuilder.getTask(2);
-		final Task task3 = problemaBuilder.getTask(3);
-		
-		Individuo individuo3 = populacao.getIndividuos().get(2);
-		MatrizDedicacao matrizDedicacao1 = individuo3.getMatrizDedicacao();
-		
-		Assert.assertEquals(Double.valueOf(0.43), matrizDedicacao1.getGrauDedicacao(employee0, task0).getValor());
-		Assert.assertEquals(Double.valueOf(0.14), matrizDedicacao1.getGrauDedicacao(employee0, task1).getValor());
-		Assert.assertEquals(Double.valueOf(0.57), matrizDedicacao1.getGrauDedicacao(employee0, task2).getValor());
-		Assert.assertEquals(Double.valueOf(0.71), matrizDedicacao1.getGrauDedicacao(employee0, task3).getValor());
-		Assert.assertEquals(Double.valueOf(0.29), matrizDedicacao1.getGrauDedicacao(employee1, task0).getValor());
-		Assert.assertEquals(Double.valueOf(0.43), matrizDedicacao1.getGrauDedicacao(employee1, task1).getValor());
-		Assert.assertEquals(Double.valueOf(0.86), matrizDedicacao1.getGrauDedicacao(employee1, task2).getValor());
-		Assert.assertEquals(Double.valueOf(0.29), matrizDedicacao1.getGrauDedicacao(employee1, task3).getValor());
-
-		
-		Individuo individuo4 = populacao.getIndividuos().get(3);
-		MatrizDedicacao matrizDedicacao2 = individuo4.getMatrizDedicacao();
-		
-		Assert.assertEquals(Double.valueOf(0.0), matrizDedicacao2.getGrauDedicacao(employee0, task0).getValor());
-		Assert.assertEquals(Double.valueOf(1.00), matrizDedicacao2.getGrauDedicacao(employee0, task1).getValor());
-		Assert.assertEquals(Double.valueOf(0.29), matrizDedicacao2.getGrauDedicacao(employee0, task2).getValor());
-		Assert.assertEquals(Double.valueOf(0.86), matrizDedicacao2.getGrauDedicacao(employee0, task3).getValor());
-		Assert.assertEquals(Double.valueOf(1.0), matrizDedicacao2.getGrauDedicacao(employee1, task0).getValor());
-		Assert.assertEquals(Double.valueOf(0.0), matrizDedicacao2.getGrauDedicacao(employee1, task1).getValor());
-		Assert.assertEquals(Double.valueOf(0.71), matrizDedicacao2.getGrauDedicacao(employee1, task2).getValor());
-		Assert.assertEquals(Double.valueOf(0.57), matrizDedicacao2.getGrauDedicacao(employee1, task3).getValor());
+		Assert.assertEquals(novoFilho.getValor(0, 0), new Double(0.9));
+		Assert.assertEquals(novoFilho.getValor(0, 1), new Double(0.4));
+		Assert.assertEquals(novoFilho.getValor(0, 2), new Double(0.6));
+		Assert.assertEquals(novoFilho.getValor(0, 3), new Double(0.8));
+		Assert.assertEquals(novoFilho.getValor(1, 0), new Double(0.4));
+		Assert.assertEquals(novoFilho.getValor(1, 1), new Double(0.3));
+		Assert.assertEquals(novoFilho.getValor(1, 2), new Double(0.2));
+		Assert.assertEquals(novoFilho.getValor(1, 3), new Double(0.1));
 	}
 
-	/**
-	 * 0.43 | 1.00 | 0.29 | 0.86
-	 * -------------------------
-	 * 0.29 | 0.00 | 0.71 | 0.57
-	 * @return
-	 */
-	private MatrizDedicacao buildMatrizDedicacao1() {
-		final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
-		
-		final Task task0 = problemaBuilder.getTask(0);
-		final Task task1 = problemaBuilder.getTask(1);
-		final Task task2 = problemaBuilder.getTask(2);
-		final Task task3 = problemaBuilder.getTask(3);
-		
-		final Employee employee0 = problemaBuilder.getEmployee(0);
-		matrizDedicacao.addGrauDedicacao(employee0, task0, 0.43);
-		matrizDedicacao.addGrauDedicacao(employee0, task1, 1.0);
-		matrizDedicacao.addGrauDedicacao(employee0, task2, 0.29);
-		matrizDedicacao.addGrauDedicacao(employee0, task3, 0.86);
-		
-		final Employee employee1 = problemaBuilder.getEmployee(1);
-		matrizDedicacao.addGrauDedicacao(employee1, task0, 0.29);
-		matrizDedicacao.addGrauDedicacao(employee1, task1, 0.0);
-		matrizDedicacao.addGrauDedicacao(employee1, task2, 0.71);
-		matrizDedicacao.addGrauDedicacao(employee1, task3, 0.57);
-		
-		return matrizDedicacao;
+	private Double[][] buildGenesCodificados1() {
+		return new Double[][]{{0.2, 0.4, 0.6, 0.8},
+							  {0.1, 0.3, 0.5, 0.7}};
 	}
 	
-	/**
-	 * 0.00 | 0.14 | 0.57 | 0.71
-	 * -------------------------
-	 * 1.00 | 0.43 | 0.86 | 0.29
-	 * @return
-	 */
-	private MatrizDedicacao buildMatrizDedicacao2() {
-		final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
-		
-		final Task task0 = problemaBuilder.getTask(0);
-		final Task task1 = problemaBuilder.getTask(1);
-		final Task task2 = problemaBuilder.getTask(2);
-		final Task task3 = problemaBuilder.getTask(3);
-		
-		final Employee employee0 = problemaBuilder.getEmployee(0);
-		matrizDedicacao.addGrauDedicacao(employee0, task0, 0.0);
-		matrizDedicacao.addGrauDedicacao(employee0, task1, 0.14);
-		matrizDedicacao.addGrauDedicacao(employee0, task2, 0.57);
-		matrizDedicacao.addGrauDedicacao(employee0, task3, 0.71);
-		
-		final Employee employee1 = problemaBuilder.getEmployee(1);
-		matrizDedicacao.addGrauDedicacao(employee1, task0, 1.0);
-		matrizDedicacao.addGrauDedicacao(employee1, task1, 0.43);
-		matrizDedicacao.addGrauDedicacao(employee1, task2, 0.86);
-		matrizDedicacao.addGrauDedicacao(employee1, task3, 0.29);
-		
-		return matrizDedicacao;
+	private Double[][] buildGenesCodificados2() {
+		return new Double[][]{{0.9, 0.8, 0.7, 0.6},
+							  {0.4, 0.3, 0.2, 0.1}};
 	}
-	
+
 }

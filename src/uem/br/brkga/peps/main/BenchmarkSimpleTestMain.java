@@ -34,34 +34,37 @@ public class BenchmarkSimpleTestMain {
 										  "/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst30-15-10-5.conf")) {
 			for (Integer numeroGeracoes : asList(50, 75, 100, 125, 150)) {
 				for (Integer tamanhoPopulacao: asList(30, 50, 75, 100, 125)) {
-					for (Double percentualCruzamento : asList(1.0, 3.0, 5.0, 10.0, 15.0)) {
-						for (Double percentualMutacao : asList(1.0, 2.0, 3.0, 4.0, 5.0, 10.0)) {
-							System.out.println("Iniciando execução: " + new File(pathBenchmark).getName() + "/"
-																	  + NUMERO_EXECUCOES + "/"
-																	  + numeroGeracoes + "/" 
-																	  + tamanhoPopulacao + "/"
-																	  + percentualCruzamento + "/"
-																	  + percentualMutacao);
-							
-							final ParametrosAlgoritmo parametrosAlgoritmo = new ParametrosAlgoritmo();
-							parametrosAlgoritmo.setNumeroExecucoes(NUMERO_EXECUCOES);
-							parametrosAlgoritmo.setNumeroGeracoes(numeroGeracoes);
-							parametrosAlgoritmo.setTamanhoPopulacao(tamanhoPopulacao);
-							parametrosAlgoritmo.setPercentualCruzamento(percentualCruzamento);
-							parametrosAlgoritmo.setPercentualMutacao(percentualMutacao);
-							parametrosAlgoritmo.setPathBenchmark(pathBenchmark);
-
-							final AlgoritmoBRKGA algoritmoGenetico = new AlgoritmoBRKGA(parametrosAlgoritmo);
-							algoritmoGenetico.inicializaDadosProblema();
-							algoritmoGenetico.executarAlgoritmo();
-							
-							System.out.println("Fim da execução");
-							System.gc();
-						} 
+					for (Double tamanhoGrupoElite: asList(10.0, 15.0, 20.0, 25.0)) {
+						for (Double tamanhoGrupoMutantes: asList(5.0, 10.0, 15.0, 20.0)) {
+							for (Double probabilidadeHerancaElite: asList(55.0, 65.0, 75.0, 85.0, 95.0)) {
+								System.out.println("Iniciando execução: " + new File(pathBenchmark).getName() + "/"
+										+ NUMERO_EXECUCOES + "/"
+										+ numeroGeracoes + "/" 
+										+ tamanhoPopulacao + "/"
+										+ tamanhoGrupoElite + "/"
+										+ tamanhoGrupoMutantes + "/"
+										+ probabilidadeHerancaElite);
+								
+								final ParametrosAlgoritmo parametrosAlgoritmo = new ParametrosAlgoritmo();
+								parametrosAlgoritmo.setNumeroExecucoes(NUMERO_EXECUCOES);
+								parametrosAlgoritmo.setNumeroGeracoes(numeroGeracoes);
+								parametrosAlgoritmo.setTamanhoPopulacao(tamanhoPopulacao);
+								parametrosAlgoritmo.setTamanhoGrupoElite(tamanhoGrupoElite);
+								parametrosAlgoritmo.setTamanhoGrupoMutantes(tamanhoGrupoMutantes);
+								parametrosAlgoritmo.setProbabilidadeHerancaElite(probabilidadeHerancaElite);
+								parametrosAlgoritmo.setPathBenchmark(pathBenchmark);
+								
+								final AlgoritmoBRKGA algoritmoGenetico = new AlgoritmoBRKGA(parametrosAlgoritmo);
+								algoritmoGenetico.inicializaDadosProblema();
+								algoritmoGenetico.executarAlgoritmo();
+								
+								System.out.println("Fim da execução");
+								System.gc();
+							}
+						}
 					}
 				}
 			}
 		}
-	}
-	
+	}	
 }

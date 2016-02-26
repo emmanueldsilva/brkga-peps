@@ -88,8 +88,9 @@ public class StatisticsPrintFactory {
 		pathDiretorio += "exe" + parametrosAlgoritmo.getNumeroExecucoes() + "/";
 		pathDiretorio += "ger" + parametrosAlgoritmo.getNumeroGeracoes() + "/";
 		pathDiretorio += "pop" + parametrosAlgoritmo.getTamanhoPopulacao() + "/";
-		pathDiretorio += "cru" + parametrosAlgoritmo.getPercentualCruzamento().intValue() + "/";
-		pathDiretorio += "mut" + parametrosAlgoritmo.getPercentualMutacao().intValue() + "/";
+		pathDiretorio += "elite" + parametrosAlgoritmo.getTamanhoGrupoElite().intValue() + "/";
+		pathDiretorio += "mut" + parametrosAlgoritmo.getTamanhoGrupoMutantes().intValue() + "/";
+		pathDiretorio += "prob" + parametrosAlgoritmo.getProbabilidadeHerancaElite().intValue() + "/";
 		
 		File file = new File(pathDiretorio);
 		if (!file.exists()) forceMkdir(file);

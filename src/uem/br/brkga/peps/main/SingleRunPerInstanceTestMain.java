@@ -52,8 +52,9 @@ public class SingleRunPerInstanceTestMain {
 		parametrosAlgoritmo.setNumeroExecucoes(100);
 		parametrosAlgoritmo.setNumeroGeracoes(2000);
 		parametrosAlgoritmo.setTamanhoPopulacao(64);
-		parametrosAlgoritmo.setPercentualCruzamento(3.0);
-		parametrosAlgoritmo.setPercentualMutacao(1.0);
+		parametrosAlgoritmo.setTamanhoGrupoElite(20.0);
+		parametrosAlgoritmo.setTamanhoGrupoMutantes(5.0);
+		parametrosAlgoritmo.setProbabilidadeHerancaElite(60.0);
 		parametrosAlgoritmo.setPathBenchmark(pathBenchmark);
 		return parametrosAlgoritmo;
 	}

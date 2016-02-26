@@ -14,6 +14,10 @@ public class IndividuoCodificado {
 	public IndividuoCodificado() {
 		this.genes = new Double[LINHAS][ProblemaBuilder.getInstance().getNumeroTasks()];
 	}
+	
+	public IndividuoCodificado(Double[][] genes) {
+		this.genes = genes;
+	}
 
 	public void popularGenesAleatoriamente() {
 		for (int i = 0; i < LINHAS; i++) {

@@ -28,7 +28,7 @@ public class Populacao {
  
     public void gerarIndividuos() {
         for (int i = 0; i < tamanhoPopulacao; i++) {
-            gerarIndividuoAleatorio();
+            gerarIndividuoCodificado();
         }
     }
     
@@ -36,13 +36,6 @@ public class Populacao {
     	final IndividuoCodificado individuoCodificado = new IndividuoCodificado();
     	individuoCodificado.popularGenesAleatoriamente();
     	addIndividuo(individuoCodificado);
-    }
- 
-    private void gerarIndividuoAleatorio() {
-//    	final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
-//    	matrizDedicacao.popularMatrizAleatoriamente();
-//    	matrizDedicacao.efetuaCalculosProjeto();
-//        addIndividuo(new Individuo(matrizDedicacao));
     }
 
 	public void avaliarIndividuos() {
@@ -102,7 +95,7 @@ public class Populacao {
 			}
 		}
 		
-		return paiOutro;
+		return novoFilho;
 	}
 	
 	public void gerarMutantes() {
