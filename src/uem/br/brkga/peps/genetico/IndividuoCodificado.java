@@ -1,5 +1,9 @@
 package uem.br.brkga.peps.genetico;
 
+import static org.apache.commons.math3.util.CombinatoricsUtils.binomialCoefficientDouble;
+
+import org.apache.commons.math3.util.CombinatoricsUtils;
+
 import uem.br.brkga.peps.problema.ProblemaBuilder;
 import uem.br.brkga.peps.utils.RandomFactory;
 
@@ -30,8 +34,8 @@ public class IndividuoCodificado {
 	}
 	
 	public void decodificar() {
-//		this.individuo = 
-		//TODO 
+		Double valorCodificado = 0.0;
+		String stringAtuacaoEmployees = ProblemaBuilder.getInstance().getStringAtuacaoEmployeesBy(valorCodificado);
 	}
 
 	public Individuo getIndividuo() {

@@ -30,7 +30,7 @@ public class IndividuoTest {
 	@Before
 	public void before() {
 		problemaBuilder.clear();
-		problemaBuilder.setParametrosPath("/home/emmanuel/projetos/ag-peps/test-resources/test-intances/peps-4-tasks-2-employees.conf");
+		problemaBuilder.setParametrosPath("/home/codeit/projetos-uem/brkga-peps/test-resources/test-intances/peps-4-tasks-2-employees.conf");
 		problemaBuilder.readParametrosArquivo();
 		
 		buildParametrosPesos();

@@ -2,9 +2,16 @@ package uem.br.brkga.peps.problema;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Integer.compare;
+import static java.lang.Long.toBinaryString;
+import static java.math.BigDecimal.ONE;
 import static java.util.Collections.emptyList;
+import static org.apache.commons.lang3.StringUtils.leftPad;
+import static org.apache.commons.lang3.StringUtils.reverse;
+import static org.apache.commons.math3.util.CombinatoricsUtils.binomialCoefficientDouble;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +41,8 @@ public class ProblemaBuilder {
 	
 	private List<Task> tasks = newArrayList();
 	
+	private List<String> atuacoesEmployees = newArrayList();
+	
 	public static ProblemaBuilder instance;
 	
 	private synchronized static void newInstance() {
@@ -59,6 +68,8 @@ public class ProblemaBuilder {
 			
 			readSkills();
 			readEmployees();
+			buildAtuacoesEmployees();
+			
 			readTasks();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -89,6 +100,24 @@ public class ProblemaBuilder {
 			employee.setSkills(readEmployeeSkills(i));
 			employees.add(employee);
 		}
+	}
+	
+	private void buildAtuacoesEmployees(){
+		int numeroEmployees = ProblemaBuilder.getInstance().getNumeroEmployees();
+		final int somatorioCombinacoesEmpregados = calculaSomatorioCombinacoesEmpregados();
+		
+		for (int i = 0; i < somatorioCombinacoesEmpregados; i++) {
+			atuacoesEmployees.add(reverse(leftPad(toBinaryString(i), numeroEmployees, '0')));
+		}
+	}
+	
+	private int calculaSomatorioCombinacoesEmpregados() {
+		int acumulado = 0;
+		final int numeroEmployees = ProblemaBuilder.getInstance().getNumeroEmployees();
+		for (int i = numeroEmployees; i >= 0 ; i--) {
+			acumulado += binomialCoefficientDouble(numeroEmployees, i);
+		}
+		return acumulado;
 	}
 	
 	private void readTasks() {
@@ -193,6 +222,22 @@ public class ProblemaBuilder {
 
 	public List<Employee> getEmployees() {
 		return employees;
+	}
+	
+	public List<String> getAtuacoesEmployees() {
+		return atuacoesEmployees;
+	}
+	
+	public String getStringAtuacaoEmployeesBy(Double valorCodificado){
+		final BigDecimal somatorioCombinacoesEmpregados = new BigDecimal(calculaSomatorioCombinacoesEmpregados());
+		final BigDecimal unidadeCombinatoriaEmpregados = ONE.divide(somatorioCombinacoesEmpregados, MathContext.DECIMAL32);
+		final BigDecimal valorIndex = new BigDecimal(valorCodificado).divideToIntegralValue(unidadeCombinatoriaEmpregados);
+		
+		return atuacoesEmployees.get(valorIndex.intValue());
+	}
+	
+	public String getStringAtuacaoEmployeesBy(int index){
+		return atuacoesEmployees.get(index);
 	}
 	
 	public int getNumeroEmployees() {
