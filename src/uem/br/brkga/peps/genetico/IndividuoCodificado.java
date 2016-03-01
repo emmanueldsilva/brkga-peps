@@ -1,9 +1,5 @@
 package uem.br.brkga.peps.genetico;
 
-import static org.apache.commons.math3.util.CombinatoricsUtils.binomialCoefficientDouble;
-
-import org.apache.commons.math3.util.CombinatoricsUtils;
-
 import uem.br.brkga.peps.problema.ProblemaBuilder;
 import uem.br.brkga.peps.utils.RandomFactory;
 
@@ -11,23 +7,21 @@ public class IndividuoCodificado {
 	
 	public static final int LINHAS = 2;
 	
-	private Double[][] genes;
+	private Double[] genes;
 	
 	private Individuo individuo;
 	
 	public IndividuoCodificado() {
-		this.genes = new Double[LINHAS][ProblemaBuilder.getInstance().getNumeroTasks()];
+		this.genes = new Double[ProblemaBuilder.getInstance().getNumeroTasks()];
 	}
 	
-	public IndividuoCodificado(Double[][] genes) {
+	public IndividuoCodificado(Double[] genes) {
 		this.genes = genes;
 	}
 
 	public void popularGenesAleatoriamente() {
-		for (int i = 0; i < LINHAS; i++) {
-			for (int j = 0; j < ProblemaBuilder.getInstance().getNumeroTasks(); j++) {
-				setGene(i, j, RandomFactory.getInstance().randomDoubleRange1());
-			}
+		for (int i = 0; i < ProblemaBuilder.getInstance().getNumeroTasks(); i++) {
+			setGene(i, RandomFactory.getInstance().randomDoubleRange1());
 		}
 		
 		decodificar();
@@ -42,16 +36,16 @@ public class IndividuoCodificado {
 		return individuo;
 	}
 	
-	public Double[][] getGenes() {
+	public Double[] getGenes() {
 		return genes;
 	}
 	
-	public Double getValor(int linha, int coluna) {
-		return genes[linha][coluna];
+	public Double getValor(int task) {
+		return genes[task];
 	}
 	
-	public void setGene(int linha, int coluna, Double valor) {
-		genes[linha][coluna] = valor;
+	public void setGene(int task, Double valor) {
+		genes[task] = valor;
 	}
 
 	public void verificaFactibilidade() {

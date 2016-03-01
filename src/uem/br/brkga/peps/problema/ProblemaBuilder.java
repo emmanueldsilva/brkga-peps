@@ -2,18 +2,17 @@ package uem.br.brkga.peps.problema;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Integer.compare;
-import static java.lang.Long.toBinaryString;
 import static java.math.BigDecimal.ONE;
 import static java.util.Collections.emptyList;
-import static org.apache.commons.lang3.StringUtils.leftPad;
-import static org.apache.commons.lang3.StringUtils.reverse;
-import static org.apache.commons.math3.util.CombinatoricsUtils.binomialCoefficientDouble;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import uem.br.brkga.peps.entidade.Employee;
 import uem.br.brkga.peps.entidade.Skill;
@@ -104,20 +103,44 @@ public class ProblemaBuilder {
 	
 	private void buildAtuacoesEmployees(){
 		int numeroEmployees = ProblemaBuilder.getInstance().getNumeroEmployees();
-		final int somatorioCombinacoesEmpregados = calculaSomatorioCombinacoesEmpregados();
-		
-		for (int i = 0; i < somatorioCombinacoesEmpregados; i++) {
-			atuacoesEmployees.add(reverse(leftPad(toBinaryString(i), numeroEmployees, '0')));
+		final String[] combinacoesAtuacoesEmployees = getAllLists(new String[]{"0", "1", "2", "3", "4", "5", "6", "7"}, numeroEmployees);
+		for (String combinacao : combinacoesAtuacoesEmployees) {
+			atuacoesEmployees.add(StringUtils.reverse(combinacao));
 		}
 	}
 	
+	public static String[] getAllLists(String[] elements, int lengthOfList)	{
+	    //initialize our returned list with the number of elements calculated above
+	    String[] allLists = new String[(int)Math.pow(elements.length, lengthOfList)];
+
+	    //lists of length 1 are just the original elements
+	    if(lengthOfList == 1) return elements; 
+	    else {
+	        //the recursion--get all lists of length 3, length 2, all the way up to 1
+	        String[] allSublists = getAllLists(elements, lengthOfList - 1);
+
+	        //append the sublists to each element
+	        int arrayIndex = 0;
+
+	        for(int i = 0; i < elements.length; i++) {
+	            for(int j = 0; j < allSublists.length; j++) {
+	                //add the newly appended combination to the list
+	                allLists[arrayIndex] = elements[i] + allSublists[j];
+	                arrayIndex++;
+	            }
+	        }
+
+	        return allLists;
+	    }
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(Arrays.deepToString(getAllLists(new String[]{"0", "1", "2", "3", "4", "5", "6", "7"}, 10)));
+	}
+	
+	
 	private int calculaSomatorioCombinacoesEmpregados() {
-		int acumulado = 0;
-		final int numeroEmployees = ProblemaBuilder.getInstance().getNumeroEmployees();
-		for (int i = numeroEmployees; i >= 0 ; i--) {
-			acumulado += binomialCoefficientDouble(numeroEmployees, i);
-		}
-		return acumulado;
+		return new BigDecimal(8).pow(ProblemaBuilder.getInstance().getNumeroEmployees()).intValue();
 	}
 	
 	private void readTasks() {
@@ -228,16 +251,16 @@ public class ProblemaBuilder {
 		return atuacoesEmployees;
 	}
 	
-	public String getStringAtuacaoEmployeesBy(Double valorCodificado){
+	public String getAtuacoesEmployeesBy(Double valorCodificado){
 		final BigDecimal somatorioCombinacoesEmpregados = new BigDecimal(calculaSomatorioCombinacoesEmpregados());
 		final BigDecimal unidadeCombinatoriaEmpregados = ONE.divide(somatorioCombinacoesEmpregados, MathContext.DECIMAL32);
 		final BigDecimal valorIndex = new BigDecimal(valorCodificado).divideToIntegralValue(unidadeCombinatoriaEmpregados);
 		
-		return atuacoesEmployees.get(valorIndex.intValue());
+		return getAtuacoesEmployeesBy(valorIndex.intValue());
 	}
 	
-	public String getStringAtuacaoEmployeesBy(int index){
-		return atuacoesEmployees.get(index);
+	public String getAtuacoesEmployeesBy(int task){
+		return atuacoesEmployees.get(task);
 	}
 	
 	public int getNumeroEmployees() {

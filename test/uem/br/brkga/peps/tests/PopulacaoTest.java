@@ -17,7 +17,7 @@ public class PopulacaoTest {
 	@Before
 	public void before() {
 		problemaBuilder.clear();
-		problemaBuilder.setParametrosPath("/home/codeit/projetos-uem/brkga-peps/test-resources/test-intances/peps-4-tasks-2-employees.conf");
+		problemaBuilder.setParametrosPath(System.getProperty("user.dir") + "/test-resources/test-intances/peps-4-tasks-2-employees.conf");
 		problemaBuilder.readParametrosArquivo();
 	}
 	
@@ -40,24 +40,18 @@ public class PopulacaoTest {
 		
 		final IndividuoCodificado novoFilho = populacao.efetuaCrossover(paiElite, paiOutro, parametrosAlgoritmo.getProbabilidadeHerancaElite());
 		
-		Assert.assertEquals(novoFilho.getValor(0, 0), new Double(0.9));
-		Assert.assertEquals(novoFilho.getValor(0, 1), new Double(0.4));
-		Assert.assertEquals(novoFilho.getValor(0, 2), new Double(0.6));
-		Assert.assertEquals(novoFilho.getValor(0, 3), new Double(0.8));
-		Assert.assertEquals(novoFilho.getValor(1, 0), new Double(0.4));
-		Assert.assertEquals(novoFilho.getValor(1, 1), new Double(0.3));
-		Assert.assertEquals(novoFilho.getValor(1, 2), new Double(0.2));
-		Assert.assertEquals(novoFilho.getValor(1, 3), new Double(0.1));
+		Assert.assertEquals(novoFilho.getValor(0), new Double(0.9));
+		Assert.assertEquals(novoFilho.getValor(1), new Double(0.4));
+		Assert.assertEquals(novoFilho.getValor(2), new Double(0.6));
+		Assert.assertEquals(novoFilho.getValor(3), new Double(0.8));
 	}
 
-	private Double[][] buildGenesCodificados1() {
-		return new Double[][]{{0.2, 0.4, 0.6, 0.8},
-							  {0.1, 0.3, 0.5, 0.7}};
+	private Double[] buildGenesCodificados1() {
+		return new Double[]{0.2, 0.4, 0.6, 0.8};
 	}
 	
-	private Double[][] buildGenesCodificados2() {
-		return new Double[][]{{0.9, 0.8, 0.7, 0.6},
-							  {0.4, 0.3, 0.2, 0.1}};
+	private Double[] buildGenesCodificados2() {
+		return new Double[]{0.9, 0.8, 0.7, 0.6};
 	}
 
 }

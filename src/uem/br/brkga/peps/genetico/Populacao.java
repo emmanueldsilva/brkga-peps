@@ -1,7 +1,5 @@
 package uem.br.brkga.peps.genetico;
 
-import static uem.br.brkga.peps.genetico.IndividuoCodificado.LINHAS;
-
 import java.util.Comparator;
 import java.util.List;
 
@@ -84,14 +82,12 @@ public class Populacao {
 	public IndividuoCodificado efetuaCrossover(IndividuoCodificado paiElite, IndividuoCodificado paiOutro, Double probabilidadeHerancaElite) {
 		final IndividuoCodificado novoFilho = new IndividuoCodificado();
 		
-		for (int i = 0; i < LINHAS; i++) {
-			for (int j = 0; j < ProblemaBuilder.getInstance().getNumeroTasks(); j++) {
-				final Double sorteio = RandomFactory.getInstance().randomDoubleRange1();
-				if (sorteio < probabilidadeHerancaElite/100) {
-					novoFilho.setGene(i, j, new Double(paiElite.getValor(i, j)));
-				} else {
-					novoFilho.setGene(i, j, new Double(paiOutro.getValor(i, j)));
-				}
+		for (int i = 0; i < ProblemaBuilder.getInstance().getNumeroTasks(); i++) {
+			final Double sorteio = RandomFactory.getInstance().randomDoubleRange1();
+			if (sorteio < probabilidadeHerancaElite/100) {
+				novoFilho.setGene(i, new Double(paiElite.getValor(i)));
+			} else {
+				novoFilho.setGene(i, new Double(paiOutro.getValor(i)));
 			}
 		}
 		

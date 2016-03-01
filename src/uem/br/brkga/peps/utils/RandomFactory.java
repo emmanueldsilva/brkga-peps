@@ -4,7 +4,9 @@ import java.util.Random;
  
 public class RandomFactory {
      
-    private final Random random;
+    public static final int HORAS_EXPEDIENTE = 8;
+
+	private final Random random;
      
     private static RandomFactory instance = null;
         
@@ -29,8 +31,11 @@ public class RandomFactory {
     }
     
     public Double randomGrauDedicacao() {
-    	int nextInt = nextInt(8);
-		switch (nextInt) {
+    	return getValorGrauDedicacao(nextInt(HORAS_EXPEDIENTE));
+    }
+
+	public Double getValorGrauDedicacao(int index) {
+		switch (index) {
 		case 0:
 			return 0.0;
 		case 1:
@@ -49,7 +54,7 @@ public class RandomFactory {
 		default:
 			return 1.00;
 		}
-    }
+	}
     
     public Double randomDoubleRange1() {
     	return this.random.nextDouble();
