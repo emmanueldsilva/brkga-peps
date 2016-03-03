@@ -41,17 +41,21 @@ public class PopulacaoTest {
 		final IndividuoCodificado novoFilho = populacao.efetuaCrossover(paiElite, paiOutro, parametrosAlgoritmo.getProbabilidadeHerancaElite());
 		
 		Assert.assertEquals(novoFilho.getValor(0), new Double(0.9));
-		Assert.assertEquals(novoFilho.getValor(1), new Double(0.4));
+		Assert.assertEquals(novoFilho.getValor(1), new Double(0.8));
 		Assert.assertEquals(novoFilho.getValor(2), new Double(0.6));
 		Assert.assertEquals(novoFilho.getValor(3), new Double(0.8));
+		Assert.assertEquals(novoFilho.getValor(4), new Double(1.0));
+		Assert.assertEquals(novoFilho.getValor(5), new Double(0.0));
+		Assert.assertEquals(novoFilho.getValor(6), new Double(0.2));
+		Assert.assertEquals(novoFilho.getValor(7), new Double(0.4));
 	}
 
 	private Double[] buildGenesCodificados1() {
-		return new Double[]{0.2, 0.4, 0.6, 0.8};
+		return new Double[]{0.2, 0.4, 0.6, 0.8, 1.0, 0.0, 0.2, 0.4};
 	}
 	
 	private Double[] buildGenesCodificados2() {
-		return new Double[]{0.9, 0.8, 0.7, 0.6};
+		return new Double[]{0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2};
 	}
 
 }

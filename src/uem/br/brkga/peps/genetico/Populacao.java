@@ -82,9 +82,9 @@ public class Populacao {
 	public IndividuoCodificado efetuaCrossover(IndividuoCodificado paiElite, IndividuoCodificado paiOutro, Double probabilidadeHerancaElite) {
 		final IndividuoCodificado novoFilho = new IndividuoCodificado();
 		
-		for (int i = 0; i < ProblemaBuilder.getInstance().getNumeroTasks(); i++) {
-			final Double sorteio = RandomFactory.getInstance().randomDoubleRange1();
-			if (sorteio < probabilidadeHerancaElite/100) {
+		for (int i = 0; i < ProblemaBuilder.getInstance().getNumeroTasks() * ProblemaBuilder.getInstance().getNumeroEmployees(); i++) {
+			final Integer sorteio = RandomFactory.getInstance().nextInt(100);
+			if (sorteio < probabilidadeHerancaElite) {
 				novoFilho.setGene(i, new Double(paiElite.getValor(i)));
 			} else {
 				novoFilho.setGene(i, new Double(paiOutro.getValor(i)));
