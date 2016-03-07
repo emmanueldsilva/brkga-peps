@@ -100,84 +100,84 @@ public class Populacao {
 		}
 	}
 
-//	public Individuo getMelhorIndividuo() {
-//		return individuos.stream()
-//			.max(individuoComparator())
-//			.get();
-//	}
-//	
-//	public Individuo getPiorIndividuo() {
-//		return individuos.stream()
-//			.min(individuoComparator())
-//			.get();
-//	}
-
-	private Comparator<? super IndividuoCodificado> individuoComparator() {
-		return (i1, i2) -> i1.getIndividuo().getValorFitness().compareTo(i2.getIndividuo().getValorFitness());
+	public IndividuoCodificado getMelhorIndividuo() {
+		return individuos.stream()
+			.max(individuoComparator())
+			.get();
 	}
 	
-//	public Double getMaiorValorFitness() {
-//		return individuos.stream()
-//			.mapToDouble(Individuo::getValorFitness)
-//			.max()
-//			.getAsDouble();
-//	}
-//	
-//	public Double getMenorValorFitness() {
-//		return individuos.stream()
-//			.mapToDouble(Individuo::getValorFitness)
-//			.min()
-//			.getAsDouble();
-//	}
-//	
-//	public Double getMediaValorFitness() {
-//		return individuos.stream()
-//			.mapToDouble(Individuo::getValorFitness)
-//			.average()
-//			.getAsDouble();
-//	}
-//	
-//	public Double getMenorValorCustoProjeto() {
-//		return individuos.stream()
-//			.mapToDouble(i -> i.getMatrizDedicacao().getCustoTotalProjeto())
-//			.min()
-//			.getAsDouble();
-//	}
-//	
-//	public Double getMaiorValorCustoProjeto() {
-//		return individuos.stream()
-//			.mapToDouble(i -> i.getMatrizDedicacao().getCustoTotalProjeto())
-//			.max()
-//			.getAsDouble();
-//	}
-//	
-//	public Double getMediaValorCustoProjeto() {
-//		return individuos.stream()
-//			.mapToDouble(i -> i.getMatrizDedicacao().getCustoTotalProjeto())
-//			.average()
-//			.getAsDouble();
-//	}
-//	
-//	public Double getMenorDuracaoProjeto() {
-//		return individuos.stream()
-//			.mapToDouble(i -> i.getMatrizDedicacao().getDuracaoTotalProjeto())
-//			.min()
-//			.getAsDouble();
-//	}
-//	
-//	public Double getMaiorDuracaoProjeto() {
-//		return individuos.stream()
-//			.mapToDouble(i -> i.getMatrizDedicacao().getDuracaoTotalProjeto())
-//			.max()
-//			.getAsDouble();
-//	}
-//	
-//	public Double getMediaDuracaoProjeto() {
-//		return individuos.stream()
-//			.mapToDouble(i -> i.getMatrizDedicacao().getDuracaoTotalProjeto())
-//			.average()
-//			.getAsDouble();
-//	}
+	public IndividuoCodificado getPiorIndividuo() {
+		return individuos.stream()
+			.min(individuoComparator())
+			.get();
+	}
+
+	private Comparator<? super IndividuoCodificado> individuoComparator() {
+		return (i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness());
+	}
+	
+	public Double getMaiorValorFitness() {
+		return individuos.stream()
+			.mapToDouble(IndividuoCodificado::getValorFitness)
+			.max()
+			.getAsDouble();
+	}
+	
+	public Double getMenorValorFitness() {
+		return individuos.stream()
+			.mapToDouble(IndividuoCodificado::getValorFitness)
+			.min()
+			.getAsDouble();
+	}
+	
+	public Double getMediaValorFitness() {
+		return individuos.stream()
+			.mapToDouble(IndividuoCodificado::getValorFitness)
+			.average()
+			.getAsDouble();
+	}
+	
+	public Double getMenorValorCustoProjeto() {
+		return individuos.stream()
+			.mapToDouble(i -> i.getCustoTotalProjeto())
+			.min()
+			.getAsDouble();
+	}
+	
+	public Double getMaiorValorCustoProjeto() {
+		return individuos.stream()
+			.mapToDouble(i -> i.getCustoTotalProjeto())
+			.max()
+			.getAsDouble();
+	}
+	
+	public Double getMediaValorCustoProjeto() {
+		return individuos.stream()
+			.mapToDouble(i -> i.getCustoTotalProjeto())
+			.average()
+			.getAsDouble();
+	}
+	
+	public Double getMenorDuracaoProjeto() {
+		return individuos.stream()
+			.mapToDouble(i -> i.getDuracaoTotalProjeto())
+			.min()
+			.getAsDouble();
+	}
+	
+	public Double getMaiorDuracaoProjeto() {
+		return individuos.stream()
+			.mapToDouble(i -> i.getDuracaoTotalProjeto())
+			.max()
+			.getAsDouble();
+	}
+	
+	public Double getMediaDuracaoProjeto() {
+		return individuos.stream()
+			.mapToDouble(i -> i.getDuracaoTotalProjeto())
+			.average()
+			.getAsDouble();
+	}
 	
 	public void addIndividuo(IndividuoCodificado individuoCodificado) {
 		this.individuos.add(individuoCodificado);

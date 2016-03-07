@@ -83,7 +83,7 @@ public class StatisticsPrintFactory {
 	}
 
 	private String buildPathDiretorio() throws IOException {
-		String pathDiretorio = getUserDirectoryPath() + "/ag-peps/execucoes/";
+		String pathDiretorio = getUserDirectoryPath() + "/brkga-peps/execucoes/";
 		pathDiretorio += new File(parametrosAlgoritmo.getPathBenchmark()).getName() + "/";
 		pathDiretorio += "exe" + parametrosAlgoritmo.getNumeroExecucoes() + "/";
 		pathDiretorio += "ger" + parametrosAlgoritmo.getNumeroGeracoes() + "/";

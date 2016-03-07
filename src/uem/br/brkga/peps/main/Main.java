@@ -38,14 +38,14 @@ public class Main {
 	public static ParametrosAlgoritmo getParametrosDefault() {
 		final ParametrosAlgoritmo parametrosAlgoritmo = new ParametrosAlgoritmo();
 		parametrosAlgoritmo.setNumeroExecucoes(100);
-		parametrosAlgoritmo.setNumeroGeracoes(2000);
+		parametrosAlgoritmo.setNumeroGeracoes(200);
 		parametrosAlgoritmo.setTamanhoPopulacao(64);
 		parametrosAlgoritmo.setTamanhoGrupoElite(20.0);
 		parametrosAlgoritmo.setTamanhoGrupoMutantes(5.0);
 		parametrosAlgoritmo.setProbabilidadeHerancaElite(60.0);
-//		parametrosAlgoritmo.setPathBenchmark("/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst10-5-10-5.conf");
+		parametrosAlgoritmo.setPathBenchmark("/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst10-5-10-5.conf");
 //		parametrosAlgoritmo.setPathBenchmark("/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst20-10-10-5.conf");
-		parametrosAlgoritmo.setPathBenchmark("/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst20-15-10-5.conf");
+//		parametrosAlgoritmo.setPathBenchmark("/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst20-15-10-5.conf");
 //		parametrosAlgoritmo.setPathBenchmark("/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst30-15-10-5.conf");
 		return parametrosAlgoritmo;
 	}

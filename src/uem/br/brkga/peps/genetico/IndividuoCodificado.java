@@ -30,19 +30,31 @@ public class IndividuoCodificado {
 	}
 	
 	public void decodificar() {
-		int numeroTasks = ProblemaBuilder.getInstance().getNumeroTasks();
-		int numeroEmployees = ProblemaBuilder.getInstance().getNumeroEmployees();
-
-		individuo = new Individuo(buildMatrizDedicacao(numeroTasks, numeroEmployees));
+		individuo = new Individuo(buildMatrizDedicacao());
 	}
 
-	private MatrizDedicacao buildMatrizDedicacao(int numeroTasks, int numeroEmployees) {
+	private MatrizDedicacao buildMatrizDedicacao() {
+		int numeroTasks = ProblemaBuilder.getInstance().getNumeroTasks();
+		int numeroEmployees = ProblemaBuilder.getInstance().getNumeroEmployees();
+		
 		final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
 		for (int i = 0; i < genes.length; i++) {
+			final Employee employee = ProblemaBuilder.getInstance().getEmployee((int) i / numeroTasks);
 			final Task task = ProblemaBuilder.getInstance().getTask(i % numeroTasks);
-			final Employee employee = ProblemaBuilder.getInstance().getEmployee(i % numeroEmployees);
+
 			matrizDedicacao.addGrauDedicacao(employee, task, normalizaValorCodificado(genes[i]));
 		}
+//		final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
+//		for (int i = 0; i < numeroEmployees; i++) {
+//			for (int j = 0; j < numeroTasks; j++) {
+//				final Employee employee = ProblemaBuilder.getInstance().getEmployee(i);
+//				final Task task = ProblemaBuilder.getInstance().getTask(j);
+//				
+//				matrizDedicacao.addGrauDedicacao(employee, task, normalizaValorCodificado(genes[j + (numeroTasks * i)]));
+//			}
+//		}
+		
+		matrizDedicacao.efetuaCalculosProjeto();
 		
 		return matrizDedicacao;
 	}
@@ -51,10 +63,6 @@ public class IndividuoCodificado {
 		return RandomFactory.getInstance().getValorGrauDedicacao((int) (valorCodificado * 8));
 	}
 
-	public static void main(String[] args) {
-		System.out.println((int) 1.99);
-	}
-	
 	public Individuo getIndividuo() {
 		return individuo;
 	}
@@ -79,4 +87,20 @@ public class IndividuoCodificado {
 		individuo.calculaValorFitness();
 	}
 
+	public Double getValorFitness() {
+		return individuo.getValorFitness();
+	}
+	
+	public Double getCustoTotalProjeto() {
+		return individuo.getCustoTotalProjeto();
+	}
+	
+	public Double getDuracaoTotalProjeto() {
+		return individuo.getDuracaoTotalProjeto();
+	}
+	
+	public boolean isFactivel() {
+		return individuo.isFactivel();
+	}
+	
 }

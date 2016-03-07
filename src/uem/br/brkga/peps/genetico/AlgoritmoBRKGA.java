@@ -49,7 +49,7 @@ public class AlgoritmoBRKGA {
 				final Populacao novaPopulacao = new Populacao(parametrosAlgoritmo);
 				novaPopulacao.addIndividuos(populacao.selecionarIndividuosMaisAptos());
 				novaPopulacao.gerarMutantes();
-//				printFactory.geraEstatisticas(populacao, i);
+				printFactory.geraEstatisticas(populacao, i);
 				
 				novaPopulacao.efetuarCruzamento(parametrosAlgoritmo.getProbabilidadeHerancaElite());
             }
@@ -57,18 +57,18 @@ public class AlgoritmoBRKGA {
             populacao.avaliarIndividuos();
             populacao.selecionarIndividuosMaisAptos();
 
-//            final Individuo melhorIndividuo = populacao.getMelhorIndividuo();
-//            
-//            printFactory.geraEstatisticas(populacao, parametrosAlgoritmo.getNumeroGeracoes());
-//			printFactory.printIndividuo(melhorIndividuo);
-//            populacao.getIndividuos().sort((i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness()));
-//            
-//            if (melhorIndividuo.isFactivel()) {
-//            	hitRate++;
-//            	melhoresFitness.add(melhorIndividuo.getValorFitness());
-//            	melhoresCustosProjeto.add(populacao.getMenorValorCustoProjeto());
-//            	melhoresDuracaoProjeto.add(populacao.getMenorDuracaoProjeto());
-//            }
+            final IndividuoCodificado melhorIndividuo = populacao.getMelhorIndividuo();
+            
+            printFactory.geraEstatisticas(populacao, parametrosAlgoritmo.getNumeroGeracoes());
+			printFactory.printIndividuo(melhorIndividuo.getIndividuo());
+            populacao.getIndividuosCodificados().sort((i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness()));
+            
+            if (melhorIndividuo.isFactivel()) {
+            	hitRate++;
+            	melhoresFitness.add(melhorIndividuo.getValorFitness());
+            	melhoresCustosProjeto.add(populacao.getMenorValorCustoProjeto());
+            	melhoresDuracaoProjeto.add(populacao.getMenorDuracaoProjeto());
+            }
              
             printFactory.printEstatisticaExecucao(calculaTempoExecucao(start), parametrosAlgoritmo);
             printFactory.plotaGraficos(populacao);
