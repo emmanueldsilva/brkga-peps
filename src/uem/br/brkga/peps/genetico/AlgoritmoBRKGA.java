@@ -39,19 +39,20 @@ public class AlgoritmoBRKGA {
         	final PrintFactory printFactory = new PrintFactory(parametrosAlgoritmo, cont + 1);
             long start = System.currentTimeMillis();  
              
-            final Populacao populacao = new Populacao(parametrosAlgoritmo);
+            Populacao populacao = new Populacao(parametrosAlgoritmo);
+            Populacao novaPopulacao = null;
             populacao.gerarIndividuos();
             
             for (int i = 0; i < parametrosAlgoritmo.getNumeroGeracoes(); i++) {
 				populacao.avaliarIndividuos();
 				populacao.ordenarIndividuos();
-				
-				final Populacao novaPopulacao = new Populacao(parametrosAlgoritmo);
-				novaPopulacao.addIndividuos(populacao.selecionarIndividuosMaisAptos());
-				novaPopulacao.gerarMutantes();
 				printFactory.geraEstatisticas(populacao, i);
 				
+				novaPopulacao = new Populacao(parametrosAlgoritmo);
+				novaPopulacao.addIndividuos(populacao.selecionarIndividuosMaisAptos());
+				novaPopulacao.gerarMutantes();
 				novaPopulacao.efetuarCruzamento(parametrosAlgoritmo.getProbabilidadeHerancaElite());
+				populacao = novaPopulacao;
             }
 
             populacao.avaliarIndividuos();
@@ -61,17 +62,17 @@ public class AlgoritmoBRKGA {
             
             printFactory.geraEstatisticas(populacao, parametrosAlgoritmo.getNumeroGeracoes());
 			printFactory.printIndividuo(melhorIndividuo.getIndividuo());
-            populacao.getIndividuosCodificados().sort((i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness()));
+			populacao.getIndividuosCodificados().sort((i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness()));
             
             if (melhorIndividuo.isFactivel()) {
             	hitRate++;
             	melhoresFitness.add(melhorIndividuo.getValorFitness());
-            	melhoresCustosProjeto.add(populacao.getMenorValorCustoProjeto());
-            	melhoresDuracaoProjeto.add(populacao.getMenorDuracaoProjeto());
+            	melhoresCustosProjeto.add(novaPopulacao.getMenorValorCustoProjeto());
+            	melhoresDuracaoProjeto.add(novaPopulacao.getMenorDuracaoProjeto());
             }
              
             printFactory.printEstatisticaExecucao(calculaTempoExecucao(start), parametrosAlgoritmo);
-            printFactory.plotaGraficos(populacao);
+            printFactory.plotaGraficos(novaPopulacao);
         }
         
         final StatisticsPrintFactory statisticsPrintFactory = new StatisticsPrintFactory(parametrosAlgoritmo, hitRate, melhoresFitness, melhoresCustosProjeto, melhoresDuracaoProjeto);

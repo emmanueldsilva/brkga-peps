@@ -35,7 +35,6 @@ public class IndividuoCodificado {
 
 	private MatrizDedicacao buildMatrizDedicacao() {
 		int numeroTasks = ProblemaBuilder.getInstance().getNumeroTasks();
-		int numeroEmployees = ProblemaBuilder.getInstance().getNumeroEmployees();
 		
 		final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
 		for (int i = 0; i < genes.length; i++) {
@@ -44,15 +43,6 @@ public class IndividuoCodificado {
 
 			matrizDedicacao.addGrauDedicacao(employee, task, normalizaValorCodificado(genes[i]));
 		}
-//		final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
-//		for (int i = 0; i < numeroEmployees; i++) {
-//			for (int j = 0; j < numeroTasks; j++) {
-//				final Employee employee = ProblemaBuilder.getInstance().getEmployee(i);
-//				final Task task = ProblemaBuilder.getInstance().getTask(j);
-//				
-//				matrizDedicacao.addGrauDedicacao(employee, task, normalizaValorCodificado(genes[j + (numeroTasks * i)]));
-//			}
-//		}
 		
 		matrizDedicacao.efetuaCalculosProjeto();
 		

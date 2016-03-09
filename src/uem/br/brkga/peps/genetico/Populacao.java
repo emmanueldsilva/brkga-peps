@@ -71,7 +71,8 @@ public class Populacao {
 			final IndividuoCodificado paiOutro = getIndividuoAleatorio();
 			
 			final IndividuoCodificado novoFilho = efetuaCrossover(paiElite, paiOutro, probabilidadeHerancaElite);
-			individuos.add(novoFilho);
+			novoFilho.decodificar();
+			addIndividuo(novoFilho);
 		}
 	}
 
@@ -113,7 +114,7 @@ public class Populacao {
 	}
 
 	private Comparator<? super IndividuoCodificado> individuoComparator() {
-		return (i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness());
+		return (i1, i2) -> i1.getIndividuo().getValorFitness().compareTo(i2.getIndividuo().getValorFitness());
 	}
 	
 	public Double getMaiorValorFitness() {
