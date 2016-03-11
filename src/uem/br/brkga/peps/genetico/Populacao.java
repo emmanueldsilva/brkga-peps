@@ -1,5 +1,8 @@
 package uem.br.brkga.peps.genetico;
 
+import static java.util.Collections.reverse;
+import static java.util.Collections.sort;
+
 import java.util.Comparator;
 import java.util.List;
 
@@ -45,7 +48,8 @@ public class Populacao {
 	}
 	
 	public void ordenarIndividuos() {
-		individuos.stream().sorted(individuoComparator());
+		sort(individuos, individuoComparator());
+		reverse(individuos);
 	}
 	
 	public List<IndividuoCodificado> selecionarIndividuosMaisAptos() {
@@ -114,7 +118,7 @@ public class Populacao {
 	}
 
 	private Comparator<? super IndividuoCodificado> individuoComparator() {
-		return (i1, i2) -> i1.getIndividuo().getValorFitness().compareTo(i2.getIndividuo().getValorFitness());
+		return (i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness());
 	}
 	
 	public Double getMaiorValorFitness() {

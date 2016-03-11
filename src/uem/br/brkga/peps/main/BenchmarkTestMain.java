@@ -17,10 +17,10 @@ public class BenchmarkTestMain {
 	private static final Double PESO_TRABALHO_NAO_REALIZADO = 1.0;
 	private static final Double PESO_HABILIDADES_NECESSARIAS = 1.0;
 	
-	private static final int NUMERO_EXECUCOES = 10;
+	private static final int NUMERO_EXECUCOES = 100;
 	
 	public static void main(String[] args) {
-		System.out.println("Iniciando AG-PEPS");
+		System.out.println("Iniciando BRKGA-PEPS");
 		
 		ParametrosPesos.getInstance().atribuiParametros(PESO_CUSTO_PROJETO, 
 													    PESO_DURACAO_PROJETO, 
@@ -32,8 +32,8 @@ public class BenchmarkTestMain {
 		for (String pathBenchmark: asList("/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst10-5-10-5.conf",
 										  "/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst20-10-10-5.conf",
 										  "/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst30-15-10-5.conf")) {
-			for (Integer numeroGeracoes : asList(50, 75, 100, 125, 150, 200, 300, 500, 1000, 1500, 2000)) {
-				for (Integer tamanhoPopulacao: asList(30, 50, 75, 100, 125, 150, 200, 250, 300, 400, 500, 750, 1000)) {
+			for (Integer numeroGeracoes : asList(50, 75, 100, 125, 150, 200, 300)) {
+				for (Integer tamanhoPopulacao: asList(30, 50, 64, 75, 100, 125, 150, 200, 250)) {
 					for (Double tamanhoGrupoElite: asList(10.0, 15.0, 20.0, 25.0)) {
 						for (Double tamanhoGrupoMutantes: asList(5.0, 10.0, 15.0, 20.0)) {
 							for (Double probabilidadeHerancaElite: asList(55.0, 65.0, 75.0, 85.0, 95.0)) {
