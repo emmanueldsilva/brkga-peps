@@ -10,13 +10,19 @@ import static org.jfree.chart.ChartUtilities.saveChartAsPNG;
 import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.category.IntervalCategoryDataset;
+import org.jfree.data.gantt.TaskSeries;
+import org.jfree.data.gantt.TaskSeriesCollection;
 
 import uem.br.brkga.peps.entidade.Employee;
 import uem.br.brkga.peps.entidade.Task;
@@ -24,6 +30,7 @@ import uem.br.brkga.peps.genetico.Individuo;
 import uem.br.brkga.peps.genetico.MatrizDedicacao;
 import uem.br.brkga.peps.genetico.ParametrosAlgoritmo;
 import uem.br.brkga.peps.genetico.Populacao;
+import uem.br.brkga.peps.genetico.TaskScheduling;
 import uem.br.brkga.peps.problema.ProblemaBuilder;
 
 public class PrintFactory {
@@ -161,6 +168,7 @@ public class PrintFactory {
 			buildGraficoFitness(pathDiretorio, melhorIndividuo, piorIndividuo);
 			buildGraficoCustoProjeto(pathDiretorio, melhorIndividuo, piorIndividuo);
 			buildGraficoDuracaoProjeto(pathDiretorio);
+			buildDiagramaGantt(pathDiretorio, melhorIndividuo);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -194,7 +202,39 @@ public class PrintFactory {
 		
 		saveChartAsPNG(new File(pathDiretorio + "grafico_duracao_" + execucao + ".png"), graficoDuracaoProjeto, 1000, 300);
 	}
+	
+	private void buildDiagramaGantt(String pathDiretorio, Individuo melhorIndividuo) throws IOException {
+		final List<TaskScheduling> escalaTarefas = melhorIndividuo.getMatrizDedicacao().getEscalaTarefas();
+		
+		final JFreeChart diagramaGantt = ChartFactory.createGanttChart("Diagrama de Gantt", "Tarefas", "Tempo", createDataset(escalaTarefas));
+		
+		saveChartAsPNG(new File(pathDiretorio + "diagrama_gantt_" + execucao + ".png"), diagramaGantt, 1000, 600);
+	}
 
+    private IntervalCategoryDataset createDataset(List<TaskScheduling> taskScheduling) {
+        final TaskSeries taskSeries = new TaskSeries("Tarefas");
+
+        taskScheduling.forEach((ts) -> {
+        	taskSeries.add(new org.jfree.data.gantt.Task("Task " + ts.getTask().getNumero(), calculaData(ts.getTempoInicio()), calculaData(ts.getTempoFim())));
+        });
+        
+        final TaskSeriesCollection taskSeriesCollection = new TaskSeriesCollection();
+        taskSeriesCollection.add(taskSeries);
+        
+        return taskSeriesCollection;
+    }
+
+	private Date calculaData(Double tempo) {
+		int meses = tempo.intValue();
+		int dias = (int) ((tempo - meses) * (365.25/12));
+		
+		final Calendar calendarInicio = Calendar.getInstance();
+		calendarInicio.set(2000, 01, 01);
+		calendarInicio.add(Calendar.MONTH, meses);
+		calendarInicio.add(Calendar.DAY_OF_MONTH, dias);
+		return calendarInicio.getTime();
+	}
+	
 	private String buildPathDiretorio() throws IOException {
 		String pathDiretorio = getUserDirectoryPath() + "/brkga-peps/execucoes/";
 		pathDiretorio += new File(parametrosAlgoritmo.getPathBenchmark()).getName() + "/";
