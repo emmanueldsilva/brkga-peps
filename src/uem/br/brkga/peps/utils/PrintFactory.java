@@ -17,6 +17,8 @@ import java.util.Locale;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -42,10 +44,12 @@ public class PrintFactory {
 	private final String MELHOR_CUSTO_PROJETO = "Melhor Custo Projeto";
 	private final String MEDIA_CUSTO_PROJETO = "Média Custo Projeto";
 	private final String PIOR_CUSTO_PROJETO = "Pior Custo Projeto";
+	private final String CUSTO_MELHOR_INDIVIDUO = "Custo Projeto Melhor Indivíduo";
 	
 	private final String MELHOR_DURACAO_PROJETO = "Melhor Duração Projeto";
 	private final String MEDIA_DURACAO_PROJETO = "Média Duração Projeto";
 	private final String PIOR_DURACAO_PROJETO = "Pior Duração Projeto";
+	private final String DURACAO_MELHOR_INDIVIDUO = "Duração Projeto Melhor Indivíduo";
 	
 	private static final NumberFormat CURRENCY_INSTANCE = NumberFormat.getCurrencyInstance(Locale.US);
 	
@@ -95,14 +99,17 @@ public class PrintFactory {
 		sb.appendLine("MELHOR FITNESS: " + populacao.getMaiorValorFitness());
 		sb.appendLine("MEDIA FITNESS: " + populacao.getMediaValorFitness());
 		sb.appendLine("PIOR FITNESS: " + populacao.getMenorValorFitness());
+		sb.appendLine("FITNESS DO MELHOR INDIVÍDUO: " + populacao.getMelhorIndividuo().getValorFitness());
 		sb.appendLine("--------------------------------------------------------------");
 		sb.appendLine("MAIOR CUSTO PROJETO: " + CURRENCY_INSTANCE.format(populacao.getMaiorValorCustoProjeto()));
 		sb.appendLine("MEDIA CUSTO PROJETO: " + CURRENCY_INSTANCE.format(populacao.getMediaValorCustoProjeto()));
 		sb.appendLine("MENOR CUSTO PROJETO: " + CURRENCY_INSTANCE.format(populacao.getMenorValorCustoProjeto()));
+		sb.appendLine("CUSTO DO MELHOR INDIVÍDUO: " + CURRENCY_INSTANCE.format(populacao.getMelhorIndividuo().getCustoTotalProjeto()));
 		sb.appendLine("--------------------------------------------------------------");
 		sb.appendLine("MAIOR DURAÇÃO PROJETO: " + populacao.getMaiorDuracaoProjeto());
 		sb.appendLine("MEDIA DURAÇÃO PROJETO: " + populacao.getMediaDuracaoProjeto());
 		sb.appendLine("MENOR DURAÇÃO PROJETO: " + populacao.getMenorDuracaoProjeto());
+		sb.appendLine("DURAÇÃO PROJETO DO MELHOR INDIVÍDUO: " + populacao.getMelhorIndividuo().getDuracaoTotalProjeto());
 		sb.appendLine("--------------------------------------------------------------");
 		sb.appendLine();
 		sb.appendLine();
@@ -151,12 +158,14 @@ public class PrintFactory {
 		dataSetDuracaoProjeto.addValue(populacao.getMaiorDuracaoProjeto(), PIOR_DURACAO_PROJETO, geracao);
 		dataSetDuracaoProjeto.addValue(populacao.getMediaDuracaoProjeto(), MEDIA_DURACAO_PROJETO, geracao);
 		dataSetDuracaoProjeto.addValue(populacao.getMenorDuracaoProjeto(), MELHOR_DURACAO_PROJETO, geracao);
+		dataSetDuracaoProjeto.addValue(populacao.getMelhorIndividuo().getDuracaoTotalProjeto(), DURACAO_MELHOR_INDIVIDUO, geracao);
 	}
 	
 	private void populaDataSetCustoProjeto(Populacao populacao, Integer geracao) {
 		dataSetCustoProjeto.addValue(populacao.getMaiorValorCustoProjeto(), PIOR_CUSTO_PROJETO, geracao);
 		dataSetCustoProjeto.addValue(populacao.getMediaValorCustoProjeto(), MEDIA_CUSTO_PROJETO, geracao);
 		dataSetCustoProjeto.addValue(populacao.getMenorValorCustoProjeto(), MELHOR_CUSTO_PROJETO, geracao);
+		dataSetCustoProjeto.addValue(populacao.getMelhorIndividuo().getCustoTotalProjeto(), CUSTO_MELHOR_INDIVIDUO, geracao);
 	}
 	
 	public synchronized void plotaGraficos(Populacao populacao) {
@@ -166,7 +175,8 @@ public class PrintFactory {
 			
 			String pathDiretorio = buildPathDiretorio();
 			buildGraficoFitness(pathDiretorio, melhorIndividuo, piorIndividuo);
-			buildGraficoCustoProjeto(pathDiretorio, melhorIndividuo, piorIndividuo);
+//			buildGraficoCustoProjeto(pathDiretorio, melhorIndividuo, piorIndividuo);
+			buildGraficoCustoProjeto(pathDiretorio, populacao.getMenorValorCustoProjeto(), populacao.getMaiorValorCustoProjeto());
 			buildGraficoDuracaoProjeto(pathDiretorio);
 			buildDiagramaGantt(pathDiretorio, melhorIndividuo);
 		} catch (IOException e) {
@@ -182,16 +192,23 @@ public class PrintFactory {
 		categoryPlot.setDomainCrosshairVisible(true);
 		categoryPlot.setRangeCrosshairVisible(true);
 		
+		
+		
 		saveChartAsPNG(new File(pathDiretorio + "grafico_fitness_" + execucao + ".png"), graficoFitness, 1000, 300);
 	}
 	
-	private void buildGraficoCustoProjeto(String pathDiretorio, Individuo melhorIndividuo, Individuo piorIndividuo) throws IOException {
+	private void buildGraficoCustoProjeto(String pathDiretorio, Double menorCustoProjeto, Double maiorCustoProjeto) throws IOException {
 		JFreeChart graficoCustoProjeto = createLineChart("Custo do Projeto", "Gerações", "Custo", dataSetCustoProjeto, 
 				PlotOrientation.VERTICAL, true, true, false);
 		
 		CategoryPlot categoryPlot = (CategoryPlot) graficoCustoProjeto.getPlot();
 		categoryPlot.setDomainCrosshairVisible(true);
 		categoryPlot.setRangeCrosshairVisible(true);
+		
+		double CENTENA_MILHAR = 10000.00;
+		NumberAxis range = (NumberAxis) categoryPlot.getRangeAxis();
+		range.setRange(menorCustoProjeto - (2 * CENTENA_MILHAR), maiorCustoProjeto + (2 * CENTENA_MILHAR));
+		range.setTickUnit(new NumberTickUnit(CENTENA_MILHAR));
 		
 		saveChartAsPNG(new File(pathDiretorio + "grafico_custo_" + execucao + ".png"), graficoCustoProjeto, 1000, 300);
 	}

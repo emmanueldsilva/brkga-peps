@@ -67,8 +67,8 @@ public class AlgoritmoBRKGA {
             if (melhorIndividuo.isFactivel()) {
             	hitRate++;
             	melhoresFitness.add(melhorIndividuo.getValorFitness());
-            	melhoresCustosProjeto.add(novaPopulacao.getMenorValorCustoProjeto());
-            	melhoresDuracaoProjeto.add(novaPopulacao.getMenorDuracaoProjeto());
+            	melhoresCustosProjeto.add(melhorIndividuo.getCustoTotalProjeto());
+            	melhoresDuracaoProjeto.add(melhorIndividuo.getDuracaoTotalProjeto());
             }
              
             printFactory.printEstatisticaExecucao(calculaTempoExecucao(start), parametrosAlgoritmo);

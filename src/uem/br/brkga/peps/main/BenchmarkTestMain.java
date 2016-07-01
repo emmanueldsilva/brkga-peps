@@ -29,14 +29,20 @@ public class BenchmarkTestMain {
 													    PESO_HABILIDADES_NECESSARIAS, 
 													    PESO_TRABALHO_EXTRA);
 		
-		for (String pathBenchmark: asList("/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst10-5-10-5.conf",
-										  "/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst20-10-10-5.conf",
-										  "/home/emmanuel/projetos/ag-peps/resources/problem-generator/inst30-15-10-5.conf")) {
-			for (Integer numeroGeracoes : asList(50, 75, 100, 125, 150, 200, 300)) {
-				for (Integer tamanhoPopulacao: asList(30, 50, 64, 75, 100, 125, 150, 200, 250)) {
-					for (Double tamanhoGrupoElite: asList(10.0, 15.0, 20.0, 25.0)) {
-						for (Double tamanhoGrupoMutantes: asList(5.0, 10.0, 15.0, 20.0)) {
-							for (Double probabilidadeHerancaElite: asList(55.0, 65.0, 75.0, 85.0, 95.0)) {
+		for (String pathBenchmark: asList(System.getProperty("user.dir") + "/resources/problem-generator/inst10-5-10-5.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-10-10-5.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-15-10-5.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-5-10-5.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-10-10-5.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-15-10-5.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-5-10-5.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-10-10-5.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-15-10-5.conf")) {
+			for (Integer numeroGeracoes : asList(200)) {
+				for (Integer tamanhoPopulacao: asList(64)) {
+					for (Double tamanhoGrupoElite: asList(10.0)) {
+						for (Double probabilidadeHerancaElite: asList(55.0)) {
+						for (Double tamanhoGrupoMutantes: asList(5.0)) {
 								System.out.println("Iniciando execução: " + new File(pathBenchmark).getName() + "/"
 										+ NUMERO_EXECUCOES + "/"
 										+ numeroGeracoes + "/" 
@@ -54,6 +60,52 @@ public class BenchmarkTestMain {
 								parametrosAlgoritmo.setProbabilidadeHerancaElite(probabilidadeHerancaElite);
 								parametrosAlgoritmo.setPathBenchmark(pathBenchmark);
 	
+								final AlgoritmoBRKGA algoritmoGenetico = new AlgoritmoBRKGA(parametrosAlgoritmo);
+								algoritmoGenetico.inicializaDadosProblema();
+								algoritmoGenetico.executarAlgoritmo();
+								
+								System.out.println("Fim da execução");
+								System.gc();
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		
+		
+		for (String pathBenchmark: asList(System.getProperty("user.dir") + "/resources/problem-generator/inst10-5-10-5.conf",
+				System.getProperty("user.dir") + "/resources/problem-generator/inst10-10-10-5.conf",
+				System.getProperty("user.dir") + "/resources/problem-generator/inst10-15-10-5.conf",
+				System.getProperty("user.dir") + "/resources/problem-generator/inst20-5-10-5.conf",
+				System.getProperty("user.dir") + "/resources/problem-generator/inst20-10-10-5.conf",
+				System.getProperty("user.dir") + "/resources/problem-generator/inst20-15-10-5.conf",
+				System.getProperty("user.dir") + "/resources/problem-generator/inst30-5-10-5.conf",
+				System.getProperty("user.dir") + "/resources/problem-generator/inst30-10-10-5.conf",
+				System.getProperty("user.dir") + "/resources/problem-generator/inst30-15-10-5.conf")) {
+			for (Integer numeroGeracoes : asList(200)) {
+				for (Integer tamanhoPopulacao: asList(64)) {
+					for (Double tamanhoGrupoElite: asList(35.0)) {
+						for (Double probabilidadeHerancaElite: asList(95.0)) {
+							for (Double tamanhoGrupoMutantes: asList(20.0)) {
+								System.out.println("Iniciando execução: " + new File(pathBenchmark).getName() + "/"
+										+ NUMERO_EXECUCOES + "/"
+										+ numeroGeracoes + "/" 
+										+ tamanhoPopulacao + "/"
+										+ tamanhoGrupoElite + "/"
+										+ tamanhoGrupoMutantes + "/"
+										+ probabilidadeHerancaElite);
+								
+								final ParametrosAlgoritmo parametrosAlgoritmo = new ParametrosAlgoritmo();
+								parametrosAlgoritmo.setNumeroExecucoes(NUMERO_EXECUCOES);
+								parametrosAlgoritmo.setNumeroGeracoes(numeroGeracoes);
+								parametrosAlgoritmo.setTamanhoPopulacao(tamanhoPopulacao);
+								parametrosAlgoritmo.setTamanhoGrupoElite(tamanhoGrupoElite);
+								parametrosAlgoritmo.setTamanhoGrupoMutantes(tamanhoGrupoMutantes);
+								parametrosAlgoritmo.setProbabilidadeHerancaElite(probabilidadeHerancaElite);
+								parametrosAlgoritmo.setPathBenchmark(pathBenchmark);
+								
 								final AlgoritmoBRKGA algoritmoGenetico = new AlgoritmoBRKGA(parametrosAlgoritmo);
 								algoritmoGenetico.inicializaDadosProblema();
 								algoritmoGenetico.executarAlgoritmo();
