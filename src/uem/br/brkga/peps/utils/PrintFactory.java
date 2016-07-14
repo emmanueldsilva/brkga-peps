@@ -150,20 +150,20 @@ public class PrintFactory {
 
 	private void populaDataSetFitness(Populacao populacao, Integer geracao) {
 		dataSetFitness.addValue(populacao.getMaiorValorFitness(), MELHOR_FITNESS, geracao);
-		dataSetFitness.addValue(populacao.getMediaValorFitness(), MEDIA_FITNESS, geracao);
-		dataSetFitness.addValue(populacao.getMenorValorFitness(), PIOR_FITNESS, geracao);
+//		dataSetFitness.addValue(populacao.getMediaValorFitness(), MEDIA_FITNESS, geracao);
+//		dataSetFitness.addValue(populacao.getMenorValorFitness(), PIOR_FITNESS, geracao);
 	}
 	
 	private void populaDataSetDuracaoProjeto(Populacao populacao, Integer geracao) {
-		dataSetDuracaoProjeto.addValue(populacao.getMaiorDuracaoProjeto(), PIOR_DURACAO_PROJETO, geracao);
-		dataSetDuracaoProjeto.addValue(populacao.getMediaDuracaoProjeto(), MEDIA_DURACAO_PROJETO, geracao);
+//		dataSetDuracaoProjeto.addValue(populacao.getMaiorDuracaoProjeto(), PIOR_DURACAO_PROJETO, geracao);
+//		dataSetDuracaoProjeto.addValue(populacao.getMediaDuracaoProjeto(), MEDIA_DURACAO_PROJETO, geracao);
 		dataSetDuracaoProjeto.addValue(populacao.getMenorDuracaoProjeto(), MELHOR_DURACAO_PROJETO, geracao);
 		dataSetDuracaoProjeto.addValue(populacao.getMelhorIndividuo().getDuracaoTotalProjeto(), DURACAO_MELHOR_INDIVIDUO, geracao);
 	}
 	
 	private void populaDataSetCustoProjeto(Populacao populacao, Integer geracao) {
-		dataSetCustoProjeto.addValue(populacao.getMaiorValorCustoProjeto(), PIOR_CUSTO_PROJETO, geracao);
-		dataSetCustoProjeto.addValue(populacao.getMediaValorCustoProjeto(), MEDIA_CUSTO_PROJETO, geracao);
+//		dataSetCustoProjeto.addValue(populacao.getMaiorValorCustoProjeto(), PIOR_CUSTO_PROJETO, geracao);
+//		dataSetCustoProjeto.addValue(populacao.getMediaValorCustoProjeto(), MEDIA_CUSTO_PROJETO, geracao);
 		dataSetCustoProjeto.addValue(populacao.getMenorValorCustoProjeto(), MELHOR_CUSTO_PROJETO, geracao);
 		dataSetCustoProjeto.addValue(populacao.getMelhorIndividuo().getCustoTotalProjeto(), CUSTO_MELHOR_INDIVIDUO, geracao);
 	}
@@ -191,8 +191,6 @@ public class PrintFactory {
 		CategoryPlot categoryPlot = graficoFitness.getCategoryPlot();
 		categoryPlot.setDomainCrosshairVisible(true);
 		categoryPlot.setRangeCrosshairVisible(true);
-		
-		
 		
 		saveChartAsPNG(new File(pathDiretorio + "grafico_fitness_" + execucao + ".png"), graficoFitness, 1000, 300);
 	}

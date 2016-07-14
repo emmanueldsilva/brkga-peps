@@ -10,14 +10,14 @@ import uem.br.brkga.peps.genetico.ParametrosPesos;
 
 public class BenchmarkTestMain {
 
-	private static final Double PESO_CUSTO_PROJETO = 0.0000005;
-	private static final Double PESO_DURACAO_PROJETO = 0.045;
+	private static final Double PESO_CUSTO_PROJETO = 0.000001;
+	private static final Double PESO_DURACAO_PROJETO = 0.1;
 	private static final Double PESO_PENALIDADE = 100.0;
-	private static final Double PESO_TRABALHO_EXTRA = 1.0;
-	private static final Double PESO_TRABALHO_NAO_REALIZADO = 1.0;
-	private static final Double PESO_HABILIDADES_NECESSARIAS = 1.0;
+	private static final Double PESO_TRABALHO_NAO_REALIZADO = 10.0;
+	private static final Double PESO_HABILIDADES_NECESSARIAS = 10.0;
+	private static final Double PESO_TRABALHO_EXTRA = 0.1;
 	
-	private static final int NUMERO_EXECUCOES = 100;
+	private static final int NUMERO_EXECUCOES = 10;
 	
 	public static void main(String[] args) {
 		System.out.println("Iniciando BRKGA-PEPS");
@@ -31,18 +31,19 @@ public class BenchmarkTestMain {
 		
 		for (String pathBenchmark: asList(System.getProperty("user.dir") + "/resources/problem-generator/inst10-5-10-5.conf",
 										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-10-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-15-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-5-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-10-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-15-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-5-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-10-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-15-10-5.conf")) {
-			for (Integer numeroGeracoes : asList(200)) {
-				for (Integer tamanhoPopulacao: asList(64)) {
-					for (Double tamanhoGrupoElite: asList(10.0)) {
-						for (Double probabilidadeHerancaElite: asList(55.0)) {
-						for (Double tamanhoGrupoMutantes: asList(5.0)) {
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-15-10-5.conf"
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-5-10-5.conf",
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-10-10-5.conf",
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-15-10-5.conf",
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-5-10-5.conf",
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-10-10-5.conf",
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-15-10-5.conf"
+										  )) {
+			for (Integer numeroGeracoes : asList(1300)) {
+				for (Integer tamanhoPopulacao: asList(256)) {
+					for (Double tamanhoGrupoElite: asList(30.0)) {
+						for (Double probabilidadeHerancaElite: asList(70.0)) {
+						for (Double tamanhoGrupoMutantes: asList(10.0, 20.0)) {
 								System.out.println("Iniciando execução: " + new File(pathBenchmark).getName() + "/"
 										+ NUMERO_EXECUCOES + "/"
 										+ numeroGeracoes + "/" 
@@ -74,50 +75,50 @@ public class BenchmarkTestMain {
 		}
 		
 		
-		
-		for (String pathBenchmark: asList(System.getProperty("user.dir") + "/resources/problem-generator/inst10-5-10-5.conf",
-				System.getProperty("user.dir") + "/resources/problem-generator/inst10-10-10-5.conf",
-				System.getProperty("user.dir") + "/resources/problem-generator/inst10-15-10-5.conf",
-				System.getProperty("user.dir") + "/resources/problem-generator/inst20-5-10-5.conf",
-				System.getProperty("user.dir") + "/resources/problem-generator/inst20-10-10-5.conf",
-				System.getProperty("user.dir") + "/resources/problem-generator/inst20-15-10-5.conf",
-				System.getProperty("user.dir") + "/resources/problem-generator/inst30-5-10-5.conf",
-				System.getProperty("user.dir") + "/resources/problem-generator/inst30-10-10-5.conf",
-				System.getProperty("user.dir") + "/resources/problem-generator/inst30-15-10-5.conf")) {
-			for (Integer numeroGeracoes : asList(200)) {
-				for (Integer tamanhoPopulacao: asList(64)) {
-					for (Double tamanhoGrupoElite: asList(35.0)) {
-						for (Double probabilidadeHerancaElite: asList(95.0)) {
-							for (Double tamanhoGrupoMutantes: asList(20.0)) {
-								System.out.println("Iniciando execução: " + new File(pathBenchmark).getName() + "/"
-										+ NUMERO_EXECUCOES + "/"
-										+ numeroGeracoes + "/" 
-										+ tamanhoPopulacao + "/"
-										+ tamanhoGrupoElite + "/"
-										+ tamanhoGrupoMutantes + "/"
-										+ probabilidadeHerancaElite);
-								
-								final ParametrosAlgoritmo parametrosAlgoritmo = new ParametrosAlgoritmo();
-								parametrosAlgoritmo.setNumeroExecucoes(NUMERO_EXECUCOES);
-								parametrosAlgoritmo.setNumeroGeracoes(numeroGeracoes);
-								parametrosAlgoritmo.setTamanhoPopulacao(tamanhoPopulacao);
-								parametrosAlgoritmo.setTamanhoGrupoElite(tamanhoGrupoElite);
-								parametrosAlgoritmo.setTamanhoGrupoMutantes(tamanhoGrupoMutantes);
-								parametrosAlgoritmo.setProbabilidadeHerancaElite(probabilidadeHerancaElite);
-								parametrosAlgoritmo.setPathBenchmark(pathBenchmark);
-								
-								final AlgoritmoBRKGA algoritmoGenetico = new AlgoritmoBRKGA(parametrosAlgoritmo);
-								algoritmoGenetico.inicializaDadosProblema();
-								algoritmoGenetico.executarAlgoritmo();
-								
-								System.out.println("Fim da execução");
-								System.gc();
-							}
-						}
-					}
-				}
-			}
-		}
+//		
+//		for (String pathBenchmark: asList(System.getProperty("user.dir") + "/resources/problem-generator/inst10-5-10-5.conf",
+//				System.getProperty("user.dir") + "/resources/problem-generator/inst10-10-10-5.conf",
+//				System.getProperty("user.dir") + "/resources/problem-generator/inst10-15-10-5.conf",
+//				System.getProperty("user.dir") + "/resources/problem-generator/inst20-5-10-5.conf",
+//				System.getProperty("user.dir") + "/resources/problem-generator/inst20-10-10-5.conf",
+//				System.getProperty("user.dir") + "/resources/problem-generator/inst20-15-10-5.conf",
+//				System.getProperty("user.dir") + "/resources/problem-generator/inst30-5-10-5.conf",
+//				System.getProperty("user.dir") + "/resources/problem-generator/inst30-10-10-5.conf",
+//				System.getProperty("user.dir") + "/resources/problem-generator/inst30-15-10-5.conf")) {
+//			for (Integer numeroGeracoes : asList(200)) {
+//				for (Integer tamanhoPopulacao: asList(64)) {
+//					for (Double tamanhoGrupoElite: asList(35.0)) {
+//						for (Double probabilidadeHerancaElite: asList(95.0)) {
+//							for (Double tamanhoGrupoMutantes: asList(20.0)) {
+//								System.out.println("Iniciando execução: " + new File(pathBenchmark).getName() + "/"
+//										+ NUMERO_EXECUCOES + "/"
+//										+ numeroGeracoes + "/" 
+//										+ tamanhoPopulacao + "/"
+//										+ tamanhoGrupoElite + "/"
+//										+ tamanhoGrupoMutantes + "/"
+//										+ probabilidadeHerancaElite);
+//								
+//								final ParametrosAlgoritmo parametrosAlgoritmo = new ParametrosAlgoritmo();
+//								parametrosAlgoritmo.setNumeroExecucoes(NUMERO_EXECUCOES);
+//								parametrosAlgoritmo.setNumeroGeracoes(numeroGeracoes);
+//								parametrosAlgoritmo.setTamanhoPopulacao(tamanhoPopulacao);
+//								parametrosAlgoritmo.setTamanhoGrupoElite(tamanhoGrupoElite);
+//								parametrosAlgoritmo.setTamanhoGrupoMutantes(tamanhoGrupoMutantes);
+//								parametrosAlgoritmo.setProbabilidadeHerancaElite(probabilidadeHerancaElite);
+//								parametrosAlgoritmo.setPathBenchmark(pathBenchmark);
+//								
+//								final AlgoritmoBRKGA algoritmoGenetico = new AlgoritmoBRKGA(parametrosAlgoritmo);
+//								algoritmoGenetico.inicializaDadosProblema();
+//								algoritmoGenetico.executarAlgoritmo();
+//								
+//								System.out.println("Fim da execução");
+//								System.gc();
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
 	}
 	
 }
