@@ -1,10 +1,13 @@
 package uem.br.brkga.peps.tests;
 
+import static uem.br.brkga.peps.genetico.TipoCodificacao.MATRIZ_DEDICACAO;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import uem.br.brkga.peps.genetico.IndividuoCodificado;
+import uem.br.brkga.peps.genetico.IndividuoCodificadoHelper;
 import uem.br.brkga.peps.genetico.ParametrosAlgoritmo;
 import uem.br.brkga.peps.genetico.Populacao;
 import uem.br.brkga.peps.problema.ProblemaBuilder;
@@ -28,14 +31,15 @@ public class PopulacaoTest {
 		parametrosAlgoritmo.setTamanhoGrupoElite(50.0);
 		parametrosAlgoritmo.setTamanhoGrupoMutantes(50.0);
 		parametrosAlgoritmo.setProbabilidadeHerancaElite(60.0);
+		parametrosAlgoritmo.setTipoCodificacao(MATRIZ_DEDICACAO);
 		
 		RandomFactory.getInstance().setSeed(1);
 		final Populacao populacao = new Populacao(parametrosAlgoritmo);
 		
-		final IndividuoCodificado paiElite = new IndividuoCodificado(buildGenesCodificados1());
+		final IndividuoCodificado paiElite = IndividuoCodificadoHelper.getInstance().newIndividuoCodificado(parametrosAlgoritmo.getTipoCodificacao(), buildGenesCodificados1());
 		populacao.addIndividuo(paiElite);
 		
-		final IndividuoCodificado paiOutro = new IndividuoCodificado(buildGenesCodificados2());
+		final IndividuoCodificado paiOutro = IndividuoCodificadoHelper.getInstance().newIndividuoCodificado(parametrosAlgoritmo.getTipoCodificacao(), buildGenesCodificados2());
 		populacao.addIndividuo(paiOutro);
 		
 		final IndividuoCodificado novoFilho = populacao.efetuaCrossover(paiElite, paiOutro, parametrosAlgoritmo.getProbabilidadeHerancaElite());

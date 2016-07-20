@@ -15,7 +15,9 @@ public class ParametrosAlgoritmo {
 	private Double probabilidadeHerancaElite;
 	
 	private String pathBenchmark;
-
+	
+	private TipoCodificacao tipoCodificacao;
+	
 	public int getTamanhoPopulacao() {
 		return tamanhoPopulacao;
 	}
@@ -70,6 +72,14 @@ public class ParametrosAlgoritmo {
 
 	public void setProbabilidadeHerancaElite(Double probabilidadeHerancaElite) {
 		this.probabilidadeHerancaElite = probabilidadeHerancaElite;
+	}
+
+	public TipoCodificacao getTipoCodificacao() {
+		return tipoCodificacao;
+	}
+
+	public void setTipoCodificacao(TipoCodificacao tipoCodificacao) {
+		this.tipoCodificacao = tipoCodificacao;
 	}
 	
 }

@@ -1,6 +1,7 @@
 package uem.br.brkga.peps.main;
 
 import static java.util.Arrays.asList;
+import static uem.br.brkga.peps.genetico.TipoCodificacao.VETOR_EMPREGADOS;
 
 import java.io.File;
 
@@ -60,6 +61,7 @@ public class BenchmarkTestMain {
 								parametrosAlgoritmo.setTamanhoGrupoMutantes(tamanhoGrupoMutantes);
 								parametrosAlgoritmo.setProbabilidadeHerancaElite(probabilidadeHerancaElite);
 								parametrosAlgoritmo.setPathBenchmark(pathBenchmark);
+								parametrosAlgoritmo.setTipoCodificacao(VETOR_EMPREGADOS);
 	
 								final AlgoritmoBRKGA algoritmoGenetico = new AlgoritmoBRKGA(parametrosAlgoritmo);
 								algoritmoGenetico.inicializaDadosProblema();

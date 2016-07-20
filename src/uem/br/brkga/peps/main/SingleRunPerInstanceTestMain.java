@@ -1,6 +1,7 @@
 package uem.br.brkga.peps.main;
 
 import static java.util.Arrays.asList;
+import static uem.br.brkga.peps.genetico.TipoCodificacao.VETOR_EMPREGADOS;
 
 import java.io.File;
 
@@ -56,6 +57,7 @@ public class SingleRunPerInstanceTestMain {
 		parametrosAlgoritmo.setTamanhoGrupoMutantes(5.0);
 		parametrosAlgoritmo.setProbabilidadeHerancaElite(60.0);
 		parametrosAlgoritmo.setPathBenchmark(pathBenchmark);
+		parametrosAlgoritmo.setTipoCodificacao(VETOR_EMPREGADOS);
 		return parametrosAlgoritmo;
 	}
 	

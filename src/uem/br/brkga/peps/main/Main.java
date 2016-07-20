@@ -1,5 +1,6 @@
 package uem.br.brkga.peps.main;
 
+import static uem.br.brkga.peps.genetico.TipoCodificacao.VETOR_EMPREGADOS;
 import uem.br.brkga.peps.genetico.AlgoritmoBRKGA;
 import uem.br.brkga.peps.genetico.ParametrosAlgoritmo;
 import uem.br.brkga.peps.genetico.ParametrosPesos;
@@ -43,6 +44,7 @@ public class Main {
 		parametrosAlgoritmo.setTamanhoGrupoElite(40.0);
 		parametrosAlgoritmo.setTamanhoGrupoMutantes(20.0);
 		parametrosAlgoritmo.setProbabilidadeHerancaElite(75.0);
+		parametrosAlgoritmo.setTipoCodificacao(VETOR_EMPREGADOS);
 //		parametrosAlgoritmo.setPathBenchmark(System.getProperty("user.dir") + "/resources/problem-generator/inst10-5-10-5.conf");
 //		parametrosAlgoritmo.setPathBenchmark(System.getProperty("user.dir") + "/resources/problem-generator/inst10-10-10-5.conf");
 		parametrosAlgoritmo.setPathBenchmark(System.getProperty("user.dir") + "/resources/problem-generator/inst10-15-10-5.conf");

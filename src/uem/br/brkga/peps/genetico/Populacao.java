@@ -19,12 +19,15 @@ public class Populacao {
 	
 	private int tamanhoGrupoMutantes;
 	
+	private TipoCodificacao tipoCodificacao;
+	
 	private List<IndividuoCodificado> individuos = Lists.newArrayList();
 	
 	public Populacao(ParametrosAlgoritmo parametrosAlgoritmo) {
 		this.tamanhoPopulacao = parametrosAlgoritmo.getTamanhoPopulacao();
 		this.tamanhoGrupoElite = getNumeroIndividuosBy(parametrosAlgoritmo.getTamanhoGrupoElite());
 		this.tamanhoGrupoMutantes = getNumeroIndividuosBy(parametrosAlgoritmo.getTamanhoGrupoMutantes());
+		this.tipoCodificacao = parametrosAlgoritmo.getTipoCodificacao();
     }
  
     public void gerarIndividuos() {
@@ -34,8 +37,8 @@ public class Populacao {
     }
     
     private void gerarIndividuoCodificado() {
-    	final IndividuoCodificado individuoCodificado = new IndividuoCodificado();
-    	individuoCodificado.popularGenesAleatoriamente();
+    	final IndividuoCodificado individuoCodificado = IndividuoCodificadoHelper.getInstance().newIndividuoCodificado(tipoCodificacao);
+    	individuoCodificado.codificar();
     	addIndividuo(individuoCodificado);
     }
 
@@ -85,7 +88,7 @@ public class Populacao {
 	}
 
 	public IndividuoCodificado efetuaCrossover(IndividuoCodificado paiElite, IndividuoCodificado paiOutro, Double probabilidadeHerancaElite) {
-		final IndividuoCodificado novoFilho = new IndividuoCodificado();
+		final IndividuoCodificado novoFilho = IndividuoCodificadoHelper.getInstance().newIndividuoCodificado(tipoCodificacao);
 		
 		for (int i = 0; i < ProblemaBuilder.getInstance().getNumeroTasks() * ProblemaBuilder.getInstance().getNumeroEmployees(); i++) {
 			final Integer sorteio = RandomFactory.getInstance().nextInt(100);
