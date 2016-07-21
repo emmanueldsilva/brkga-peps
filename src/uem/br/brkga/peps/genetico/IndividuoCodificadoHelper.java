@@ -22,7 +22,7 @@ public class IndividuoCodificadoHelper {
 		switch (tipoCodificacao) {
 		case MATRIZ_DEDICACAO: 
 			return new IndividuoCodificadoMatriz();
-		case VETOR_EMPREGADOS:
+		case VETOR_EMPREGADOS_ATUACAO:
 			return new IndividuoCodificadoEmpregados();
 		default:
 			return null;
@@ -33,7 +33,7 @@ public class IndividuoCodificadoHelper {
 		switch (tipoCodificacao) {
 		case MATRIZ_DEDICACAO: 
 			return new IndividuoCodificadoMatriz(genes);
-		case VETOR_EMPREGADOS:
+		case VETOR_EMPREGADOS_ATUACAO:
 			return new IndividuoCodificadoEmpregados(genes);
 		default:
 			return null;

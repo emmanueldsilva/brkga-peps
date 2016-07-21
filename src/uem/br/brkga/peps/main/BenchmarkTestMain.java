@@ -1,7 +1,7 @@
 package uem.br.brkga.peps.main;
 
 import static java.util.Arrays.asList;
-import static uem.br.brkga.peps.genetico.TipoCodificacao.VETOR_EMPREGADOS;
+import static uem.br.brkga.peps.genetico.TipoCodificacao.VETOR_EMPREGADOS_ATUACAO;
 
 import java.io.File;
 
@@ -30,12 +30,13 @@ public class BenchmarkTestMain {
 													    PESO_HABILIDADES_NECESSARIAS, 
 													    PESO_TRABALHO_EXTRA);
 		
-		for (String pathBenchmark: asList(System.getProperty("user.dir") + "/resources/problem-generator/inst10-5-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-10-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-15-10-5.conf"
+		for (String pathBenchmark: asList(
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-5-10-5.conf",
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-10-10-5.conf",
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-15-10-5.conf"
 //										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-5-10-5.conf",
 //										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-10-10-5.conf",
-//										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-15-10-5.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-15-10-5.conf"
 //										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-5-10-5.conf",
 //										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-10-10-5.conf",
 //										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-15-10-5.conf"
@@ -61,7 +62,7 @@ public class BenchmarkTestMain {
 								parametrosAlgoritmo.setTamanhoGrupoMutantes(tamanhoGrupoMutantes);
 								parametrosAlgoritmo.setProbabilidadeHerancaElite(probabilidadeHerancaElite);
 								parametrosAlgoritmo.setPathBenchmark(pathBenchmark);
-								parametrosAlgoritmo.setTipoCodificacao(VETOR_EMPREGADOS);
+								parametrosAlgoritmo.setTipoCodificacao(VETOR_EMPREGADOS_ATUACAO);
 	
 								final AlgoritmoBRKGA algoritmoGenetico = new AlgoritmoBRKGA(parametrosAlgoritmo);
 								algoritmoGenetico.inicializaDadosProblema();

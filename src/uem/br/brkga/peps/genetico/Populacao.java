@@ -6,7 +6,6 @@ import static java.util.Collections.sort;
 import java.util.Comparator;
 import java.util.List;
 
-import uem.br.brkga.peps.problema.ProblemaBuilder;
 import uem.br.brkga.peps.utils.RandomFactory;
 
 import com.google.common.collect.Lists;
@@ -90,7 +89,7 @@ public class Populacao {
 	public IndividuoCodificado efetuaCrossover(IndividuoCodificado paiElite, IndividuoCodificado paiOutro, Double probabilidadeHerancaElite) {
 		final IndividuoCodificado novoFilho = IndividuoCodificadoHelper.getInstance().newIndividuoCodificado(tipoCodificacao);
 		
-		for (int i = 0; i < ProblemaBuilder.getInstance().getNumeroTasks() * ProblemaBuilder.getInstance().getNumeroEmployees(); i++) {
+		for (int i = 0; i < paiElite.getGenes().length; i++) {
 			final Integer sorteio = RandomFactory.getInstance().nextInt(100);
 			if (sorteio < probabilidadeHerancaElite) {
 				novoFilho.setGene(i, new Double(paiElite.getValor(i)));

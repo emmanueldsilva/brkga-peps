@@ -3,10 +3,14 @@ package uem.br.brkga.peps.genetico;
 import static java.lang.Long.toBinaryString;
 import static java.lang.Math.pow;
 import static org.apache.commons.lang3.StringUtils.leftPad;
+import uem.br.brkga.peps.entidade.Employee;
+import uem.br.brkga.peps.entidade.Task;
 import uem.br.brkga.peps.problema.ProblemaBuilder;
 import uem.br.brkga.peps.utils.RandomFactory;
 
 public class IndividuoCodificadoEmpregados extends IndividuoCodificado {
+	
+	private String[] empregadosPorTarefas = new String[ProblemaBuilder.getInstance().getNumeroTasks()];
 
 	public IndividuoCodificadoEmpregados() {
 		this(new Double[ProblemaBuilder.getInstance().getNumeroTasks()]);
@@ -18,7 +22,7 @@ public class IndividuoCodificadoEmpregados extends IndividuoCodificado {
 	
 	@Override
 	public void codificar() {
-		for (int i = 0; i < ProblemaBuilder.getInstance().getNumeroTasks(); i++) {
+		for (int i = 0; i < genes.length; i++) {
 			setGene(i, RandomFactory.getInstance().randomDoubleRange1());
 		}
 		
@@ -27,17 +31,48 @@ public class IndividuoCodificadoEmpregados extends IndividuoCodificado {
 
 	@Override
 	public void decodificar() {
-		for (int i = 0; i < ProblemaBuilder.getInstance().getNumeroTasks(); i++) {
-			String binary = leftPad(toBinaryString(normalizaValorCodificado(getValor(i))), ProblemaBuilder.getInstance().getNumeroEmployees(), '0');
-			System.out.println(binary);
+		for (int i = 0; i < genes.length; i++) {
+			long valorNormalizado = normalizaValorCodificado(getValor(i));
+			valorNormalizado = resolvePrimeiraRestricao(i, valorNormalizado);
+			
+			empregadosPorTarefas[i] = leftPad(toBinaryString(valorNormalizado), ProblemaBuilder.getInstance().getNumeroEmployees(), '0');
 		}
 		
 		individuo = new Individuo(buildMatrizDedicacao());
 	}
 
+	private long resolvePrimeiraRestricao(int i, long valorNormalizado) {
+		while (valorNormalizado == 0) {
+			setGene(i, RandomFactory.getInstance().randomDoubleRange1());
+			
+			valorNormalizado = normalizaValorCodificado(getValor(i));
+		}
+		
+		return valorNormalizado;
+	}
+
 	private MatrizDedicacao buildMatrizDedicacao() {
-		// TODO Auto-generated method stub
-		return null;
+		final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
+		
+		for (int i = 0; i < empregadosPorTarefas.length; i++) {
+			String atuacaoBinario = empregadosPorTarefas[i];
+			
+			for (int j = 0; j < ProblemaBuilder.getInstance().getNumeroEmployees(); j++) {
+				final Task task = ProblemaBuilder.getInstance().getTask(i);
+				final Employee employee = ProblemaBuilder.getInstance().getEmployee(j);
+				
+				boolean empregadoAtuaNaTarefa = atuacaoBinario.charAt(j) == '1';
+				matrizDedicacao.addGrauDedicacao(employee, task, getGrauDedicacaoByAtuacao(empregadoAtuaNaTarefa));
+			}
+		}
+		
+		matrizDedicacao.efetuaCalculosProjeto();
+		
+		return matrizDedicacao;
+	}
+	
+	private Double getGrauDedicacaoByAtuacao(boolean empregadoAtuaNaTarefa) {
+		return RandomFactory.getInstance().getValorGrauDedicacao(empregadoAtuaNaTarefa? 1 : 0);
 	}
 	
 	private long normalizaValorCodificado(Double valorCodificado) {
