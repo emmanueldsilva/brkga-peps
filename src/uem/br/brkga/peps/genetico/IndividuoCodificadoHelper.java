@@ -24,6 +24,8 @@ public class IndividuoCodificadoHelper {
 			return new IndividuoCodificadoMatriz();
 		case VETOR_EMPREGADOS_ATUACAO:
 			return new IndividuoCodificadoEmpregados();
+		case MATRIZ_EMPREGADO_ATUA_GRAU:
+			return new MatrizEmpregadoAtuaGrau();
 		default:
 			return null;
 		}
@@ -35,6 +37,8 @@ public class IndividuoCodificadoHelper {
 			return new IndividuoCodificadoMatriz(genes);
 		case VETOR_EMPREGADOS_ATUACAO:
 			return new IndividuoCodificadoEmpregados(genes);
+		case MATRIZ_EMPREGADO_ATUA_GRAU:
+			return new MatrizEmpregadoAtuaGrau(genes);
 		default:
 			return null;
 		}

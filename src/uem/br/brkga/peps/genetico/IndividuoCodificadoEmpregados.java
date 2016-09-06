@@ -72,7 +72,11 @@ public class IndividuoCodificadoEmpregados extends IndividuoCodificado {
 	}
 	
 	private Double getGrauDedicacaoByAtuacao(boolean empregadoAtuaNaTarefa) {
-		return RandomFactory.getInstance().getValorGrauDedicacao(empregadoAtuaNaTarefa? 1 : 0);
+		if (empregadoAtuaNaTarefa) {
+			return RandomFactory.getInstance().randomGrauDedicacaoPositivo();
+		}
+			
+		return RandomFactory.getInstance().getValorGrauDedicacao(0);
 	}
 	
 	private long normalizaValorCodificado(Double valorCodificado) {

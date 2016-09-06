@@ -33,6 +33,10 @@ public class RandomFactory {
     public Double randomGrauDedicacao() {
     	return getValorGrauDedicacao(nextInt(HORAS_EXPEDIENTE));
     }
+    
+    public Double randomGrauDedicacaoPositivo() {
+    	return getValorGrauDedicacao(nextInt(HORAS_EXPEDIENTE + 1));
+    }
 
 	public Double getValorGrauDedicacao(int index) {
 		switch (index) {
@@ -55,9 +59,33 @@ public class RandomFactory {
 			return 1.00;
 		}
 	}
+	
+	public Double getValorGrauDedicacaoSemZero(int index) {
+		switch (index) {
+		case 0:
+			return 0.14;
+		case 1:
+			return 0.29;
+		case 2:
+			return 0.43;
+		case 3:
+			return 0.57;
+		case 4:
+			return 0.71;
+		case 5:
+			return 0.86;
+		case 6:
+		default:
+			return 1.00;
+		}
+	}
     
     public Double randomDoubleRange1() {
     	return this.random.nextDouble();
     }
     
+    public Double randomDoubleRange2() {
+    	return this.random.nextDouble() + nextInt(2);
+    }
+
 }
