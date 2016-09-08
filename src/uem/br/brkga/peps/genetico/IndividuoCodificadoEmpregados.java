@@ -40,6 +40,9 @@ public class IndividuoCodificadoEmpregados extends IndividuoCodificado {
 		
 		individuo = new Individuo(buildMatrizDedicacao());
 	}
+	
+	@Override
+	public void recodificar() {	}
 
 	private long resolvePrimeiraRestricao(int i, long valorNormalizado) {
 		while (valorNormalizado == 0) {

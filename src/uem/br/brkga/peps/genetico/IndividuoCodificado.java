@@ -10,6 +10,8 @@ public abstract class IndividuoCodificado {
 	
 	public abstract void decodificar();
 	
+	public abstract void recodificar();
+	
 	public Individuo getIndividuo() {
 		return individuo;
 	}

@@ -28,6 +28,9 @@ public class IndividuoCodificadoMatriz extends IndividuoCodificado {
 	public void decodificar() {
 		individuo = new Individuo(buildMatrizDedicacao());
 	}
+	
+	@Override
+	public void recodificar() {	}
 
 	private MatrizDedicacao buildMatrizDedicacao() {
 		int numeroTasks = ProblemaBuilder.getInstance().getNumeroTasks();
