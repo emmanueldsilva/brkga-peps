@@ -56,7 +56,8 @@ public class MatrizEmpregadoAtuaGrau extends IndividuoCodificado {
 		
 		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
 			for (Task task : ProblemaBuilder.getInstance().getTasks()) {
-				int posicao = (task.getNumero() * ProblemaBuilder.getInstance().getNumeroTasks()) + employee.getCodigo();
+//				int posicao = (task.getNumero() * ProblemaBuilder.getInstance().getNumeroTasks()) + employee.getCodigo();
+				int posicao = task.getNumero() + (employee.getCodigo() * ProblemaBuilder.getInstance().getNumeroTasks());
 				
 				final Double grauDedicacaoCodificado = genes[posicao];
 				final Double grauDedicacaoDecodificado = matrizDedicacao.getGrauDedicacao(employee, task).getValor();
@@ -77,7 +78,8 @@ public class MatrizEmpregadoAtuaGrau extends IndividuoCodificado {
 	}
 
 	private boolean saoMesmosValores(Double grauDedicacaoCodificado, Double grauDedicacaoDecodificado) {
-		return (int) ((grauDedicacaoCodificado - 1.0) * 7) == (int) ((grauDedicacaoDecodificado - 1.0) * 7);
+		final Double valorGrauDedicacaoDecodificado = RandomFactory.getInstance().getValorGrauDedicacaoSemZero((int) ((grauDedicacaoCodificado - 1.0) * 7));
+		return valorGrauDedicacaoDecodificado.equals(grauDedicacaoDecodificado);
 	}
 	
 }

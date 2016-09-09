@@ -1,5 +1,8 @@
 package uem.br.brkga.peps.utils;
 
+import static java.math.BigDecimal.ROUND_HALF_EVEN;
+
+import java.math.BigDecimal;
 import java.util.Random;
  
 public class RandomFactory {
@@ -41,42 +44,40 @@ public class RandomFactory {
 	public Double getValorGrauDedicacao(int index) {
 		switch (index) {
 		case 0:
-			return 0.0;
+			return new BigDecimal(1).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
 		case 1:
-			return 0.14;
+			return new BigDecimal(2).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
 		case 2:
-			return 0.29;
+			return new BigDecimal(3).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
 		case 3:
-			return 0.43;
+			return new BigDecimal(4).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
 		case 4:
-			return 0.57;
+			return new BigDecimal(5).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
 		case 5:
-			return 0.71;
+			return new BigDecimal(6).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
 		case 6:
-			return 0.86;
-		case 7:
 		default:
-			return 1.00;
+			return new BigDecimal(7).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
 		}
 	}
 	
 	public Double getValorGrauDedicacaoSemZero(int index) {
 		switch (index) {
 		case 0:
-			return 0.14;
+			return new BigDecimal(1).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
 		case 1:
-			return 0.29;
+			return new BigDecimal(2).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
 		case 2:
-			return 0.43;
+			return new BigDecimal(3).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
 		case 3:
-			return 0.57;
+			return new BigDecimal(4).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
 		case 4:
-			return 0.71;
+			return new BigDecimal(5).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
 		case 5:
-			return 0.86;
+			return new BigDecimal(6).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
 		case 6:
 		default:
-			return 1.00;
+			return new BigDecimal(7).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
 		}
 	}
     
