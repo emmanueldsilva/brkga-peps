@@ -1,5 +1,10 @@
 package uem.br.brkga.peps.genetico;
 
+import static java.math.BigDecimal.ONE;
+import static java.math.MathContext.DECIMAL32;
+
+import java.math.BigDecimal;
+
 import uem.br.brkga.peps.entidade.Employee;
 import uem.br.brkga.peps.entidade.Task;
 import uem.br.brkga.peps.problema.ProblemaBuilder;
@@ -56,7 +61,6 @@ public class MatrizEmpregadoAtuaGrau extends IndividuoCodificado {
 		
 		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
 			for (Task task : ProblemaBuilder.getInstance().getTasks()) {
-//				int posicao = (task.getNumero() * ProblemaBuilder.getInstance().getNumeroTasks()) + employee.getCodigo();
 				int posicao = task.getNumero() + (employee.getCodigo() * ProblemaBuilder.getInstance().getNumeroTasks());
 				
 				final Double grauDedicacaoCodificado = genes[posicao];
@@ -64,13 +68,13 @@ public class MatrizEmpregadoAtuaGrau extends IndividuoCodificado {
 				
 				if (grauDedicacaoCodificado >= 1.0) {
 					if (grauDedicacaoDecodificado == 0.0) {
-						genes[posicao] -= 1.0; 
+						genes[posicao] = new BigDecimal(genes[posicao]).subtract(ONE, DECIMAL32).doubleValue(); 
 					} else if (!saoMesmosValores(grauDedicacaoCodificado, grauDedicacaoDecodificado)) {
-						genes[posicao] = 1.0 + grauDedicacaoDecodificado;
+						genes[posicao] = new BigDecimal(grauDedicacaoDecodificado).add(ONE, DECIMAL32).doubleValue();
 					}
 				} else { 
 					if (grauDedicacaoDecodificado > 0.0) {
-						genes[posicao] = 1.0 + grauDedicacaoDecodificado;
+						genes[posicao] = new BigDecimal(grauDedicacaoDecodificado).add(ONE, DECIMAL32).doubleValue();
 					}
 				}
 			}

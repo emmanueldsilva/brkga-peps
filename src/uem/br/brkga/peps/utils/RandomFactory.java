@@ -1,6 +1,6 @@
 package uem.br.brkga.peps.utils;
 
-import static java.math.BigDecimal.ROUND_HALF_EVEN;
+import static java.math.MathContext.DECIMAL32;
 
 import java.math.BigDecimal;
 import java.util.Random;
@@ -44,40 +44,40 @@ public class RandomFactory {
 	public Double getValorGrauDedicacao(int index) {
 		switch (index) {
 		case 0:
-			return new BigDecimal(1).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
+			return new BigDecimal(1).divide(new BigDecimal(7), DECIMAL32).doubleValue();
 		case 1:
-			return new BigDecimal(2).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
+			return new BigDecimal(2).divide(new BigDecimal(7), DECIMAL32).doubleValue();
 		case 2:
-			return new BigDecimal(3).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
+			return new BigDecimal(3).divide(new BigDecimal(7), DECIMAL32).doubleValue();
 		case 3:
-			return new BigDecimal(4).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
+			return new BigDecimal(4).divide(new BigDecimal(7), DECIMAL32).doubleValue();
 		case 4:
-			return new BigDecimal(5).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
+			return new BigDecimal(5).divide(new BigDecimal(7), DECIMAL32).doubleValue();
 		case 5:
-			return new BigDecimal(6).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
+			return new BigDecimal(6).divide(new BigDecimal(7), DECIMAL32).doubleValue();
 		case 6:
 		default:
-			return new BigDecimal(7).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
+			return new BigDecimal(7).divide(new BigDecimal(7), DECIMAL32).doubleValue();
 		}
 	}
 	
 	public Double getValorGrauDedicacaoSemZero(int index) {
 		switch (index) {
 		case 0:
-			return new BigDecimal(1).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
+			return new BigDecimal(1).divide(new BigDecimal(7), DECIMAL32).doubleValue();
 		case 1:
-			return new BigDecimal(2).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
+			return new BigDecimal(2).divide(new BigDecimal(7), DECIMAL32).doubleValue();
 		case 2:
-			return new BigDecimal(3).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
+			return new BigDecimal(3).divide(new BigDecimal(7), DECIMAL32).doubleValue();
 		case 3:
-			return new BigDecimal(4).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
+			return new BigDecimal(4).divide(new BigDecimal(7), DECIMAL32).doubleValue();
 		case 4:
-			return new BigDecimal(5).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
+			return new BigDecimal(5).divide(new BigDecimal(7), DECIMAL32).doubleValue();
 		case 5:
-			return new BigDecimal(6).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
+			return new BigDecimal(6).divide(new BigDecimal(7), DECIMAL32).doubleValue();
 		case 6:
 		default:
-			return new BigDecimal(7).divide(new BigDecimal(7), 4, ROUND_HALF_EVEN).doubleValue();
+			return new BigDecimal(7).divide(new BigDecimal(7), DECIMAL32).doubleValue();
 		}
 	}
     
