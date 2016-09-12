@@ -106,6 +106,13 @@ public class Populacao {
 			gerarIndividuoCodificado();
 		}
 	}
+	
+	public void efetuarBuscaLocal() {
+		for (IndividuoCodificado individuoCodificado : individuos) {
+			final Individuo individuo = individuoCodificado.getIndividuo();
+			individuo.efetuarBuscaLocal();
+		}
+	}
 
 	public IndividuoCodificado getMelhorIndividuo() {
 		return individuos.stream()
@@ -197,5 +204,5 @@ public class Populacao {
 	public List<IndividuoCodificado> getIndividuosCodificados() {
 		return individuos;
 	}
-	
+
 }

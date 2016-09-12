@@ -2,6 +2,8 @@ package uem.br.brkga.peps.genetico;
 
 import static java.math.BigDecimal.ONE;
 import static java.math.MathContext.DECIMAL32;
+import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ONE;
+import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ZERO;
 
 import java.math.BigDecimal;
 
@@ -66,14 +68,14 @@ public class MatrizEmpregadoAtuaGrau extends IndividuoCodificado {
 				final Double grauDedicacaoCodificado = genes[posicao];
 				final Double grauDedicacaoDecodificado = matrizDedicacao.getGrauDedicacao(employee, task).getValor();
 				
-				if (grauDedicacaoCodificado >= 1.0) {
-					if (grauDedicacaoDecodificado == 0.0) {
+				if (grauDedicacaoCodificado >= DOUBLE_ONE) {
+					if (grauDedicacaoDecodificado == DOUBLE_ZERO) {
 						genes[posicao] = new BigDecimal(genes[posicao]).subtract(ONE, DECIMAL32).doubleValue(); 
 					} else if (!saoMesmosValores(grauDedicacaoCodificado, grauDedicacaoDecodificado)) {
 						genes[posicao] = new BigDecimal(grauDedicacaoDecodificado).add(ONE, DECIMAL32).doubleValue();
 					}
 				} else { 
-					if (grauDedicacaoDecodificado > 0.0) {
+					if (grauDedicacaoDecodificado > DOUBLE_ZERO) {
 						genes[posicao] = new BigDecimal(grauDedicacaoDecodificado).add(ONE, DECIMAL32).doubleValue();
 					}
 				}

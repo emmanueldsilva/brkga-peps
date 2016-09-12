@@ -61,11 +61,21 @@ public class Individuo {
 		final ParametrosPesos parametrosPesos = ParametrosPesos.getInstance();
 		
 		BigDecimal penalidade = valueOf(parametrosPesos.getPesoPenalidade());
-		penalidade = penalidade.add(valueOf(parametrosPesos.getPesoTrabalhoNaoRealizado()).multiply(valueOf(matrizDedicacao.getTarefasNaoRealizadas())));
-		penalidade = penalidade.add(valueOf(parametrosPesos.getPesoHabilidadesNecessarias()).multiply(valueOf(matrizDedicacao.getHabilidadesNecessarias())));
-		penalidade = penalidade.add(valueOf(parametrosPesos.getPesoTrabalhoExtra()).multiply(valueOf(matrizDedicacao.getTrabalhoExtra())));
+		penalidade = penalidade.add(valueOf(parametrosPesos.getPesoTrabalhoNaoRealizado()).multiply(valueOf(matrizDedicacao.getNumeroTarefasNaoRealizadas())));
+		penalidade = penalidade.add(valueOf(parametrosPesos.getPesoHabilidadesNecessarias()).multiply(valueOf(matrizDedicacao.getNumeroHabilidadesNecessarias())));
+		penalidade = penalidade.add(valueOf(parametrosPesos.getPesoTrabalhoExtra()).multiply(valueOf(matrizDedicacao.getTotalTrabalhoExtra())));
 		
 		return penalidade;
+	}
+	
+	public void efetuarBuscaLocal() {
+		if (!isFactivel()) {
+			if (!matrizDedicacao.isSolucaoValidaPeranteRestricao1()) {
+				matrizDedicacao.getTarefasNaoRealizadas();
+			}
+		} else {
+			
+		}
 	}
 	
 	public void efetuarMutacao() {
@@ -148,7 +158,5 @@ public class Individuo {
 			return false;
 		return true;
 	}
-	
-	
 	
 }

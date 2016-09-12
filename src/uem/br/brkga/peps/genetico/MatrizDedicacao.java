@@ -1,6 +1,7 @@
 package uem.br.brkga.peps.genetico;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.difference;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.math.BigDecimal.ONE;
@@ -14,6 +15,7 @@ import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ZERO;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,11 +39,19 @@ public class MatrizDedicacao {
 	
 	private Double duracaoTotalProjeto;
 	
-	private int tarefasNaoRealizadas;
+	private int numeroTarefasNaoRealizadas;
 	
-	private int habilidadesNecessarias;
+	private List<Task> tarefasNaoRealizadas = newArrayList(); 
 	
-	private Double trabalhoExtra;
+	private int numeroHabilidadesNecessarias;
+	
+	private HashMap<Task, Skill[]> habilidadesNecessarias = newHashMap();
+	
+	private Double totalTrabalhoExtra;
+	
+	private HashMap<Employee, FaseProjeto> trabalhosExtra = newHashMap();
+	
+//	private HashMap<Employee, FaseProjeto> 
 
 	public MatrizDedicacao() {
 		int numeroEmpregados = ProblemaBuilder.getInstance().getEmployees().size();
@@ -136,10 +146,11 @@ public class MatrizDedicacao {
 		for (Task task: ProblemaBuilder.getInstance().getTasks()) {
 			if (calculaSomatorioDedicacaoTask(task).compareTo(ZERO) <= 0) {
 				numeroTarefasNaoRealizadas++;
+				tarefasNaoRealizadas.add(task);
 			}
 		}
 		
-		return this.tarefasNaoRealizadas = numeroTarefasNaoRealizadas;
+		return this.numeroTarefasNaoRealizadas = numeroTarefasNaoRealizadas;
 	}
 	
 	/**
@@ -148,16 +159,18 @@ public class MatrizDedicacao {
 	 * @return
 	 */
 	public boolean isSolucaoValidaPeranteRestricao2() {
-		habilidadesNecessarias = 0;
+		numeroHabilidadesNecessarias = 0;
 		for (Task task : ProblemaBuilder.getInstance().getTasks()) {
 			final List<Skill> employeesSkills = getSkillsDosEmployeesQueAtuamNaTask(task);
 			final List<Skill> taskSkills = task.getSkills();
 			employeesSkills.retainAll(taskSkills);
 			
-			habilidadesNecessarias += difference(newHashSet(taskSkills), newHashSet(employeesSkills)).size();
+			final Skill[] skillsNecessarias = (Skill[]) difference(newHashSet(taskSkills), newHashSet(employeesSkills)).toArray();
+			habilidadesNecessarias.put(task, skillsNecessarias);
+			numeroHabilidadesNecessarias += skillsNecessarias.length;
 		}
 		
-		return habilidadesNecessarias == 0;
+		return numeroHabilidadesNecessarias == 0;
 	}
 	
 	/**
@@ -177,7 +190,7 @@ public class MatrizDedicacao {
 			esforcoExtraTotalProjeto = esforcoExtraTotalProjeto.add(calculaEsforcoExtraFuncionario(employee));
 		}
 		
-		return this.trabalhoExtra = esforcoExtraTotalProjeto.doubleValue();
+		return this.totalTrabalhoExtra = esforcoExtraTotalProjeto.doubleValue();
 	}
 
 	private BigDecimal calculaEsforcoExtraFuncionario(Employee employee) {
@@ -192,6 +205,7 @@ public class MatrizDedicacao {
 	private BigDecimal calculaEsforcoExtraFuncionarioFase(Employee employee, FaseProjeto faseProjeto) {
 		final BigDecimal esforcoFase = calculaEsforcoFuncionarioFase(employee, faseProjeto);
 		if (esforcoFase.compareTo(ONE) > 0) {
+			trabalhosExtra.put(employee, faseProjeto);
 			return calculaEsforcoExtraFuncionarioProjeto(faseProjeto, esforcoFase);
 		}
 		
@@ -378,16 +392,27 @@ public class MatrizDedicacao {
 		return duracaoTotalProjeto;
 	}
 
-	public int getTarefasNaoRealizadas() {
+	public int getNumeroTarefasNaoRealizadas() {
+		return numeroTarefasNaoRealizadas;
+	}
+	
+	public List<Task> getTarefasNaoRealizadas() {
 		return tarefasNaoRealizadas;
 	}
 
-	public int getHabilidadesNecessarias() {
+	public int getNumeroHabilidadesNecessarias() {
+		return numeroHabilidadesNecessarias;
+	}
+	
+	public HashMap<Task, Skill[]> getHabilidadesNecessarias() {
 		return habilidadesNecessarias;
 	}
 
-	public Double getTrabalhoExtra() {
-		return trabalhoExtra;
+	public Double getTotalTrabalhoExtra() {
+		return totalTrabalhoExtra;
 	}
 	
+	public HashMap<Employee, FaseProjeto> getTrabalhosExtra() {
+		return trabalhosExtra;
+	}
 }

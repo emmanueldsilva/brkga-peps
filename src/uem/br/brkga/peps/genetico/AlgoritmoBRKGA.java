@@ -52,6 +52,8 @@ public class AlgoritmoBRKGA {
 				novaPopulacao.addIndividuos(populacao.selecionarIndividuosMaisAptos());
 				novaPopulacao.gerarMutantes();
 				novaPopulacao.efetuarCruzamento(parametrosAlgoritmo.getProbabilidadeHerancaElite());
+				novaPopulacao.efetuarBuscaLocal();
+				
 				populacao = novaPopulacao;
             }
 

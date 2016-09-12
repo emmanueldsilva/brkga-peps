@@ -157,14 +157,14 @@ public class PrintFactory {
 	private void populaDataSetDuracaoProjeto(Populacao populacao, Integer geracao) {
 //		dataSetDuracaoProjeto.addValue(populacao.getMaiorDuracaoProjeto(), PIOR_DURACAO_PROJETO, geracao);
 //		dataSetDuracaoProjeto.addValue(populacao.getMediaDuracaoProjeto(), MEDIA_DURACAO_PROJETO, geracao);
-		dataSetDuracaoProjeto.addValue(populacao.getMenorDuracaoProjeto(), MELHOR_DURACAO_PROJETO, geracao);
+//		dataSetDuracaoProjeto.addValue(populacao.getMenorDuracaoProjeto(), MELHOR_DURACAO_PROJETO, geracao);
 		dataSetDuracaoProjeto.addValue(populacao.getMelhorIndividuo().getDuracaoTotalProjeto(), DURACAO_MELHOR_INDIVIDUO, geracao);
 	}
 	
 	private void populaDataSetCustoProjeto(Populacao populacao, Integer geracao) {
 //		dataSetCustoProjeto.addValue(populacao.getMaiorValorCustoProjeto(), PIOR_CUSTO_PROJETO, geracao);
 //		dataSetCustoProjeto.addValue(populacao.getMediaValorCustoProjeto(), MEDIA_CUSTO_PROJETO, geracao);
-		dataSetCustoProjeto.addValue(populacao.getMenorValorCustoProjeto(), MELHOR_CUSTO_PROJETO, geracao);
+//		dataSetCustoProjeto.addValue(populacao.getMenorValorCustoProjeto(), MELHOR_CUSTO_PROJETO, geracao);
 		dataSetCustoProjeto.addValue(populacao.getMelhorIndividuo().getCustoTotalProjeto(), CUSTO_MELHOR_INDIVIDUO, geracao);
 	}
 	
@@ -175,7 +175,6 @@ public class PrintFactory {
 			
 			String pathDiretorio = buildPathDiretorio();
 			buildGraficoFitness(pathDiretorio, melhorIndividuo, piorIndividuo);
-//			buildGraficoCustoProjeto(pathDiretorio, melhorIndividuo, piorIndividuo);
 			buildGraficoCustoProjeto(pathDiretorio, populacao.getMenorValorCustoProjeto(), populacao.getMaiorValorCustoProjeto());
 			buildGraficoDuracaoProjeto(pathDiretorio);
 			buildDiagramaGantt(pathDiretorio, melhorIndividuo);
@@ -274,16 +273,16 @@ public class PrintFactory {
 		final MatrizDedicacao matrizDedicacao = individuo.getMatrizDedicacao();
 		if (individuo.isFactivel() != null) {
 			sb.appendLine("FACTIVEL: " + individuo.isFactivel());
-			sb.appendLine("TAREFAS NÃO REALIZADAS: " + matrizDedicacao.getTarefasNaoRealizadas());
-			sb.appendLine("HABILIDADES NECESSARIAS: " + matrizDedicacao.getHabilidadesNecessarias());
-			sb.appendLine("TRABALHO EXTRA: " + matrizDedicacao.getTrabalhoExtra());
+			sb.appendLine("TAREFAS NÃO REALIZADAS: " + matrizDedicacao.getNumeroTarefasNaoRealizadas());
+			sb.appendLine("HABILIDADES NECESSARIAS: " + matrizDedicacao.getNumeroHabilidadesNecessarias());
+			sb.appendLine("TRABALHO EXTRA: " + matrizDedicacao.getTotalTrabalhoExtra());
 			sb.appendLine("CUSTO PROJETO: " + CURRENCY_INSTANCE.format(matrizDedicacao.getCustoTotalProjeto()));
 			sb.appendLine("DURAÇÃO PROJETO: " + matrizDedicacao.getDuracaoTotalProjeto());
 		}
 
 		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
 			for (Task task: ProblemaBuilder.getInstance().getTasks()) {
-				sb.append(matrizDedicacao.getGrauDedicacao(employee, task).getValor() + "\t");
+				sb.append(matrizDedicacao.getGrauDedicacao(employee, task).getValor() + "\t\t");
 			}
 			
 			sb.appendLine();
