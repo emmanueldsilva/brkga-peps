@@ -4,10 +4,15 @@ import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 import static java.math.BigDecimal.valueOf;
 import static java.math.MathContext.DECIMAL32;
+import static java.util.Collections.shuffle;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-public class Individuo {
+import uem.br.brkga.peps.entidade.Task;
+import uem.br.brkga.peps.utils.RandomFactory;
+
+public class Individuo implements Cloneable {
 
 	private MatrizDedicacao matrizDedicacao;
 	
@@ -69,13 +74,23 @@ public class Individuo {
 	}
 	
 	public void efetuarBuscaLocal() {
+		
+		
 		if (!isFactivel()) {
 			if (!matrizDedicacao.isSolucaoValidaPeranteRestricao1()) {
-				matrizDedicacao.getTarefasNaoRealizadas();
+				aplicarBuscaLocalRestricao1();
 			}
 		} else {
 			
 		}
+	}
+
+	private void aplicarBuscaLocalRestricao1() {
+		final List<Task> tarefasNaoRealizadas = matrizDedicacao.getTarefasNaoRealizadas();
+		shuffle(tarefasNaoRealizadas);
+		Task task = tarefasNaoRealizadas.get(0);
+		
+		matrizDedicacao.addGrauDedicacao(RandomFactory.getInstance().randomEmployee(), task, RandomFactory.getInstance().randomGrauDedicacaoPositivo());
 	}
 	
 	public void efetuarMutacao() {
@@ -157,6 +172,11 @@ public class Individuo {
 		} else if (!valorFitness.equals(other.valorFitness))
 			return false;
 		return true;
+	}
+	
+	@Override
+	protected Individuo clone() throws CloneNotSupportedException {
+		return new Individuo(matrizDedicacao.clone());
 	}
 	
 }

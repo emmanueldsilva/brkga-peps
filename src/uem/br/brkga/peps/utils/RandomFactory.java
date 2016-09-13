@@ -4,6 +4,9 @@ import static java.math.MathContext.DECIMAL32;
 
 import java.math.BigDecimal;
 import java.util.Random;
+
+import uem.br.brkga.peps.entidade.Employee;
+import uem.br.brkga.peps.problema.ProblemaBuilder;
  
 public class RandomFactory {
      
@@ -38,7 +41,7 @@ public class RandomFactory {
     }
     
     public Double randomGrauDedicacaoPositivo() {
-    	return getValorGrauDedicacao(nextInt(HORAS_EXPEDIENTE + 1));
+    	return getValorGrauDedicacaoSemZero(nextInt(HORAS_EXPEDIENTE));
     }
 
 	public Double getValorGrauDedicacao(int index) {
@@ -87,6 +90,11 @@ public class RandomFactory {
     
     public Double randomDoubleRange2() {
     	return this.random.nextDouble() + nextInt(2);
+    }
+    
+    public Employee randomEmployee() {
+    	final ProblemaBuilder problemaBuilder = ProblemaBuilder.getInstance();
+		return problemaBuilder.getEmployee(this.random.nextInt(problemaBuilder.getNumeroEmployees()));
     }
 
 }

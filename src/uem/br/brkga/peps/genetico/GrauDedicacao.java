@@ -6,7 +6,7 @@ import static org.apache.commons.lang3.StringUtils.leftPad;
 import uem.br.brkga.peps.entidade.Employee;
 import uem.br.brkga.peps.entidade.Task;
 
-public class GrauDedicacao {
+public class GrauDedicacao implements Cloneable {
 
 	private Employee employee;
 	
