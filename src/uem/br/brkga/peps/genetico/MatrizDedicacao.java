@@ -388,6 +388,7 @@ public class MatrizDedicacao implements Cloneable {
 	public void exploraBuscaLocalRestricao2() {
 		HashMap<Task, List<Skill>> habilidadesNecessarias = getHabilidadesNecessarias();
 		
+		habilidadesNecessarias.keySet()
 		
 		List<Skill> keySet = habilidadesNecessarias.get(RandomFactory.getInstance().randomTask());
 	}
