@@ -52,7 +52,7 @@ public class AlgoritmoBRKGA {
 				novaPopulacao.addIndividuos(populacao.selecionarIndividuosMaisAptos());
 				novaPopulacao.gerarMutantes();
 				novaPopulacao.efetuarCruzamento(parametrosAlgoritmo.getProbabilidadeHerancaElite());
-				novaPopulacao.efetuarBuscaLocal();
+				novaPopulacao.aplicarBuscaLocal();
 				
 				populacao = novaPopulacao;
             }

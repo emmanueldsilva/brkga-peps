@@ -42,4 +42,8 @@ public class Employee {
 		}
 	}
 	
+	public boolean hasSkill(Skill skill) {
+		return skills.contains(skill);
+	}
+	
 }

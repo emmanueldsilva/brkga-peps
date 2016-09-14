@@ -8,6 +8,7 @@ import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 import static java.math.BigDecimal.valueOf;
 import static java.math.MathContext.DECIMAL32;
+import static java.util.Collections.shuffle;
 import static java.util.Comparator.comparingDouble;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -17,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import uem.br.brkga.peps.entidade.Employee;
@@ -373,6 +375,21 @@ public class MatrizDedicacao implements Cloneable {
 				addGrauDedicacao(employee, task, RandomFactory.getInstance().randomGrauDedicacao());
 			}
 		}
+	}
+	
+	public void exploraBuscaLocalRestricao1() {
+		final List<Task> tarefasNaoRealizadas = getTarefasNaoRealizadas();
+		shuffle(tarefasNaoRealizadas);
+		Task task = tarefasNaoRealizadas.get(0);
+		
+		addGrauDedicacao(RandomFactory.getInstance().randomEmployee(), task, RandomFactory.getInstance().randomGrauDedicacaoPositivo());
+	}
+	
+	public void exploraBuscaLocalRestricao2() {
+		HashMap<Task, List<Skill>> habilidadesNecessarias = getHabilidadesNecessarias();
+		
+		
+		List<Skill> keySet = habilidadesNecessarias.get(RandomFactory.getInstance().randomTask());
 	}
 	
 	public GrauDedicacao[][] getMatrizDedicacao() {

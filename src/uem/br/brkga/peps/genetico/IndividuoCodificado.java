@@ -16,6 +16,10 @@ public abstract class IndividuoCodificado {
 		return individuo;
 	}
 	
+	public void setIndividuo(Individuo individuo) {
+		this.individuo = individuo;
+	}
+	
 	public Double[] getGenes() {
 		return genes;
 	}

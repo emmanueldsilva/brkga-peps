@@ -107,10 +107,15 @@ public class Populacao {
 		}
 	}
 	
-	public void efetuarBuscaLocal() {
+	public void aplicarBuscaLocal() {
 		for (IndividuoCodificado individuoCodificado : individuos) {
 			final Individuo individuo = individuoCodificado.getIndividuo();
-			individuo.efetuarBuscaLocal();
+			final Individuo novaSolucao = individuo.clone().buscarSolucaoVizinha();
+			
+			if (novaSolucao.getValorFitness() > individuo.getValorFitness()) {
+				individuoCodificado.setIndividuo(novaSolucao);
+				individuoCodificado.recodificar();
+			}
 		}
 	}
 

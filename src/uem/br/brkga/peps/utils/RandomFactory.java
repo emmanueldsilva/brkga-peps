@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.Random;
 
 import uem.br.brkga.peps.entidade.Employee;
+import uem.br.brkga.peps.entidade.Task;
 import uem.br.brkga.peps.problema.ProblemaBuilder;
  
 public class RandomFactory {
@@ -94,7 +95,16 @@ public class RandomFactory {
     
     public Employee randomEmployee() {
     	final ProblemaBuilder problemaBuilder = ProblemaBuilder.getInstance();
-		return problemaBuilder.getEmployee(this.random.nextInt(problemaBuilder.getNumeroEmployees()));
+    	return problemaBuilder.getEmployee(this.random.nextInt(problemaBuilder.getNumeroEmployees()));
+    }
+    
+    public Task randomTask() {
+    	final ProblemaBuilder problemaBuilder = ProblemaBuilder.getInstance();
+		return problemaBuilder.getTask(this.random.nextInt(problemaBuilder.getNumeroTasks()));
+    }
+    
+    public T randomElement(T... elements) {
+    	return elements[this.random.nextInt(elements.length)]; 
     }
 
 }
