@@ -50,7 +50,7 @@ public class MatrizDedicacao implements Cloneable {
 	
 	private Double totalTrabalhoExtra;
 	
-	private HashMap<Employee, FaseProjeto> trabalhosExtra = newHashMap();
+	private HashMap<Employee, List<FaseProjeto>> trabalhosExtra = newHashMap();
 	
 	public MatrizDedicacao() {
 		int numeroEmpregados = ProblemaBuilder.getInstance().getEmployees().size();
@@ -198,18 +198,24 @@ public class MatrizDedicacao implements Cloneable {
 	}
 
 	private BigDecimal calculaEsforcoExtraFuncionario(Employee employee) {
+		final List<FaseProjeto> fasesProjetoComEsforcoExtra = newArrayList();
+		
 		BigDecimal esforcoExtraFuncionario = ZERO;
 		for (FaseProjeto faseProjeto : fasesProjeto) {
-			esforcoExtraFuncionario = esforcoExtraFuncionario.add(calculaEsforcoExtraFuncionarioFase(employee, faseProjeto));
+			esforcoExtraFuncionario = esforcoExtraFuncionario.add(calculaEsforcoExtraFuncionarioFase(employee, faseProjeto, fasesProjetoComEsforcoExtra));
+		}
+		
+		if (!fasesProjetoComEsforcoExtra.isEmpty()) {
+			trabalhosExtra.put(employee, fasesProjetoComEsforcoExtra);
 		}
 		
 		return esforcoExtraFuncionario;
 	}
 
-	private BigDecimal calculaEsforcoExtraFuncionarioFase(Employee employee, FaseProjeto faseProjeto) {
+	private BigDecimal calculaEsforcoExtraFuncionarioFase(Employee employee, FaseProjeto faseProjeto, List<FaseProjeto> fasesProjetoComEsforcoExtra) {
 		final BigDecimal esforcoFase = calculaEsforcoFuncionarioFase(employee, faseProjeto);
 		if (esforcoFase.compareTo(ONE) > 0) {
-			trabalhosExtra.put(employee, faseProjeto);
+			fasesProjetoComEsforcoExtra.add(faseProjeto);
 			return calculaEsforcoExtraFuncionarioProjeto(faseProjeto, esforcoFase);
 		}
 		
@@ -393,6 +399,16 @@ public class MatrizDedicacao implements Cloneable {
 		addGrauDedicacao(employee, task, RandomFactory.getInstance().randomGrauDedicacaoPositivo());
 	}
 	
+	public void exploraBuscaLocalRestricao3() {
+		final HashMap<Employee, List<FaseProjeto>> trabalhosExtra = getTrabalhosExtra();
+		final Employee employee = RandomFactory.getInstance().randomElement(newArrayList(trabalhosExtra.keySet()));
+		final FaseProjeto faseProjeto = RandomFactory.getInstance().randomElement(trabalhosExtra.get(employee));
+		
+		//Aqui poderia pegar a task com maior grau atuação.
+		final Task task = RandomFactory.getInstance().randomElement(faseProjeto.getEscalasConcomitantes()).getTask();
+		addGrauDedicacao(employee, task, RandomFactory.getInstance().randomGrauDedicacaoPositivo());
+	}
+	
 	public GrauDedicacao[][] getMatrizDedicacao() {
 		return matrizDedicacao;
 	}
@@ -433,7 +449,7 @@ public class MatrizDedicacao implements Cloneable {
 		return totalTrabalhoExtra;
 	}
 	
-	public HashMap<Employee, FaseProjeto> getTrabalhosExtra() {
+	public HashMap<Employee, List<FaseProjeto>> getTrabalhosExtra() {
 		return trabalhosExtra;
 	}
 	
@@ -449,5 +465,5 @@ public class MatrizDedicacao implements Cloneable {
 		
 		return matrizDedicacao;
 	}
-	
+
 }

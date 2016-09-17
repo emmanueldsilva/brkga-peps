@@ -74,6 +74,8 @@ public class Individuo implements Cloneable {
 				matrizDedicacao.exploraBuscaLocalRestricao1();
 			} else if (!matrizDedicacao.isSolucaoValidaPeranteRestricao2()) {
 				matrizDedicacao.exploraBuscaLocalRestricao2();
+			} else if (!matrizDedicacao.isSolucaoValidaPeranteRestricao3()) {
+				matrizDedicacao.exploraBuscaLocalRestricao3();
 			}
 		} else {
 		}
