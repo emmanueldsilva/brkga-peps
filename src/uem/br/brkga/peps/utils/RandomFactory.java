@@ -3,11 +3,11 @@ package uem.br.brkga.peps.utils;
 import static java.math.MathContext.DECIMAL32;
 
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
 import uem.br.brkga.peps.entidade.Employee;
+import uem.br.brkga.peps.entidade.Skill;
 import uem.br.brkga.peps.entidade.Task;
 import uem.br.brkga.peps.problema.ProblemaBuilder;
  
@@ -99,12 +99,16 @@ public class RandomFactory {
     	return randomElement(ProblemaBuilder.getInstance().getEmployees());
     }
     
+    public Employee randomEmployeeComSkill(Skill skill) {
+    	return randomElement(ProblemaBuilder.getInstance().getEmployeesComSkill(skill));
+    }
+    
     public Task randomTask() {
     	return randomElement(ProblemaBuilder.getInstance().getTasks());
     }
     
-    public <T> T randomElement(List<T> elements) {
-    	return elements.get(this.random.nextInt(elements.size())); 
+	public <T> T randomElement(List<T> elements) {
+		return elements.get(this.random.nextInt(elements.size()));
     }
-
+    
 }

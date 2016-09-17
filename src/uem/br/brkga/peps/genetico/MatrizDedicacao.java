@@ -18,7 +18,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import uem.br.brkga.peps.entidade.Employee;
@@ -380,17 +379,18 @@ public class MatrizDedicacao implements Cloneable {
 	public void exploraBuscaLocalRestricao1() {
 		final List<Task> tarefasNaoRealizadas = getTarefasNaoRealizadas();
 		shuffle(tarefasNaoRealizadas);
-		Task task = tarefasNaoRealizadas.get(0);
 		
-		addGrauDedicacao(RandomFactory.getInstance().randomEmployee(), task, RandomFactory.getInstance().randomGrauDedicacaoPositivo());
+		final Task task = tarefasNaoRealizadas.get(0);
+		final Employee employee = RandomFactory.getInstance().randomEmployee();
+		addGrauDedicacao(employee, task, RandomFactory.getInstance().randomGrauDedicacaoPositivo());
 	}
 	
 	public void exploraBuscaLocalRestricao2() {
-		HashMap<Task, List<Skill>> habilidadesNecessarias = getHabilidadesNecessarias();
-		
-		habilidadesNecessarias.keySet()
-		
-		List<Skill> keySet = habilidadesNecessarias.get(RandomFactory.getInstance().randomTask());
+		final HashMap<Task, List<Skill>> habilidadesNecessarias = getHabilidadesNecessarias();
+		final Task task = RandomFactory.getInstance().randomElement(newArrayList(habilidadesNecessarias.keySet()));
+		final Skill skill = RandomFactory.getInstance().randomElement(habilidadesNecessarias.get(task));
+		final Employee employee = RandomFactory.getInstance().randomEmployeeComSkill(skill);
+		addGrauDedicacao(employee, task, RandomFactory.getInstance().randomGrauDedicacaoPositivo());
 	}
 	
 	public GrauDedicacao[][] getMatrizDedicacao() {
