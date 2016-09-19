@@ -24,6 +24,10 @@ public class AlgoritmoBRKGA {
 	
 	private List<Double> melhoresDuracaoProjeto = Lists.newArrayList();
 	
+	private IndividuoCodificado ultimoMelhorIndividuo;
+	
+	private IndividuoCodificado melhorIndividuo;
+	
 	public AlgoritmoBRKGA(ParametrosAlgoritmo parametrosAlgoritmo) {
 		this.parametrosAlgoritmo = parametrosAlgoritmo;
 	}
@@ -38,21 +42,37 @@ public class AlgoritmoBRKGA {
         for (int cont = 0; cont < parametrosAlgoritmo.getNumeroExecucoes(); cont++) {
         	final PrintFactory printFactory = new PrintFactory(parametrosAlgoritmo, cont + 1);
             long start = System.currentTimeMillis();  
-             
+            
+            this.ultimoMelhorIndividuo = null;
+    		this.melhorIndividuo = null;
+            
             Populacao populacao = new Populacao(parametrosAlgoritmo);
             Populacao novaPopulacao = null;
             populacao.gerarIndividuos();
             
             for (int i = 0; i < parametrosAlgoritmo.getNumeroGeracoes(); i++) {
 				populacao.avaliarIndividuos();
+				populacao.aplicarBuscaLocal();
 				populacao.ordenarIndividuos();
+				
+				melhorIndividuo = populacao.getMelhorIndividuo();
+				if (ultimoMelhorIndividuo == null) {
+					ultimoMelhorIndividuo = populacao.getMelhorIndividuo();
+				}
+				
+				if (melhorIndividuo.getValorFitness() < ultimoMelhorIndividuo.getValorFitness()) {
+					printFactory.printIndividuo(melhorIndividuo.getIndividuo());
+					printFactory.printIndividuo(ultimoMelhorIndividuo.getIndividuo());
+				} else {
+					ultimoMelhorIndividuo = melhorIndividuo;
+				}
+				
 				printFactory.geraEstatisticas(populacao, i);
 				
 				novaPopulacao = new Populacao(parametrosAlgoritmo);
 				novaPopulacao.addIndividuos(populacao.selecionarIndividuosMaisAptos());
 				novaPopulacao.gerarMutantes();
 				novaPopulacao.efetuarCruzamento(parametrosAlgoritmo.getProbabilidadeHerancaElite());
-				novaPopulacao.aplicarBuscaLocal();
 				
 				populacao = novaPopulacao;
             }

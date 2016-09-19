@@ -4,6 +4,8 @@ import static org.apache.commons.io.FileUtils.forceDelete;
 import static org.apache.commons.io.FileUtils.forceMkdir;
 import static org.apache.commons.io.FileUtils.getUserDirectoryPath;
 import static org.apache.commons.io.FileUtils.write;
+import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ONE;
+import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ZERO;
 import static org.jfree.chart.ChartFactory.createLineChart;
 import static org.jfree.chart.ChartUtilities.saveChartAsPNG;
 
@@ -28,6 +30,7 @@ import org.jfree.data.gantt.TaskSeriesCollection;
 
 import uem.br.brkga.peps.entidade.Employee;
 import uem.br.brkga.peps.entidade.Task;
+import uem.br.brkga.peps.genetico.GrauDedicacao;
 import uem.br.brkga.peps.genetico.Individuo;
 import uem.br.brkga.peps.genetico.MatrizDedicacao;
 import uem.br.brkga.peps.genetico.ParametrosAlgoritmo;
@@ -282,7 +285,13 @@ public class PrintFactory {
 
 		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
 			for (Task task: ProblemaBuilder.getInstance().getTasks()) {
-				sb.append(matrizDedicacao.getGrauDedicacao(employee, task).getValor() + "\t\t");
+				final GrauDedicacao grauDedicacao = matrizDedicacao.getGrauDedicacao(employee, task);
+				
+				if (!DOUBLE_ZERO.equals(grauDedicacao.getValor()) && !DOUBLE_ONE.equals(grauDedicacao.getValor())) {
+					sb.append(grauDedicacao.getValor() + "\t");
+				} else {
+					sb.append(grauDedicacao.getValor() + "\t\t");
+				}
 			}
 			
 			sb.appendLine();

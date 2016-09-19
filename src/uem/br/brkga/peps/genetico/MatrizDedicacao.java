@@ -168,7 +168,10 @@ public class MatrizDedicacao implements Cloneable {
 			employeesSkills.retainAll(taskSkills);
 			
 			List<Skill> skillsNecessarias = difference(newHashSet(taskSkills), newHashSet(employeesSkills)).stream().collect(Collectors.toList());
-			habilidadesNecessarias.put(task, skillsNecessarias);
+			if (!skillsNecessarias.isEmpty()) {
+				habilidadesNecessarias.put(task, skillsNecessarias);
+			}
+			
 			numeroHabilidadesNecessarias += skillsNecessarias.size();
 		}
 		
@@ -455,15 +458,15 @@ public class MatrizDedicacao implements Cloneable {
 	
 	@Override
 	protected MatrizDedicacao clone() throws CloneNotSupportedException {
-		final MatrizDedicacao matrizDedicacao = new MatrizDedicacao();
+		final MatrizDedicacao clone = new MatrizDedicacao();
 		
 		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
 			for (Task task : ProblemaBuilder.getInstance().getTasks()) {
-				matrizDedicacao.addGrauDedicacao(employee, task, getGrauDedicacao(employee, task).clone());
+				clone.addGrauDedicacao(employee, task, getGrauDedicacao(employee, task).clone());
 			}
 		}
 		
-		return matrizDedicacao;
+		return clone;
 	}
 
 }

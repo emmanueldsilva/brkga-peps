@@ -80,6 +80,8 @@ public class Individuo implements Cloneable {
 		} else {
 		}
 
+		matrizDedicacao.efetuaCalculosProjeto();
+		
 		verificaFactibilidade();
 		calculaValorFitness();
 		return this;
@@ -169,7 +171,10 @@ public class Individuo implements Cloneable {
 	@Override
 	protected Individuo clone() {
 		try {
-			return new Individuo(matrizDedicacao.clone());
+			final Individuo clone = new Individuo(this.matrizDedicacao.clone());
+			clone.setFactivel(this.factivel);
+			clone.setValorFitness(this.valorFitness);
+			return clone;
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
