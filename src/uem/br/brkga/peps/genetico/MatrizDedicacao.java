@@ -218,7 +218,10 @@ public class MatrizDedicacao implements Cloneable {
 	private BigDecimal calculaEsforcoExtraFuncionarioFase(Employee employee, FaseProjeto faseProjeto, List<FaseProjeto> fasesProjetoComEsforcoExtra) {
 		final BigDecimal esforcoFase = calculaEsforcoFuncionarioFase(employee, faseProjeto);
 		if (esforcoFase.compareTo(ONE) > 0) {
-			fasesProjetoComEsforcoExtra.add(faseProjeto);
+			if (!fasesProjetoComEsforcoExtra.contains(faseProjeto)) {
+				fasesProjetoComEsforcoExtra.add(faseProjeto);
+			}
+			
 			return calculaEsforcoExtraFuncionarioProjeto(faseProjeto, esforcoFase);
 		}
 		
@@ -276,7 +279,7 @@ public class MatrizDedicacao implements Cloneable {
 	private List<TaskScheduling> getTaskSchedulingConcomitantes(TaskScheduling taskMaisCedoASerConcluida) {
 		Double tempoFim = taskMaisCedoASerConcluida.getTempoFim();
 		return escalaTarefas.stream()
-                            .filter(rt -> rt.getTempoInicio() < tempoFim && tempoFim < rt.getTempoFim())
+                            .filter(rt -> rt.getTempoInicio() < tempoFim && tempoFim <= rt.getTempoFim() && !rt.getTask().equals(taskMaisCedoASerConcluida.getTask()))
                             .collect(toList());
 	}
 
@@ -410,6 +413,10 @@ public class MatrizDedicacao implements Cloneable {
 		//Aqui poderia pegar a task com maior grau atuação.
 		final Task task = RandomFactory.getInstance().randomElement(faseProjeto.getEscalasConcomitantes()).getTask();
 		addGrauDedicacao(employee, task, RandomFactory.getInstance().randomGrauDedicacaoPositivo());
+	}
+
+	public void exploraBuscaLocalFactivel() {
+		
 	}
 	
 	public GrauDedicacao[][] getMatrizDedicacao() {

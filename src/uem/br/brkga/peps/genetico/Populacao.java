@@ -110,13 +110,23 @@ public class Populacao {
 	public void aplicarBuscaLocal() {
 		for (IndividuoCodificado individuoCodificado : individuos) {
 			final Individuo individuo = individuoCodificado.getIndividuo();
-			final Individuo novaSolucao = individuo.clone().buscarSolucaoVizinha();
+			final Individuo novaSolucao = individuo.clone();
 			
-			if (novaSolucao.getValorFitness() > individuo.getValorFitness()) {
+			int tentativas = 0; 
+			while (isNovoFitnessMenorIgualFitnessOriginal(individuo, novaSolucao) && tentativas <= 5) {
+				novaSolucao.buscarSolucaoVizinha();
+				tentativas++;
+			}
+			
+			if (!isNovoFitnessMenorIgualFitnessOriginal(individuo, novaSolucao)) {
 				individuoCodificado.setIndividuo(novaSolucao);
 				individuoCodificado.recodificar();
 			}
 		}
+	}
+
+	private boolean isNovoFitnessMenorIgualFitnessOriginal(Individuo individuo, Individuo novaSolucao) {
+		return novaSolucao.getValorFitness().compareTo(individuo.getValorFitness()) <= 0;
 	}
 
 	public IndividuoCodificado getMelhorIndividuo() {

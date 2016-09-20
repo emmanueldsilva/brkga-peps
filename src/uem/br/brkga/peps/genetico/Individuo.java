@@ -22,9 +22,11 @@ public class Individuo implements Cloneable {
 	}
 	
 	public void verificaFactibilidade() {
-		this.factivel = matrizDedicacao.isSolucaoValidaPeranteRestricao1() && 
-						matrizDedicacao.isSolucaoValidaPeranteRestricao2() && 
-						matrizDedicacao.isSolucaoValidaPeranteRestricao3();
+		boolean factivelRestricao1 = matrizDedicacao.isSolucaoValidaPeranteRestricao1();
+		boolean factivelRestricao2 = matrizDedicacao.isSolucaoValidaPeranteRestricao2();
+		boolean factivelRestricao3 = matrizDedicacao.isSolucaoValidaPeranteRestricao3();
+		
+		this.factivel = factivelRestricao1 && factivelRestricao2 && factivelRestricao3;
 	}
 	
 	public void calculaValorFitness() {
