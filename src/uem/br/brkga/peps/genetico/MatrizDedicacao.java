@@ -51,7 +51,7 @@ public class MatrizDedicacao implements Cloneable {
 	private Double totalTrabalhoExtra;
 	
 	private HashMap<Employee, List<FaseProjeto>> trabalhosExtra = newHashMap();
-	
+
 	public MatrizDedicacao() {
 		int numeroEmpregados = ProblemaBuilder.getInstance().getEmployees().size();
 		int numeroTarefas = ProblemaBuilder.getInstance().getTasks().size();

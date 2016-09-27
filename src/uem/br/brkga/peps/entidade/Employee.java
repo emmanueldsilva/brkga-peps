@@ -37,7 +37,7 @@ public class Employee {
 	}
 	
 	public void addSkill(Skill skill) {
-		if (!skills.contains(skill)) {
+		if (!hasSkill(skill)) {
 			skills.add(skill);
 		}
 	}
