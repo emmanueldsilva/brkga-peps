@@ -10,25 +10,25 @@ import java.math.BigDecimal;
 public class Individuo implements Cloneable {
 
 	private MatrizDedicacao matrizDedicacao;
-	
+
 	private Double valorFitness;
-	
+
 	private Boolean factivel;
-	
+
 	public Individuo(MatrizDedicacao matrizDedicacao) {
 		this.matrizDedicacao = matrizDedicacao;
 		this.valorFitness = null;
 		this.factivel = null;
 	}
-	
+
 	public void verificaFactibilidade() {
 		boolean factivelRestricao1 = matrizDedicacao.isSolucaoValidaPeranteRestricao1();
 		boolean factivelRestricao2 = matrizDedicacao.isSolucaoValidaPeranteRestricao2();
 		boolean factivelRestricao3 = matrizDedicacao.isSolucaoValidaPeranteRestricao3();
-		
+
 		this.factivel = factivelRestricao1 && factivelRestricao2 && factivelRestricao3;
 	}
-	
+
 	public void calculaValorFitness() {
 		BigDecimal valorFitness = ZERO;
 		if (factivel) {
@@ -36,40 +36,40 @@ public class Individuo implements Cloneable {
 		} else {
 			valorFitness = calculaValorFitnessSolucaoNaoFactivel();
 		}
-		
+
 		this.valorFitness = valorFitness.doubleValue();
 	}
 
 	private BigDecimal calculaValorFitnessSolucaoFactivel() {
 		return ONE.divide(calculaCusto(), DECIMAL32);
 	}
-	
+
 	private BigDecimal calculaValorFitnessSolucaoNaoFactivel() {
 		return ONE.divide(calculaCusto().add(calculaPenalidade()), DECIMAL32);
 	}
 
 	private BigDecimal calculaCusto() {
 		final ParametrosPesos parametrosPesos = ParametrosPesos.getInstance();
-		
+
 		final BigDecimal pesoCustoProjeto = valueOf(parametrosPesos.getPesoCustoProjeto());
 		final BigDecimal pesoDuracaoProjeto = valueOf(parametrosPesos.getPesoDuracaoProjeto());
 		final BigDecimal custoProjeto = valueOf(matrizDedicacao.getCustoTotalProjeto());
 		final BigDecimal duracaoProjeto = valueOf(matrizDedicacao.getDuracaoTotalProjeto());
-		
+
 		return pesoCustoProjeto.multiply(custoProjeto).add(pesoDuracaoProjeto.multiply(duracaoProjeto));
 	}
-	
+
 	private BigDecimal calculaPenalidade() {
 		final ParametrosPesos parametrosPesos = ParametrosPesos.getInstance();
-		
+
 		BigDecimal penalidade = valueOf(parametrosPesos.getPesoPenalidade());
 		penalidade = penalidade.add(valueOf(parametrosPesos.getPesoTrabalhoNaoRealizado()).multiply(valueOf(matrizDedicacao.getNumeroTarefasNaoRealizadas())));
 		penalidade = penalidade.add(valueOf(parametrosPesos.getPesoHabilidadesNecessarias()).multiply(valueOf(matrizDedicacao.getNumeroHabilidadesNecessarias())));
 		penalidade = penalidade.add(valueOf(parametrosPesos.getPesoTrabalhoExtra()).multiply(valueOf(matrizDedicacao.getTotalTrabalhoExtra())));
-		
+
 		return penalidade;
 	}
-	
+
 	public Individuo buscarSolucaoVizinha() {
 		if (!isFactivel()) {
 			if (!matrizDedicacao.isSolucaoValidaPeranteRestricao1()) {
@@ -79,13 +79,13 @@ public class Individuo implements Cloneable {
 			} else if (!matrizDedicacao.isSolucaoValidaPeranteRestricao3()) {
 				matrizDedicacao.exploraBuscaLocalRestricao3();
 			}
+			
+			matrizDedicacao.efetuaCalculosProjeto();
+			
+			verificaFactibilidade();
+			calculaValorFitness();
 		} else {
 		}
-
-		matrizDedicacao.efetuaCalculosProjeto();
-		
-		verificaFactibilidade();
-		calculaValorFitness();
 		return this;
 	}
 
@@ -116,20 +116,20 @@ public class Individuo implements Cloneable {
 	public void setFactivel(boolean isFactivel) {
 		this.factivel = isFactivel;
 	}
-	
+
 	public Double getCustoTotalProjeto() {
 		return matrizDedicacao.getCustoTotalProjeto();
 	}
-	
+
 	public Double getDuracaoTotalProjeto() {
 		return matrizDedicacao.getDuracaoTotalProjeto();
 	}
-	
+
 	public String fitnessToString() {
 		if (valorFitness == null) {
 			return "NULL";
 		}
-		
+
 		return new BigDecimal(getValorFitness(), DECIMAL32) + "";
 	}
 
@@ -169,7 +169,7 @@ public class Individuo implements Cloneable {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	protected Individuo clone() {
 		try {
@@ -180,8 +180,8 @@ public class Individuo implements Cloneable {
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
-	
+
 }

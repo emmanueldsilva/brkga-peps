@@ -31,15 +31,24 @@ public class BenchmarkTestMain {
 													    PESO_TRABALHO_EXTRA);
 		
 		for (String pathBenchmark: asList(
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-5-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-10-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-15-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-5-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-10-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-15-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-5-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-10-10-5.conf",
-										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-15-10-5.conf"
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-5-10-5.conf",
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-10-10-5.conf",
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-15-10-5.conf",
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-5-10-5.conf",
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-10-10-5.conf",
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-15-10-5.conf",
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-5-10-5.conf",
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-10-10-5.conf",
+//										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-15-10-5.conf"
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-5-10-7.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-10-10-7.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst10-15-10-7.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-5-10-7.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-10-10-7.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst20-15-10-7.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-5-10-7.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-10-10-7.conf",
+										  System.getProperty("user.dir") + "/resources/problem-generator/inst30-15-10-7.conf"
 										  )) {
 			for (Integer numeroGeracoes : asList(1300)) {
 				for (Integer tamanhoPopulacao: asList(256)) {

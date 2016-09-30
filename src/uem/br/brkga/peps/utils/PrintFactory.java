@@ -208,7 +208,7 @@ public class PrintFactory {
 		double CENTENA_MILHAR = 10000.00;
 		NumberAxis range = (NumberAxis) categoryPlot.getRangeAxis();
 		range.setRange(menorCustoProjeto - (2 * CENTENA_MILHAR), maiorCustoProjeto + (2 * CENTENA_MILHAR));
-		range.setTickUnit(new NumberTickUnit(CENTENA_MILHAR));
+//		range.setTickUnit(new NumberTickUnit(CENTENA_MILHAR));
 		
 		saveChartAsPNG(new File(pathDiretorio + "grafico_custo_" + execucao + ".png"), graficoCustoProjeto, 1000, 300);
 	}

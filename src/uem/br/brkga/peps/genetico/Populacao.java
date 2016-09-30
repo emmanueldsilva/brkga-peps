@@ -3,6 +3,7 @@ package uem.br.brkga.peps.genetico;
 import static java.util.Collections.reverse;
 import static java.util.Collections.sort;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -119,8 +120,23 @@ public class Populacao {
 			}
 			
 			if (!isNovoFitnessMenorIgualFitnessOriginal(individuo, novaSolucao)) {
+				Double valorant = individuoCodificado.getIndividuo().getValorFitness();
+				System.out.println(Arrays.deepToString(individuoCodificado.getGenes()));
+				
 				individuoCodificado.setIndividuo(novaSolucao);
 				individuoCodificado.recodificar();
+				
+				System.out.println(Arrays.deepToString(individuoCodificado.getGenes()));
+				
+				individuoCodificado.decodificar();
+				individuoCodificado.verificaFactibilidade();
+				individuoCodificado.calculaValorFitness();
+				Double valorPost = individuoCodificado.getIndividuo().getValorFitness();
+				
+				if (valorPost < valorant) {
+					System.out.println("Fitness anterior: " + valorant);
+					System.out.println("Fitness posterior: " + valorPost);
+				}
 			}
 		}
 	}

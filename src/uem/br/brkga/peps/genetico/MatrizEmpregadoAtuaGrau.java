@@ -7,6 +7,8 @@ import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ZERO;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import uem.br.brkga.peps.entidade.Employee;
 import uem.br.brkga.peps.entidade.Task;
 import uem.br.brkga.peps.problema.ProblemaBuilder;
@@ -72,10 +74,16 @@ public class MatrizEmpregadoAtuaGrau extends IndividuoCodificado {
 					if (grauDedicacaoDecodificado == DOUBLE_ZERO) {
 						genes[posicao] = new BigDecimal(genes[posicao]).subtract(ONE, DECIMAL32).doubleValue(); 
 					} else if (!saoMesmosValores(grauDedicacaoCodificado, grauDedicacaoDecodificado)) {
-						genes[posicao] = new BigDecimal(grauDedicacaoDecodificado).add(ONE, DECIMAL32).doubleValue();
+						if (grauDedicacaoDecodificado == 1.0) {
+							genes[posicao] = new BigDecimal(grauDedicacaoDecodificado).add(new BigDecimal(0.99), DECIMAL32).doubleValue();
+						} else {
+							genes[posicao] = new BigDecimal(grauDedicacaoDecodificado).add(ONE, DECIMAL32).doubleValue();
+						}
 					}
 				} else { 
-					if (grauDedicacaoDecodificado > DOUBLE_ZERO) {
+					if (grauDedicacaoDecodificado == 1.0) {
+						genes[posicao] = new BigDecimal(grauDedicacaoDecodificado).add(new BigDecimal(0.99), DECIMAL32).doubleValue();
+					} else if (grauDedicacaoDecodificado > DOUBLE_ZERO) {
 						genes[posicao] = new BigDecimal(grauDedicacaoDecodificado).add(ONE, DECIMAL32).doubleValue();
 					}
 				}
