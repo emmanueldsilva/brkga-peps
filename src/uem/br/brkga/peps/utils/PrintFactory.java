@@ -4,8 +4,6 @@ import static org.apache.commons.io.FileUtils.forceDelete;
 import static org.apache.commons.io.FileUtils.forceMkdir;
 import static org.apache.commons.io.FileUtils.getUserDirectoryPath;
 import static org.apache.commons.io.FileUtils.write;
-import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ONE;
-import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ZERO;
 import static org.jfree.chart.ChartFactory.createLineChart;
 import static org.jfree.chart.ChartUtilities.saveChartAsPNG;
 
@@ -20,7 +18,6 @@ import java.util.Locale;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -28,9 +25,6 @@ import org.jfree.data.category.IntervalCategoryDataset;
 import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
 
-import uem.br.brkga.peps.entidade.Employee;
-import uem.br.brkga.peps.entidade.Task;
-import uem.br.brkga.peps.genetico.GrauDedicacao;
 import uem.br.brkga.peps.genetico.Individuo;
 import uem.br.brkga.peps.genetico.MatrizDedicacao;
 import uem.br.brkga.peps.genetico.ParametrosAlgoritmo;
@@ -283,19 +277,7 @@ public class PrintFactory {
 			sb.appendLine("DURAÇÃO PROJETO: " + matrizDedicacao.getDuracaoTotalProjeto());
 		}
 
-		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
-			for (Task task: ProblemaBuilder.getInstance().getTasks()) {
-				final GrauDedicacao grauDedicacao = matrizDedicacao.getGrauDedicacao(employee, task);
-				
-				if (!DOUBLE_ZERO.equals(grauDedicacao.getValor()) && !DOUBLE_ONE.equals(grauDedicacao.getValor())) {
-					sb.append(grauDedicacao.getValor() + "\t");
-				} else {
-					sb.append(grauDedicacao.getValor() + "\t\t");
-				}
-			}
-			
-			sb.appendLine();
-		}
+		sb.append(matrizDedicacao.getMatrizDedicacaoString());
 		
 		sb.appendLine("==================================================================================");
 		sb.appendLine();

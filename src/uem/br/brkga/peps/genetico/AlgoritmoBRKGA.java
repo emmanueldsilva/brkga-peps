@@ -24,12 +24,6 @@ public class AlgoritmoBRKGA {
 	
 	private List<Double> melhoresDuracaoProjeto = Lists.newArrayList();
 	
-	private Individuo ultimoMelhorIndividuo;
-	
-	private Individuo melhorIndividuo;
-	
-	private Individuo primeiroIndividuo;
-	
 	public AlgoritmoBRKGA(ParametrosAlgoritmo parametrosAlgoritmo) {
 		this.parametrosAlgoritmo = parametrosAlgoritmo;
 	}
@@ -45,71 +39,23 @@ public class AlgoritmoBRKGA {
         	final PrintFactory printFactory = new PrintFactory(parametrosAlgoritmo, cont + 1);
             long start = System.currentTimeMillis();  
             
-            this.ultimoMelhorIndividuo = null;
-    		this.melhorIndividuo = null;
-            
             Populacao populacao = new Populacao(parametrosAlgoritmo);
             Populacao novaPopulacao = null;
             populacao.gerarIndividuos();
             
             for (int i = 0; i < parametrosAlgoritmo.getNumeroGeracoes(); i++) {
 				populacao.avaliarIndividuos();
-				
-				if (ultimoMelhorIndividuo == null) {
-					ultimoMelhorIndividuo = populacao.getMelhorIndividuo().getIndividuo().clone();
-				}
-				
-				melhorIndividuo = populacao.getMelhorIndividuo().getIndividuo().clone();
-				
-				System.out.println("AVALIACAO GERACAO: " + i + 
-						" | FITNESS ULMELIND: " + ultimoMelhorIndividuo.getValorFitness() +
-						" | FITNESS MELIND: " + melhorIndividuo.getValorFitness());
-				
-				if (melhorIndividuo.getValorFitness().compareTo(ultimoMelhorIndividuo.getValorFitness()) == -1) {
-					printFactory.printIndividuo(melhorIndividuo);
-					printFactory.printIndividuo(ultimoMelhorIndividuo);
-				} else {
-					ultimoMelhorIndividuo = melhorIndividuo;
-				}
-				
 				populacao.aplicarBuscaLocal();
-				
-				melhorIndividuo = populacao.getMelhorIndividuo().getIndividuo().clone();
-				
-				System.out.println("BUSCA LOCAL GERACAO: " + i + 
-						" | FITNESS ULMELIND: " + ultimoMelhorIndividuo.getValorFitness() +
-						" | FITNESS MELIND: " + melhorIndividuo.getValorFitness());
-				
-				if (melhorIndividuo.getValorFitness().compareTo(ultimoMelhorIndividuo.getValorFitness()) == -1) {
-					printFactory.printIndividuo(melhorIndividuo);
-					printFactory.printIndividuo(ultimoMelhorIndividuo);
-				} else {
-					ultimoMelhorIndividuo = melhorIndividuo;
-				}
-				
 				populacao.ordenarIndividuos();
 
-				melhorIndividuo = populacao.getMelhorIndividuo().getIndividuo().clone();
-				
-				System.out.println("ORDENACAO GERACAO: " + i + 
-						" | FITNESS ULMELIND: " + ultimoMelhorIndividuo.getValorFitness() +
-						" | FITNESS MELIND: " + melhorIndividuo.getValorFitness());
-				
-				if (melhorIndividuo.getValorFitness().compareTo(ultimoMelhorIndividuo.getValorFitness()) == -1) {
-					printFactory.printIndividuo(melhorIndividuo);
-					printFactory.printIndividuo(ultimoMelhorIndividuo);
-				} else {
-					ultimoMelhorIndividuo = melhorIndividuo;
-				}
-				
 				printFactory.geraEstatisticas(populacao, i);
 				
-//				novaPopulacao = new Populacao(parametrosAlgoritmo);
-//				novaPopulacao.addIndividuos(populacao.selecionarIndividuosMaisAptos());
-//				novaPopulacao.gerarMutantes();
-//				novaPopulacao.efetuarCruzamento(parametrosAlgoritmo.getProbabilidadeHerancaElite());
-//				
-//				populacao = novaPopulacao;
+				novaPopulacao = new Populacao(parametrosAlgoritmo);
+				novaPopulacao.addIndividuos(populacao.selecionarIndividuosMaisAptos());
+				novaPopulacao.gerarMutantes();
+				novaPopulacao.efetuarCruzamento(parametrosAlgoritmo.getProbabilidadeHerancaElite());
+				
+				populacao = novaPopulacao;
             }
 
             populacao.avaliarIndividuos();

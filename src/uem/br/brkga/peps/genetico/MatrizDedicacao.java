@@ -12,6 +12,7 @@ import static java.util.Collections.shuffle;
 import static java.util.Comparator.comparingDouble;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ONE;
 import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ZERO;
 
 import java.math.BigDecimal;
@@ -24,6 +25,7 @@ import uem.br.brkga.peps.entidade.Employee;
 import uem.br.brkga.peps.entidade.Skill;
 import uem.br.brkga.peps.entidade.Task;
 import uem.br.brkga.peps.problema.ProblemaBuilder;
+import uem.br.brkga.peps.utils.CustomStringBuilder;
 import uem.br.brkga.peps.utils.RandomFactory;
 
 import com.google.common.collect.Lists;
@@ -415,8 +417,23 @@ public class MatrizDedicacao implements Cloneable {
 		addGrauDedicacao(employee, task, RandomFactory.getInstance().randomGrauDedicacaoPositivo());
 	}
 
-	public void exploraBuscaLocalFactivel() {
+	public String getMatrizDedicacaoString() {
+		final CustomStringBuilder sb = new CustomStringBuilder();
+		for (Employee employee : ProblemaBuilder.getInstance().getEmployees()) {
+			for (Task task: ProblemaBuilder.getInstance().getTasks()) {
+				final GrauDedicacao grauDedicacao = getGrauDedicacao(employee, task);
+				
+				if (!DOUBLE_ZERO.equals(grauDedicacao.getValor()) && !DOUBLE_ONE.equals(grauDedicacao.getValor())) {
+					sb.append(grauDedicacao.getValor() + "\t");
+				} else {
+					sb.append(grauDedicacao.getValor() + "\t\t");
+				}
+			}
+			
+			sb.appendLine();
+		}
 		
+		return sb.toString();
 	}
 	
 	public GrauDedicacao[][] getMatrizDedicacao() {

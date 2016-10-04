@@ -7,8 +7,6 @@ import static org.apache.commons.lang3.math.NumberUtils.DOUBLE_ZERO;
 
 import java.math.BigDecimal;
 
-import org.apache.commons.lang3.math.NumberUtils;
-
 import uem.br.brkga.peps.entidade.Employee;
 import uem.br.brkga.peps.entidade.Task;
 import uem.br.brkga.peps.problema.ProblemaBuilder;
@@ -57,7 +55,7 @@ public class MatrizEmpregadoAtuaGrau extends IndividuoCodificado {
 	private Double decodificaValor(Double valorCodificado) {
 		if (valorCodificado < 1.0) return 0.0;
 		
-		return RandomFactory.getInstance().getValorGrauDedicacaoSemZero((int) ((valorCodificado - 1.0) * 7));
+		return RandomFactory.getInstance().getValorGrauDedicacaoSemZero((int) ((valorCodificado - 1.0000001) * 7));
 	}
 	
 	public void recodificar() {
@@ -72,19 +70,19 @@ public class MatrizEmpregadoAtuaGrau extends IndividuoCodificado {
 				
 				if (grauDedicacaoCodificado >= DOUBLE_ONE) {
 					if (grauDedicacaoDecodificado == DOUBLE_ZERO) {
-						genes[posicao] = new BigDecimal(genes[posicao]).subtract(ONE, DECIMAL32).doubleValue(); 
+						genes[posicao] = new BigDecimal(genes[posicao], DECIMAL32).subtract(ONE).doubleValue(); 
 					} else if (!saoMesmosValores(grauDedicacaoCodificado, grauDedicacaoDecodificado)) {
 						if (grauDedicacaoDecodificado == 1.0) {
-							genes[posicao] = new BigDecimal(grauDedicacaoDecodificado).add(new BigDecimal(0.99), DECIMAL32).doubleValue();
+							genes[posicao] = new BigDecimal(grauDedicacaoDecodificado, DECIMAL32).add(new BigDecimal(0.99)).doubleValue();
 						} else {
-							genes[posicao] = new BigDecimal(grauDedicacaoDecodificado).add(ONE, DECIMAL32).doubleValue();
+							genes[posicao] = new BigDecimal(grauDedicacaoDecodificado, DECIMAL32).add(ONE).doubleValue();
 						}
 					}
 				} else { 
 					if (grauDedicacaoDecodificado == 1.0) {
-						genes[posicao] = new BigDecimal(grauDedicacaoDecodificado).add(new BigDecimal(0.99), DECIMAL32).doubleValue();
+						genes[posicao] = new BigDecimal(grauDedicacaoDecodificado, DECIMAL32).add(new BigDecimal(0.99)).doubleValue();
 					} else if (grauDedicacaoDecodificado > DOUBLE_ZERO) {
-						genes[posicao] = new BigDecimal(grauDedicacaoDecodificado).add(ONE, DECIMAL32).doubleValue();
+						genes[posicao] = new BigDecimal(grauDedicacaoDecodificado, DECIMAL32).add(ONE).doubleValue();
 					}
 				}
 			}
@@ -92,7 +90,7 @@ public class MatrizEmpregadoAtuaGrau extends IndividuoCodificado {
 	}
 
 	private boolean saoMesmosValores(Double grauDedicacaoCodificado, Double grauDedicacaoDecodificado) {
-		final Double valorGrauDedicacaoDecodificado = RandomFactory.getInstance().getValorGrauDedicacaoSemZero((int) ((grauDedicacaoCodificado - 1.0) * 7));
+		final Double valorGrauDedicacaoDecodificado = RandomFactory.getInstance().getValorGrauDedicacaoSemZero((int) ((grauDedicacaoCodificado - 1.0000001) * 7));
 		return valorGrauDedicacaoDecodificado.equals(grauDedicacaoDecodificado);
 	}
 	
