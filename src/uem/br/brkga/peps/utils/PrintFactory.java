@@ -1,10 +1,12 @@
 package uem.br.brkga.peps.utils;
 
+import static java.awt.Color.BLACK;
+import static java.awt.Color.WHITE;
+import static java.util.Calendar.JANUARY;
 import static org.apache.commons.io.FileUtils.forceDelete;
 import static org.apache.commons.io.FileUtils.forceMkdir;
 import static org.apache.commons.io.FileUtils.getUserDirectoryPath;
 import static org.apache.commons.io.FileUtils.write;
-import static org.jfree.chart.ChartFactory.createLineChart;
 import static org.jfree.chart.ChartUtilities.saveChartAsPNG;
 
 import java.io.File;
@@ -18,12 +20,13 @@ import java.util.Locale;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.category.IntervalCategoryDataset;
 import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import uem.br.brkga.peps.genetico.Individuo;
 import uem.br.brkga.peps.genetico.MatrizDedicacao;
@@ -35,26 +38,16 @@ import uem.br.brkga.peps.problema.ProblemaBuilder;
 public class PrintFactory {
 
 	private final String MELHOR_FITNESS = "Melhor Fitness";
-	private final String MEDIA_FITNESS = "Média Fitness";
-	private final String PIOR_FITNESS = "Pior Fitness";
-	
 	private final String MELHOR_CUSTO_PROJETO = "Melhor Custo Projeto";
-	private final String MEDIA_CUSTO_PROJETO = "Média Custo Projeto";
-	private final String PIOR_CUSTO_PROJETO = "Pior Custo Projeto";
-	private final String CUSTO_MELHOR_INDIVIDUO = "Custo Projeto Melhor Indivíduo";
-	
 	private final String MELHOR_DURACAO_PROJETO = "Melhor Duração Projeto";
-	private final String MEDIA_DURACAO_PROJETO = "Média Duração Projeto";
-	private final String PIOR_DURACAO_PROJETO = "Pior Duração Projeto";
-	private final String DURACAO_MELHOR_INDIVIDUO = "Duração Projeto Melhor Indivíduo";
 	
 	private static final NumberFormat CURRENCY_INSTANCE = NumberFormat.getCurrencyInstance(Locale.US);
 	
-	private DefaultCategoryDataset dataSetFitness = new DefaultCategoryDataset();
+	private XYSeries fitnessSeries = new XYSeries(MELHOR_FITNESS);
 	
-	private DefaultCategoryDataset dataSetCustoProjeto = new DefaultCategoryDataset();
+	private XYSeries custoProjetoSeries = new XYSeries(MELHOR_CUSTO_PROJETO);
 	
-	private DefaultCategoryDataset dataSetDuracaoProjeto = new DefaultCategoryDataset();
+	private XYSeries duracaoProjetoSeries = new XYSeries(MELHOR_DURACAO_PROJETO);
 	
 	private ParametrosAlgoritmo parametrosAlgoritmo;
 	
@@ -146,23 +139,15 @@ public class PrintFactory {
 	}
 
 	private void populaDataSetFitness(Populacao populacao, Integer geracao) {
-		dataSetFitness.addValue(populacao.getMaiorValorFitness(), MELHOR_FITNESS, geracao);
-//		dataSetFitness.addValue(populacao.getMediaValorFitness(), MEDIA_FITNESS, geracao);
-//		dataSetFitness.addValue(populacao.getMenorValorFitness(), PIOR_FITNESS, geracao);
+		fitnessSeries.add(geracao, populacao.getMaiorValorFitness());
 	}
 	
 	private void populaDataSetDuracaoProjeto(Populacao populacao, Integer geracao) {
-//		dataSetDuracaoProjeto.addValue(populacao.getMaiorDuracaoProjeto(), PIOR_DURACAO_PROJETO, geracao);
-//		dataSetDuracaoProjeto.addValue(populacao.getMediaDuracaoProjeto(), MEDIA_DURACAO_PROJETO, geracao);
-//		dataSetDuracaoProjeto.addValue(populacao.getMenorDuracaoProjeto(), MELHOR_DURACAO_PROJETO, geracao);
-		dataSetDuracaoProjeto.addValue(populacao.getMelhorIndividuo().getDuracaoTotalProjeto(), DURACAO_MELHOR_INDIVIDUO, geracao);
+		duracaoProjetoSeries.add(geracao, populacao.getMelhorIndividuo().getDuracaoTotalProjeto());
 	}
 	
 	private void populaDataSetCustoProjeto(Populacao populacao, Integer geracao) {
-//		dataSetCustoProjeto.addValue(populacao.getMaiorValorCustoProjeto(), PIOR_CUSTO_PROJETO, geracao);
-//		dataSetCustoProjeto.addValue(populacao.getMediaValorCustoProjeto(), MEDIA_CUSTO_PROJETO, geracao);
-//		dataSetCustoProjeto.addValue(populacao.getMenorValorCustoProjeto(), MELHOR_CUSTO_PROJETO, geracao);
-		dataSetCustoProjeto.addValue(populacao.getMelhorIndividuo().getCustoTotalProjeto(), CUSTO_MELHOR_INDIVIDUO, geracao);
+		custoProjetoSeries.add(geracao, populacao.getMelhorIndividuo().getCustoTotalProjeto());
 	}
 	
 	public synchronized void plotaGraficos(Populacao populacao) {
@@ -172,7 +157,7 @@ public class PrintFactory {
 			
 			String pathDiretorio = buildPathDiretorio();
 			buildGraficoFitness(pathDiretorio, melhorIndividuo, piorIndividuo);
-			buildGraficoCustoProjeto(pathDiretorio, populacao.getMenorValorCustoProjeto(), populacao.getMaiorValorCustoProjeto());
+			buildGraficoCustoProjeto(pathDiretorio, melhorIndividuo.getCustoTotalProjeto());
 			buildGraficoDuracaoProjeto(pathDiretorio);
 			buildDiagramaGantt(pathDiretorio, melhorIndividuo);
 		} catch (IOException e) {
@@ -181,35 +166,40 @@ public class PrintFactory {
 	}
 
 	private void buildGraficoFitness(String pathDiretorio, Individuo melhorIndividuo, Individuo piorIndividuo) throws IOException {
-		JFreeChart graficoFitness = createLineChart("Valor de Fitness", "Gerações", "Fitness", dataSetFitness, 
+		JFreeChart graficoFitness = ChartFactory.createXYLineChart("Valor de Fitness", "Gerações", "Fitness", new XYSeriesCollection(fitnessSeries), 
 				PlotOrientation.VERTICAL, true, true, false);
 		
-		CategoryPlot categoryPlot = graficoFitness.getCategoryPlot();
-		categoryPlot.setDomainCrosshairVisible(true);
-		categoryPlot.setRangeCrosshairVisible(true);
-		
+		final XYPlot xyPlot = graficoFitness.getXYPlot();
+		xyPlot.setBackgroundPaint(WHITE);
+		xyPlot.setDomainGridlinePaint(BLACK);
+		xyPlot.setRangeGridlinePaint(BLACK);
+
 		saveChartAsPNG(new File(pathDiretorio + "grafico_fitness_" + execucao + ".png"), graficoFitness, 1000, 300);
 	}
 	
-	private void buildGraficoCustoProjeto(String pathDiretorio, Double menorCustoProjeto, Double maiorCustoProjeto) throws IOException {
-		JFreeChart graficoCustoProjeto = createLineChart("Custo do Projeto", "Gerações", "Custo", dataSetCustoProjeto, 
+	private void buildGraficoCustoProjeto(String pathDiretorio, Double custoProjeto) throws IOException {
+		JFreeChart graficoCustoProjeto = ChartFactory.createXYLineChart("Custo do Projeto", "Gerações", "Custo", new XYSeriesCollection(custoProjetoSeries), 
 				PlotOrientation.VERTICAL, true, true, false);
 		
-		CategoryPlot categoryPlot = (CategoryPlot) graficoCustoProjeto.getPlot();
-		categoryPlot.setDomainCrosshairVisible(true);
-		categoryPlot.setRangeCrosshairVisible(true);
+		final XYPlot xyPlot = graficoCustoProjeto.getXYPlot();
+		xyPlot.setBackgroundPaint(WHITE);
+		xyPlot.setDomainGridlinePaint(BLACK);
+		xyPlot.setRangeGridlinePaint(BLACK);
 		
-		double CENTENA_MILHAR = 10000.00;
-		NumberAxis range = (NumberAxis) categoryPlot.getRangeAxis();
-		range.setRange(menorCustoProjeto - (2 * CENTENA_MILHAR), maiorCustoProjeto + (2 * CENTENA_MILHAR));
-//		range.setTickUnit(new NumberTickUnit(CENTENA_MILHAR));
+		double DEZENA_MILHAR = 10000.00;
+		((NumberAxis) xyPlot.getRangeAxis()).setRange(custoProjeto - (2 * DEZENA_MILHAR), custoProjeto + (2 * DEZENA_MILHAR));
 		
 		saveChartAsPNG(new File(pathDiretorio + "grafico_custo_" + execucao + ".png"), graficoCustoProjeto, 1000, 300);
 	}
 	
 	private void buildGraficoDuracaoProjeto(String pathDiretorio) throws IOException {
-		JFreeChart graficoDuracaoProjeto = createLineChart("Duração do Projeto", "Gerações", "Duração", dataSetDuracaoProjeto, 
+		JFreeChart graficoDuracaoProjeto = ChartFactory.createXYLineChart("Duração do Projeto", "Gerações", "Duração", new XYSeriesCollection(duracaoProjetoSeries), 
 				PlotOrientation.VERTICAL, true, true, false);
+		
+		final XYPlot xyPlot = graficoDuracaoProjeto.getXYPlot();
+		xyPlot.setBackgroundPaint(WHITE);
+		xyPlot.setDomainGridlinePaint(BLACK);
+		xyPlot.setRangeGridlinePaint(BLACK);
 		
 		saveChartAsPNG(new File(pathDiretorio + "grafico_duracao_" + execucao + ".png"), graficoDuracaoProjeto, 1000, 300);
 	}
@@ -240,7 +230,7 @@ public class PrintFactory {
 		int dias = (int) ((tempo - meses) * (365.25/12));
 		
 		final Calendar calendarInicio = Calendar.getInstance();
-		calendarInicio.set(2000, 01, 01);
+		calendarInicio.set(2016, JANUARY, 1);
 		calendarInicio.add(Calendar.MONTH, meses);
 		calendarInicio.add(Calendar.DAY_OF_MONTH, dias);
 		return calendarInicio.getTime();

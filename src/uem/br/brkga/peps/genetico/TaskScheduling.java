@@ -21,12 +21,6 @@ public class TaskScheduling {
 		this.duracao = duracao;
 	}
 	
-	public TaskScheduling(Task task, Double tempoInicio, Double tempoFim) {
-		this.tempoInicio = tempoInicio;
-		this.tempoFim = tempoFim;
-		this.task = task;
-	}
-
 	public Double getTempoInicio() {
 		return tempoInicio;
 	}

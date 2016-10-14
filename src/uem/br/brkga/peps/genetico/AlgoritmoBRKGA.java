@@ -1,5 +1,6 @@
 package uem.br.brkga.peps.genetico;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.List;
@@ -24,8 +25,11 @@ public class AlgoritmoBRKGA {
 	
 	private List<Double> melhoresDuracaoProjeto = Lists.newArrayList();
 	
+	private DadosExecucao dadosExecucao;
+	
 	public AlgoritmoBRKGA(ParametrosAlgoritmo parametrosAlgoritmo) {
 		this.parametrosAlgoritmo = parametrosAlgoritmo;
+		this.dadosExecucao = new DadosExecucao(new File(parametrosAlgoritmo.getPathBenchmark()).getName());
 	}
 	
     public void inicializaDadosProblema() {
@@ -50,6 +54,8 @@ public class AlgoritmoBRKGA {
 
 				printFactory.geraEstatisticas(populacao, i);
 				
+				dadosExecucao.acumularFitness(i, populacao.getMaiorValorFitness());
+				
 				novaPopulacao = new Populacao(parametrosAlgoritmo);
 				novaPopulacao.addIndividuos(populacao.selecionarIndividuosMaisAptos());
 				novaPopulacao.gerarMutantes();
@@ -59,14 +65,17 @@ public class AlgoritmoBRKGA {
             }
 
             populacao.avaliarIndividuos();
+            populacao.aplicarBuscaLocal();
+            populacao.ordenarIndividuos();
             populacao.selecionarIndividuosMaisAptos();
+            printFactory.geraEstatisticas(populacao, parametrosAlgoritmo.getNumeroGeracoes());
+            
+            dadosExecucao.acumularFitness(parametrosAlgoritmo.getNumeroGeracoes(), populacao.getMaiorValorFitness());
 
             final IndividuoCodificado melhorIndividuo = populacao.getMelhorIndividuo();
-            
-            printFactory.geraEstatisticas(populacao, parametrosAlgoritmo.getNumeroGeracoes());
 			printFactory.printIndividuo(melhorIndividuo.getIndividuo());
-			populacao.getIndividuosCodificados().sort((i1, i2) -> i1.getValorFitness().compareTo(i2.getValorFitness()));
-            
+            dadosExecucao.addMelhorIndividuo(melhorIndividuo);
+			
             if (melhorIndividuo.isFactivel()) {
             	hitRate++;
             	melhoresFitness.add(melhorIndividuo.getValorFitness());
@@ -99,5 +108,8 @@ public class AlgoritmoBRKGA {
 		return parametrosAlgoritmo;
 	}
 	
+	public DadosExecucao getDadosExecucao() {
+		return dadosExecucao;
+	}
 }
 
