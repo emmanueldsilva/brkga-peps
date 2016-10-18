@@ -20,6 +20,7 @@ import java.util.Locale;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.category.IntervalCategoryDataset;
@@ -209,14 +210,19 @@ public class PrintFactory {
 		
 		final JFreeChart diagramaGantt = ChartFactory.createGanttChart("Diagrama de Gantt", "Tarefas", "Tempo", createDataset(escalaTarefas));
 		
-		saveChartAsPNG(new File(pathDiretorio + "diagrama_gantt_" + execucao + ".png"), diagramaGantt, 1000, 600);
+		final CategoryPlot categoryPlot = diagramaGantt.getCategoryPlot();
+		categoryPlot.setBackgroundPaint(WHITE);
+		categoryPlot.setDomainGridlinePaint(BLACK);
+		categoryPlot.setRangeGridlinePaint(BLACK);
+				
+		saveChartAsPNG(new File(pathDiretorio + "diagrama_gantt_" + execucao + ".png"), diagramaGantt, (100 * melhorIndividuo.getDuracaoTotalProjeto().intValue()), 600);
 	}
 
     private IntervalCategoryDataset createDataset(List<TaskScheduling> taskScheduling) {
         final TaskSeries taskSeries = new TaskSeries("Tarefas");
 
         taskScheduling.forEach((ts) -> {
-        	taskSeries.add(new org.jfree.data.gantt.Task("Task " + ts.getTask().getNumero(), calculaData(ts.getTempoInicio()), calculaData(ts.getTempoFim())));
+			taskSeries.add(new org.jfree.data.gantt.Task("Task " + ts.getTask().getNumero(), calculaData(ts.getTempoInicio()), calculaData(ts.getTempoFim())));
         });
         
         final TaskSeriesCollection taskSeriesCollection = new TaskSeriesCollection();

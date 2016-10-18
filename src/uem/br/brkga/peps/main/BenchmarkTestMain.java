@@ -21,7 +21,7 @@ public class BenchmarkTestMain {
 	private static final Double PESO_TRABALHO_EXTRA = 0.1;
 	
 	private static final int NUMERO_EXECUCOES = 5;
-	private static final int NUMERO_GERACOES = 10;
+	private static final int NUMERO_GERACOES = 1300;
 	private static final int TAMANHO_POPULACAO = 256;
 	private static final Double TAMANHO_GRUPO_ELITE = 30.0;
 	private static final Double PROBABILIDADE_HERANCA_ELITE = 70.0;

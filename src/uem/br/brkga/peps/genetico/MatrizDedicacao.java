@@ -88,7 +88,6 @@ public class MatrizDedicacao implements Cloneable {
 		escalaTarefas = Lists.newArrayList();
 		for (Task task : ProblemaBuilder.getInstance().getTasks()) {
 			final BigDecimal esforcoTask = BigDecimal.valueOf(task.getCusto());
-			
 			final BigDecimal somatorioDedicaoTask = calculaSomatorioDedicacaoTask(task);
 			
 			BigDecimal duracaoTask = ZERO;
